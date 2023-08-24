@@ -21,13 +21,32 @@
     <!-- Disables NU5128 error when creating a package with no assemblies. -->
     <!-- See: https://learn.microsoft.com/en-us/nuget/reference/errors-and-warnings/nu5128#solution-1 -->
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <!-- <PowerShellFile>powershell -NonInteractive -NoLogo -NoProfile -ExecutionPolicy Unrestricted -File</PowerShellFile> -->
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="test.txt">
+    <Content Include="$(OutputPath)workloadset.json">
       <Pack>true</Pack>
       <PackagePath>data</PackagePath>
     </Content>
   </ItemGroup>
+
+  <Import Project="workloads.props" />
+
+  <Target Name="CreateWorkloadSetJson" BeforeTargets="Build">
+    <!-- <ItemGroup Label="workloadset.json"> -->
+      <!-- <WorkloadSetJson Include="{" /> -->
+      <!-- <WorkloadSetJson Include="  &quot;%(WorkloadManifest.Identity)&quot;: &quot;%(WorkloadManifest.Version)/%(WorkloadManifest.FeatureBand)&quot;," /> -->
+      <!-- <WorkloadSetJson Include="}" /> -->
+    <!-- </ItemGroup> -->
+    <PropertyGroup>
+      <WorkloadSetsList>@(WorkloadManifest->'&quot;%(Identity)&quot;:&quot;%(Version)/%(FeatureBand)&quot;', ',')</WorkloadSetsList>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(OutputPath)workloadset.json" Lines="{$(WorkloadSetsList)}" Overwrite="true" />
+    <!-- <PropertyGroup>
+      <WorkloadSetsList>@(WorkloadManifest->'@{name=%(Identity);featureBand=%(FeatureBand);version=%(Version)}', ',')</WorkloadSetsList>
+    </PropertyGroup> -->
+    <!-- <Exec ContinueOnError="false" Command="$(PowerShellFile) &quot;$(MSBuildThisFileDirectory)FlushUnshippedAPIFiles.ps1&quot; -projectDirectory &quot;$(MSBuildProjectDirectory)&quot;" /> -->
+  </Target>
 
 </Project>
