@@ -1,7 +1,33 @@
+﻿<!--<Project Sdk="Microsoft.NET.Sdk">-->
 <Project Sdk="Microsoft.Build.NoTargets">
 
   <PropertyGroup>
     <TargetFramework>$(SdkTargetFramework)</TargetFramework>
+    <!-- Allows the pack target to run on this project. -->
+    <IsPackable>true</IsPackable>
+    <!-- Runs pack when building. -->
+    <!-- See: https://learn.microsoft.com/en-us/nuget/quickstart/create-and-publish-a-package-using-the-dotnet-cli#automatically-generate-package-on-build -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <!-- Disables build output of .dll, .deps.json, and .pdb. -->
+    <!-- See: https://gist.github.com/jstangroome/3087991 -->
+    <!--<SkipCopyBuildProduct>true</SkipCopyBuildProduct>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>-->
+    <!-- Disables packing the project output into the NuGet package. -->
+    <!-- See: https://stackoverflow.com/a/42867924/294804 -->
+    <!-- See: https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#pack-target-inputs -->
+    <!--<IncludeBuildOutput>false</IncludeBuildOutput>-->
+    <!-- Disables NU5128 error when creating a package with no assemblies. -->
+    <!-- See: https://learn.microsoft.com/en-us/nuget/reference/errors-and-warnings/nu5128#solution-1 -->
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="test.txt">
+      <Pack>true</Pack>
+      <PackagePath>data</PackagePath>
+    </Content>
+  </ItemGroup>
 
 </Project>
