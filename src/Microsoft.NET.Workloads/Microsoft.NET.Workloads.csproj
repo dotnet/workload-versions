@@ -1,0 +1,71 @@
+﻿<!--<Project Sdk="Microsoft.NET.Sdk">-->
+<Project Sdk="Microsoft.Build.NoTargets">
+
+  <PropertyGroup>
+    <TargetFramework>$(SdkTargetFramework)</TargetFramework>
+    <!-- Allows the pack target to run on this project. -->
+    <IsPackable>true</IsPackable>
+    <!-- Runs pack when building. -->
+    <!-- See: https://learn.microsoft.com/en-us/nuget/quickstart/create-and-publish-a-package-using-the-dotnet-cli#automatically-generate-package-on-build -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <!-- Disables build output of .dll, .deps.json, and .pdb. -->
+    <!-- See: https://gist.github.com/jstangroome/3087991 -->
+    <!--<SkipCopyBuildProduct>true</SkipCopyBuildProduct>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>-->
+    <!-- Disables packing the project output into the NuGet package. -->
+    <!-- See: https://stackoverflow.com/a/42867924/294804 -->
+    <!-- See: https://learn.microsoft.com/en-us/nuget/reference/msbuild-targets#pack-target-inputs -->
+    <!--<IncludeBuildOutput>false</IncludeBuildOutput>-->
+    <!-- Disables NU5128 error when creating a package with no assemblies. -->
+    <!-- See: https://learn.microsoft.com/en-us/nuget/reference/errors-and-warnings/nu5128#solution-1 -->
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <!-- <PowerShellFile>powershell -NonInteractive -NoLogo -NoProfile -ExecutionPolicy Unrestricted -File</PowerShellFile> -->
+    <PackageId>$(MSBuildProjectName).$(SDKFeatureBand)</PackageId>
+    <!-- Adds a README.md to the NuGet package. -->
+    <!-- See: https://devblogs.microsoft.com/nuget/add-a-readme-to-your-nuget-package/ -->
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="$(OutputPath)workloadset.json" Pack="true" PackagePath="data" />
+    <None Include="README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+
+  <Import Project="workloads.props" />
+
+  <Target Name="CreateWorkloadSetJson" BeforeTargets="Build">
+    <PropertyGroup>
+      <!-- <WorkloadsJson>@(WorkloadManifest->'&quot;%(Identity)&quot;:&quot;%(Version)/%(FeatureBand)&quot;', ',')</WorkloadsJson> -->
+      <!-- <WorkloadsJson2>@(WorkloadManifest->'%5C&quot;%(Identity)%5C&quot;:%5C&quot;%(Version)/%(FeatureBand)%5C&quot;', ',')</WorkloadsJson2> -->
+      <!-- <WorkloadsJson>@(WorkloadManifest->'%20%20&quot;%(Identity)&quot;: &quot;%(Version)/%(FeatureBand)&quot;', ',')</WorkloadsJson> -->
+
+      <!-- %20 is the space character in ASCII for indentation. MSBuild normally doesn't allow leading whitespace. -->
+      <!-- ',;' is used so each workload is treated as a new line via semi-colon and has the appropriate commas for JSON properties. -->
+      <WorkloadsJson>@(WorkloadManifest->'%20%20&quot;%(Identity)&quot;: &quot;%(Version)/%(FeatureBand)&quot;', ',;')</WorkloadsJson>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <!-- <WorkloadSetJson Include="{" /> -->
+      <!-- <WorkloadsJson Include="%(WorkloadManifest->'%20%20&quot;%(Identity)&quot;: &quot;%(Version)/%(FeatureBand)&quot;', ',')" /> -->
+      <!-- <WorkloadSetJson Include="%20%20%(WorkloadsJson.Identity)" /> -->
+      <!-- <WorkloadsJson Include="}" /> -->
+    </ItemGroup>
+
+    <!-- <Message Text="WorkloadsJson: @(WorkloadsJson)" Importance="high" /> -->
+
+    <!-- <Exec ContinueOnError="false" ConsoleToMSBuild="true" Command="powershell -NonInteractive -NoLogo -NoProfile -ExecutionPolicy Unrestricted -Command &quot;'{$(WorkloadsJson)}' | ConvertFrom-Json | ConvertTo-Json&quot;">
+      <Output TaskParameter="ConsoleOutput" PropertyName="WorkloadSetJson" />
+    </Exec>
+
+    <Message Text="WorkloadSetJson: $(WorkloadSetJson)" Importance="high" />
+    <WriteLinesToFile File="$(OutputPath)workloadset.json" Lines="$(WorkloadSetJson)" Overwrite="true" /> -->
+
+    <!-- <Exec ContinueOnError="false" Command="powershell -NonInteractive -NoLogo -NoProfile -ExecutionPolicy Unrestricted -Command &quot;'{$(WorkloadsJson)}' | ConvertFrom-Json | ConvertTo-Json | Out-File -FilePath '$(OutputPath)workloadset.json'&quot;" /> -->
+    <!-- <Exec ContinueOnError="false" Command="powershell -NonInteractive -NoLogo -NoProfile -ExecutionPolicy Unrestricted -Command &quot;'{$(WorkloadsJson2)}' | ConvertFrom-Json | ConvertTo-Json&quot;" /> -->
+    <!-- <Exec ContinueOnError="false" Command="powershell -NonInteractive -NoLogo -NoProfile -ExecutionPolicy Unrestricted -Command &quot;'{$(WorkloadsJson2)}'&quot;" /> -->
+    <WriteLinesToFile File="$(OutputPath)workloadset.json" Lines="{;$(WorkloadsJson);}" Overwrite="true" />
+  </Target>
+
+</Project>
