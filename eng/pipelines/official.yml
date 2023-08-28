@@ -100,6 +100,18 @@ variables:
   # https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/codeql/configuring-codeql3000-ado-pipelines#monolithic-repos-and-multistage-pipelines
 - name: Codeql.SkipTaskAutoInjection
   value: true
+- ${{ if eq(variables['_RunAsPublic'], 'true') }}:
+  - name: _AdditionalBuildArgs
+    value: ''
+  - name: _BuildJobDisplayName
+    value: 'Build and Test'
+- ${{ else }}:
+  - name: _AdditionalBuildArgs
+    value: '/p:Test=false'
+  - name: _BuildJobDisplayName
+    value: 'Build, Sign and Publish'
+- name: _InternalBuildArgs
+  value: ''
 
 # parameters:
 # - name: CreateInsertion
