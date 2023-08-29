@@ -120,7 +120,6 @@ variables:
   value: False
 - name: _InternalBuildArgs
   value: ''
-
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - name: _RunAsPublic
     value: False
@@ -220,23 +219,23 @@ stages:
             $(_AdditionalBuildArgs)
             $(_InternalBuildArgs)
           displayName: $(_BuildJobDisplayName)
-  - ${{ if eq(variables._RunAsInternal, True) }}:
-    - template: /eng/common/templates/post-build/post-build.yml
-      parameters:
-        publishAssetsImmediately: true
-        SDLValidationParameters:
-          enable: false
-          params: ' -SourceToolsList $(_TsaSourceToolsList)
-            -TsaInstanceURL $(_TsaInstanceURL)
-            -TsaProjectName $(_TsaProjectName)
-            -TsaNotificationEmail $(_TsaNotificationEmail)
-            -TsaCodebaseAdmin $(_TsaCodebaseAdmin)
-            -TsaBugAreaPath $(_TsaBugAreaPath)
-            -TsaIterationPath $(_TsaIterationPath)
-            -TsaRepositoryName $(_TsaRepositoryName)
-            -TsaCodebaseName $(_TsaCodebaseName)
-            -TsaOnboard $(_TsaOnboard)
-            -TsaPublish $(_TsaPublish)'
+- ${{ if eq(variables._RunAsInternal, True) }}:
+  - template: /eng/common/templates/post-build/post-build.yml
+    parameters:
+      publishAssetsImmediately: true
+      SDLValidationParameters:
+        enable: false
+        params: ' -SourceToolsList $(_TsaSourceToolsList)
+          -TsaInstanceURL $(_TsaInstanceURL)
+          -TsaProjectName $(_TsaProjectName)
+          -TsaNotificationEmail $(_TsaNotificationEmail)
+          -TsaCodebaseAdmin $(_TsaCodebaseAdmin)
+          -TsaBugAreaPath $(_TsaBugAreaPath)
+          -TsaIterationPath $(_TsaIterationPath)
+          -TsaRepositoryName $(_TsaRepositoryName)
+          -TsaCodebaseName $(_TsaCodebaseName)
+          -TsaOnboard $(_TsaOnboard)
+          -TsaPublish $(_TsaPublish)'
 
   # variables:
   #   SkipOptimize: ${{ parameters.SkipOptimize }}
