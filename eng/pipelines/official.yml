@@ -28,9 +28,13 @@
 
 
 
+# Activates the pipeline after a PR is merged.
+# See: https://docs.microsoft.com/azure/devops/pipelines/yaml-schema/trigger?view=azure-pipelines
+trigger: none
 
-
-
+# Activates PR builds for this pipeline.
+# See: https://docs.microsoft.com/azure/devops/pipelines/yaml-schema/pr?view=azure-pipelines#examples
+pr: none
 
 
 

@@ -21,7 +21,7 @@
   <ItemGroup>
     <Content Include="$(OutputPath)workloadset.json" Pack="true" PackagePath="data" />
     <None Include="README.md" Pack="true" PackagePath="\"/>
-    <ItemsToSign Include="$(PackageId).nupkg" />
+    <!-- <ItemsToSign Include="$(PackageId).nupkg" /> -->
   </ItemGroup>
 
   <Import Project="workloads.props" />
