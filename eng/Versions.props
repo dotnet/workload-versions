@@ -45,10 +45,13 @@
 
   <PropertyGroup>
     <MicroBuildCorePackageVersion>0.2.0</MicroBuildCorePackageVersion>
+    <MicrosoftDotNetBuildTasksWorkloadsPackageVersion>9.0.0-beta.23531.4</MicrosoftDotNetBuildTasksWorkloadsPackageVersion>
+    <MicrosoftDotNetBuildTasksInstallersVersion>9.0.0-beta.23531.4</MicrosoftDotNetBuildTasksInstallersVersion>
   </PropertyGroup>
 
   <PropertyGroup>
     <WixPackageVersion>1.0.0-v3.14.0.5722</WixPackageVersion>
+    <SwixPackageVersion>1.1.87-gba258badda</SwixPackageVersion>
   </PropertyGroup>
 
   <!-- infrastructure and test only dependencies -->

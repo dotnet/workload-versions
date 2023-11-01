@@ -19,6 +19,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.DotNet.Build.Tasks.Workloads" Version="$(MicrosoftDotNetBuildTasksWorkloadsPackageVersion)" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.Signed.WiX" Version="$(WixPackageVersion)" GeneratePathProperty="true" />
+    <PackageReference Include="MicroBuild.Plugins.SwixBuild.Dotnet" Version="$(SwixPackageVersion)" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.DotNet.Build.Tasks.Installers" Version="$(MicrosoftDotNetBuildTasksInstallersVersion)" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <WixToolsetPath>$(PkgMicrosoft_Signed_Wix)\tools</WixToolsetPath>
+    <SwixPluginPath>$(PkgMicroBuild_Plugins_SwixBuild_Dotnet)</SwixPluginPath>
+    <SwixBuildTargets>$(SwixPluginPath)\build\MicroBuild.Plugins.SwixBuild.targets</SwixBuildTargets>
+    <WorkloadIntermediateOutputPath>$(ArtifactsObjDir)workloads/</WorkloadIntermediateOutputPath>
+    <WorkloadOutputPath>$(ArtifactsBinDir)workloads/</WorkloadOutputPath>
+  </PropertyGroup>
+
+  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
+
+  <!-- TODO: Hacky workaround -->
+  <PropertyGroup>
+    <MicrosoftDotNetBuildTasksWorkloadsAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(PkgMicrosoft_DotNet_Build_Tasks_Workloads)\tools\net8.0\Microsoft.DotNet.Build.Tasks.Workloads.dll</MicrosoftDotNetBuildTasksWorkloadsAssembly>
+  </PropertyGroup>
+
+  <UsingTask TaskName="CreateVisualStudioWorkloadSet" AssemblyFile="$(MicrosoftDotNetBuildTasksWorkloadsAssembly)" />
+
+  <ItemGroup>
     <Content Include="$(OutputPath)workloadset.json" Pack="true" PackagePath="data" />
     <None Include="README.md" Pack="true" PackagePath="\"/>
     <!-- <ItemsToSign Include="$(PackageId).nupkg" /> -->
@@ -33,6 +57,46 @@
       <WorkloadsJson>@(WorkloadManifest->'%20%20&quot;%(Identity)&quot;: &quot;%(Version)/%(FeatureBand)&quot;', ',;')</WorkloadsJson>
     </PropertyGroup>
     <WriteLinesToFile File="$(OutputPath)workloadset.json" Lines="{;$(WorkloadsJson);}" Overwrite="true" />
+  </Target>
+
+  <Target Name="_GenerateMsiVersionString">
+    <PropertyGroup>
+      <VersionPadding Condition="'$(VersionPadding)'==''">5</VersionPadding>
+      <!-- Using the following default comparison date will produce versions that align with our internal build system. -->
+      <VersionComparisonDate Condition="'$(VersionComparisonDate)'==''">1996-04-01</VersionComparisonDate>
+    </PropertyGroup>
+
+    <GenerateCurrentVersion
+        SeedDate="$([System.DateTime]::Now.ToString(yyyy-MM-dd))"
+        OfficialBuildId="$(OfficialBuildId)"
+        ComparisonDate="$(VersionComparisonDate)"
+        Padding="$(VersionPadding)">
+      <Output PropertyName="BuildNumberMajor" TaskParameter="GeneratedVersion" />
+      <Output PropertyName="BuildNumberMinor" TaskParameter="GeneratedRevision" />
+    </GenerateCurrentVersion>
+
+    <GenerateMsiVersion
+        Major="$(VersionMajor)"
+        Minor="$(VersionMinor)"
+        Patch="$(VersionSDKMinor)$(VersionFeature)"
+        BuildNumberMajor="$(BuildNumberMajor)"
+        BuildNumberMinor="$(BuildNumberMinor)">
+      <Output TaskParameter="MsiVersion" PropertyName="MsiVersion" />
+    </GenerateMsiVersion>
+  </Target>
+
+  <Target Name="CreateVisualStudioMsi" AfterTargets="Build" DependsOnTargets="GetAssemblyVersion;_GenerateMsiVersionString">
+    <ItemGroup>
+      <WorkloadSetPackage Include="$(ArtifactsShippingPackagesDir)/Microsoft.NET.Workloads*.nupkg" Exclude="$(ArtifactsShippingPackagesDir)/Microsoft.NET.Workloads*Msi*.nupkg" />
+    </ItemGroup>
+
+    <CreateVisualStudioWorkloadSet
+        BaseIntermediateOutputPath="$(WorkloadIntermediateOutputPath)"
+        BaseOutputPath="$(WorkloadOutputPath)"
+        PackageSource="_"
+        WorkloadSetPackageFiles="@(WorkloadSetPackage)"
+        WixToolsetPath="$(WixToolsetPath)"
+        WorkloadSetMsiVersion="$(MsiVersion)" />
   </Target>
 
 </Project>
