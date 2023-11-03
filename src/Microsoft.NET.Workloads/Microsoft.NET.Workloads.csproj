@@ -16,13 +16,17 @@
     <!-- Adds a README.md to the NuGet package. -->
     <!-- See: https://devblogs.microsoft.com/nuget/add-a-readme-to-your-nuget-package/ -->
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <!-- LGHT1105: Warning generated from MSI creation process. -->
+    <NoWarn>LGHT1105</NoWarn>
   </PropertyGroup>
 
+  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.DotNet.Build.Tasks.Workloads" Version="$(MicrosoftDotNetBuildTasksWorkloadsPackageVersion)" GeneratePathProperty="true" />
     <PackageReference Include="Microsoft.Signed.WiX" Version="$(WixPackageVersion)" GeneratePathProperty="true" />
     <PackageReference Include="MicroBuild.Plugins.SwixBuild.Dotnet" Version="$(SwixPackageVersion)" GeneratePathProperty="true" />
     <PackageReference Include="Microsoft.DotNet.Build.Tasks.Installers" Version="$(MicrosoftDotNetBuildTasksInstallersVersion)" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.DotNet.Build.Tasks.Workloads" Version="$(MicrosoftDotNetBuildTasksWorkloadsPackageVersion)" GeneratePathProperty="true" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -32,15 +36,6 @@
     <WorkloadIntermediateOutputPath>$(ArtifactsObjDir)workloads/</WorkloadIntermediateOutputPath>
     <WorkloadOutputPath>$(ArtifactsBinDir)workloads/</WorkloadOutputPath>
   </PropertyGroup>
-
-  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
-
-  <!-- TODO: Hacky workaround -->
-  <PropertyGroup>
-    <MicrosoftDotNetBuildTasksWorkloadsAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(PkgMicrosoft_DotNet_Build_Tasks_Workloads)\tools\net8.0\Microsoft.DotNet.Build.Tasks.Workloads.dll</MicrosoftDotNetBuildTasksWorkloadsAssembly>
-  </PropertyGroup>
-
-  <UsingTask TaskName="CreateVisualStudioWorkloadSet" AssemblyFile="$(MicrosoftDotNetBuildTasksWorkloadsAssembly)" />
 
   <ItemGroup>
     <Content Include="$(OutputPath)workloadset.json" Pack="true" PackagePath="data" />
@@ -93,7 +88,6 @@
     <CreateVisualStudioWorkloadSet
         BaseIntermediateOutputPath="$(WorkloadIntermediateOutputPath)"
         BaseOutputPath="$(WorkloadOutputPath)"
-        PackageSource="_"
         WorkloadSetPackageFiles="@(WorkloadSetPackage)"
         WixToolsetPath="$(WixToolsetPath)"
         WorkloadSetMsiVersion="$(MsiVersion)" />

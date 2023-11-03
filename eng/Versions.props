@@ -45,8 +45,8 @@
 
   <PropertyGroup>
     <MicroBuildCorePackageVersion>0.2.0</MicroBuildCorePackageVersion>
-    <MicrosoftDotNetBuildTasksWorkloadsPackageVersion>9.0.0-beta.23531.4</MicrosoftDotNetBuildTasksWorkloadsPackageVersion>
-    <MicrosoftDotNetBuildTasksInstallersVersion>9.0.0-beta.23531.4</MicrosoftDotNetBuildTasksInstallersVersion>
+    <MicrosoftDotNetBuildTasksInstallersVersion>9.0.0-beta.23552.3</MicrosoftDotNetBuildTasksInstallersVersion>
+    <MicrosoftDotNetBuildTasksWorkloadsPackageVersion>9.0.0-beta.23552.3</MicrosoftDotNetBuildTasksWorkloadsPackageVersion>
   </PropertyGroup>
 
   <PropertyGroup>
