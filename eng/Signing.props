@@ -45,6 +45,8 @@
   </ItemGroup> -->
 
   <ItemGroup>
+    <ItemsToSign Include="$(ArtifactsPackagesDir)**\*.zip" />
+    <ItemsToSign Include="$(ArtifactsPackagesDir)**\*.msi" />
     <ItemsToSign Include="$(ArtifactsPackagesDir)**\*.nupkg" />
   </ItemGroup>
 

@@ -11,12 +11,12 @@
     <!-- Disables NU5128 error when creating a package with no assemblies. -->
     <!-- See: https://learn.microsoft.com/en-us/nuget/reference/errors-and-warnings/nu5128#solution-1 -->
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
-    <!-- <PowerShellFile>powershell -NonInteractive -NoLogo -NoProfile -ExecutionPolicy Unrestricted -File</PowerShellFile> -->
     <PackageId>$(MSBuildProjectName).$(SDKFeatureBand)</PackageId>
     <!-- Adds a README.md to the NuGet package. -->
     <!-- See: https://devblogs.microsoft.com/nuget/add-a-readme-to-your-nuget-package/ -->
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <!-- LGHT1105: Warning generated from MSI creation process. -->
+    <!-- See: https://github.com/orgs/wixtoolset/discussions/6715 -->
     <NoWarn>LGHT1105</NoWarn>
   </PropertyGroup>
 
@@ -35,6 +35,15 @@
     <SwixBuildTargets>$(SwixPluginPath)\build\MicroBuild.Plugins.SwixBuild.targets</SwixBuildTargets>
     <WorkloadIntermediateOutputPath>$(ArtifactsObjDir)workloads/</WorkloadIntermediateOutputPath>
     <WorkloadOutputPath>$(ArtifactsBinDir)workloads/</WorkloadOutputPath>
+    <VSTemp>$(WorkloadIntermediateOutputPath)VS/</VSTemp>
+  </PropertyGroup>
+
+  <!-- Arcade -->
+  <PropertyGroup>
+    <!-- Temp directory for light command layouts -->
+    <LightCommandObjDir>$(ArtifactsObjDir)/LightCommandPackages</LightCommandObjDir>
+    <!-- Directory for the zipped up light command package -->
+    <LightCommandPackagesDir>$(ArtifactsNonShippingPackagesDir)</LightCommandPackagesDir>
   </PropertyGroup>
 
   <ItemGroup>
@@ -90,7 +99,51 @@
         BaseOutputPath="$(WorkloadOutputPath)"
         WorkloadSetPackageFiles="@(WorkloadSetPackage)"
         WixToolsetPath="$(WixToolsetPath)"
-        WorkloadSetMsiVersion="$(MsiVersion)" />
+        WorkloadSetMsiVersion="$(MsiVersion)">
+      <Output TaskParameter="SwixProjects" ItemName="SwixProjects" />
+      <Output TaskParameter="Msis" ItemName="Msis" />
+    </CreateVisualStudioWorkloadSet>
+
+    <ItemGroup>
+      <SwixWorkloadSetProjects Include="@(SwixProjects)" Condition="'%(PackageType)' == 'msi-workload-set'"
+                                ManifestOutputPath="$(VStemp)\ws\%(SwixProjects.SdkFeatureBand)"
+                                ZipFile="WorkloadSet.VSDrop.$(VersionMajor).$(VersionMinor)-%(SwixProjects.SdkFeatureBand).zip" />
+      <MsiPackageProjects Include="%(Msis.PackageProject)" />
+    </ItemGroup>
+
+    <MSBuild Projects="@(SwixWorkloadSetProjects)" Properties="SwixBuildTargets=$(SwixBuildTargets);ManifestOutputPath=%(ManifestOutputPath)" />
+
+    <ItemGroup>
+      <VSDrop Include="%(SwixWorkloadSetProjects.ZipFile)" SourceDirectory="%(ManifestOutputPath)" />
+    </ItemGroup>
+
+    <MakeDir Directories="$(VisualStudioSetupInsertionPath)" />
+    <ZipDirectory Overwrite="true" SourceDirectory="%(SourceDirectory)"
+                  DestinationFile="$(VisualStudioSetupInsertionPath)%(VSDrop.Identity)" />
+
+    <!-- Gather .wixobj files for post-build signing. We'll have to batch since we generated multiple MSIs in the previous step. -->
+    <MSBuild Projects="$(MSBuildProjectFile)" Properties="_WixObjDir=%(Msis.WixObj);_Msi=%(Msis.Identity)" Targets="CreateWixPack" />
+
+    <!-- We disable PackageValidation which runs because these projects import the repo's Directory.Build.props and Directory.Build.targets file. -->
+    <MSBuild Projects="@(MsiPackageProjects)" Properties="OutputPath=$(ArtifactsShippingPackagesDir);IncludeSymbols=false;EnablePackageValidation=false" Targets="restore;pack" />
+  </Target>
+
+  <!-- Target to create a single wixpack for signing -->
+  <Target Name="CreateWixPack">
+    <ItemGroup>
+      <_WixObj Include="$(_WixObjDir)\**\*.wixobj" />
+    </ItemGroup>
+
+    <CreateLightCommandPackageDrop
+        LightCommandWorkingDir="$(LightCommandObjDir)"
+        OutputFolder="$(LightCommandPackagesDir)"
+        NoLogo="true"
+        Cultures="en-us"
+        InstallerFile="$(_Msi)"
+        WixExtensions="WixUIExtension;WixDependencyExtension;WixUtilExtension"
+        WixSrcFiles="@(_WixObj)">
+      <Output TaskParameter="OutputFile" PropertyName="_LightCommandPackageNameOutput" />
+    </CreateLightCommandPackageDrop>
   </Target>
 
 </Project>
