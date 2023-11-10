@@ -55,6 +55,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ItemsToSignPostBuild Remove="*.wixpack.zip" />
+  </ItemGroup>
+
+  <ItemGroup>
     <FileExtensionSignInfo Include=".msi" CertificateName="$(InternalCertificateId)" />
   </ItemGroup>
 
