@@ -4,11 +4,18 @@
 
   <PropertyGroup>
     <PublishingVersion>3</PublishingVersion>
+    <Product>workload-versions</Product>
   </PropertyGroup>
 
+  <Import Project="$(RepoRootDirectory)eng/Versions.props" />
+
   <ItemGroup>
-    <WixPacksToPublish Include="$(ArtifactsNonShippingPackagesDir)*.wixpack.zip" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.msi" />
+
+    <SdkAssetsToPushToBlobFeed Include="$(ArtifactsNonShippingPackagesDir)*.wixpack.zip">
+      <RelativeBlobPath>$(Product)/$(VersionPrefix)-$(PreReleaseVersionLabel)/$([System.String]::Copy('%(Filename)%(Extension)'))</RelativeBlobPath>
+      <ManifestArtifactData>NonShipping=true</ManifestArtifactData>
+    </SdkAssetsToPushToBlobFeed>
   </ItemGroup>
 
 </Project>
