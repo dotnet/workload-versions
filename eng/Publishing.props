@@ -7,7 +7,7 @@
     <Product>workload-versions</Product>
   </PropertyGroup>
 
-  <Import Project="$(RepoRootDirectory)eng/Versions.props" />
+  <Import Project="Versions.props" />
 
   <ItemGroup>
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.msi" />
