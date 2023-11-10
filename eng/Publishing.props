@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.zip" />
+    <WixPacksToPublish Include="$(ArtifactsNonShippingPackagesDir)*.wixpack.zip" />
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.msi" />
   </ItemGroup>
 
