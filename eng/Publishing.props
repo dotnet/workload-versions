@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.msi" />
-    <SdkAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.wixpack.zip" />
   </ItemGroup>
 
 </Project>
