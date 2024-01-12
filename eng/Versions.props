@@ -38,8 +38,8 @@
   </PropertyGroup>
   <PropertyGroup Label="EmscriptenWorkloads">
     <!-- Workloads from dotnet/emsdk -->
-    <MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion>9.0.0-alpha.1.24053.1</MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion>
-    <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion)</EmscriptenWorkloadManifestVersion>
+    <MicrosoftNETWorkloadEmscriptenCurrentManifest80100PackageVersion>8.0.0</MicrosoftNETWorkloadEmscriptenCurrentManifest80100PackageVersion>
+    <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100PackageVersion)</EmscriptenWorkloadManifestVersion>
     <!-- emsdk workload prerelease version band must match the emsdk feature band -->
     <EmscriptenWorkloadFeatureBand>8.0.100$([System.Text.RegularExpressions.Regex]::Match($(EmscriptenWorkloadManifestVersion), `-[A-z]*[\.]*\d*`))</EmscriptenWorkloadFeatureBand>
   </PropertyGroup>
@@ -53,7 +53,7 @@
     <XamarinTvOSWorkloadManifestVersion>17.0.8478</XamarinTvOSWorkloadManifestVersion>
   </PropertyGroup>
   <PropertyGroup Label="MonoWorkloads">
-    <MicrosoftNETCoreAppRefPackageVersion>9.0.0-alpha.1.24061.8</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>8.0.0</MicrosoftNETCoreAppRefPackageVersion>
     <!-- Workloads from dotnet/runtime use MicrosoftNETCoreAppRefPackageVersion because it has a stable name that does not include the full feature band -->
     <MonoWorkloadManifestVersion>$(MicrosoftNETCoreAppRefPackageVersion)</MonoWorkloadManifestVersion>
     <!-- mono workload prerelease version band must match the runtime feature band -->
@@ -61,6 +61,6 @@
   </PropertyGroup>
   <PropertyGroup Label="AspireWorkloads">
     <AspireFeatureBand>8.0.100</AspireFeatureBand>
-    <AspireWorkloadManifestVersion>8.0.0-preview.3.24060.4</AspireWorkloadManifestVersion>
+    <AspireWorkloadManifestVersion>8.0.0-preview.1.23557.2</AspireWorkloadManifestVersion>
   </PropertyGroup>
 </Project>
