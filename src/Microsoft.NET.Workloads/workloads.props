@@ -22,4 +22,7 @@
     <WorkloadManifest Include="Microsoft.NET.Workload.Mono.ToolChain.net7"    FeatureBand="$(MonoWorkloadFeatureBand)" Version="$(MonoWorkloadManifestVersion)" />
   </ItemGroup>
 
+  <ItemGroup Label="Aspire">
+    <WorkloadManifest Include="Microsoft.NET.Sdk.Aspire" FeatureBand="$(AspireFeatureBand)" Version="$(AspireWorkloadManifestVersion)" />
+  </ItemGroup>
 </Project>
