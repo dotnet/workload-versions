@@ -6,9 +6,9 @@
       <Sha>5cda86493ac07dce11dcb04323d2b57eecff00b7</Sha>
       <SourceBuild RepoName="emsdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0-alpha.1.24061.8">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0-alpha.1.24066.15">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>8d1c3d9527f0efe03d1f8a98f5d08ba9de43c108</Sha>
+      <Sha>066258c0c7535fc3c037bc3b280746294e877268</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
