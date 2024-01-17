@@ -45,10 +45,13 @@
   </PropertyGroup>
   <PropertyGroup Label="MauiWorkloads">
     <MauiFeatureBand>8.0.100</MauiFeatureBand>
+    <MicrosoftNETSdkiOSManifest80100PackageVersion>8.0.0-preview.1.23557.2</MicrosoftNETSdkiOSManifest80100PackageVersion>
+    <MicrosoftNETSdkMacCatalystManifest80100PackageVersion>17.2.8008</MicrosoftNETSdkMacCatalystManifest80100PackageVersion>
+    <MicrosoftNETSdkAndroidManifest80100PackageVersion>34.0.67</MicrosoftNETSdkAndroidManifest80100PackageVersion>
     <MauiWorkloadManifestVersion>8.0.3</MauiWorkloadManifestVersion>
-    <XamarinAndroidWorkloadManifestVersion>34.0.43</XamarinAndroidWorkloadManifestVersion>
+    <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest80100PackageVersion)</XamarinAndroidWorkloadManifestVersion>
     <XamarinIOSWorkloadManifestVersion>17.0.8478</XamarinIOSWorkloadManifestVersion>
-    <XamarinMacCatalystWorkloadManifestVersion>17.0.8478</XamarinMacCatalystWorkloadManifestVersion>
+    <XamarinMacCatalystWorkloadManifestVersion>$(MicrosoftNETSdkMacCatalystManifest80100PackageVersion)</XamarinMacCatalystWorkloadManifestVersion>
     <XamarinMacOSWorkloadManifestVersion>14.0.8478</XamarinMacOSWorkloadManifestVersion>
     <XamarinTvOSWorkloadManifestVersion>17.0.8478</XamarinTvOSWorkloadManifestVersion>
   </PropertyGroup>
