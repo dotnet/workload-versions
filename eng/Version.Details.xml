@@ -13,6 +13,26 @@
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspire</Uri>
       <Sha>48e42f59d64d84b404e904996a9ed61f2a17a569</Sha>
     </Dependency>
+    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-8.0.100" Version="34.0.67">
+      <Uri>https://github.com/xamarin/xamarin-android</Uri>
+      <Sha>351bfa3f0925e315c716c7e5c6887443336067e4</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-8.0.100" Version="17.2.8008">
+      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
+      <Sha>de67fd5bfb29ade4591aa78d8bae78d0ace2ccb5</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-8.0.100" Version="17.2.8008">
+      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
+      <Sha>de67fd5bfb29ade4591aa78d8bae78d0ace2ccb5</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-8.0.100" Version="17.2.8008">
+      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
+      <Sha>de67fd5bfb29ade4591aa78d8bae78d0ace2ccb5</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-8.0.100" Version="14.2.8008">
+      <Uri>https://github.com/xamarin/xamarin-macios</Uri>
+      <Sha>de67fd5bfb29ade4591aa78d8bae78d0ace2ccb5</Sha>
+    </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
     <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="8.0.0-beta.24060.4">
