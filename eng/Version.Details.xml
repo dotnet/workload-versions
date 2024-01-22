@@ -13,9 +13,9 @@
       <Uri>https://github.com/dotnet/aspire</Uri>
       <Sha>c99b4e27f52d60ff86ebb0cf8105353367dd0fcc</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-8.0.100" Version="34.0.74">
+    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-8.0.100" Version="34.0.75">
       <Uri>https://github.com/xamarin/xamarin-android</Uri>
-      <Sha>31f031a675b68783fb9a6e52784601f342ae2816</Sha>
+      <Sha>c22c17fbe9c37d1152b8413d418a197079bb2361</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-8.0.100" Version="17.2.8008">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
