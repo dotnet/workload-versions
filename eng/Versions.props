@@ -20,7 +20,7 @@
     <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' != 'true'">preview</PreReleaseVersionLabel>
     <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' == 'true' and '$(VersionFeature)' == '00'">rtm</PreReleaseVersionLabel>
     <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' == 'true' and '$(VersionFeature)' != '00'">servicing</PreReleaseVersionLabel>
-    <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'">1</PreReleaseVersionIteration>
+    <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'">2</PreReleaseVersionIteration>
   </PropertyGroup>
   <!-- Restore feeds -->
   <PropertyGroup Label="Restore feeds">
@@ -45,7 +45,7 @@
   </PropertyGroup>
   <PropertyGroup Label="MauiWorkloads">
     <MauiFeatureBand>8.0.100</MauiFeatureBand>
-    <MicrosoftNETSdkAndroidManifest80100PackageVersion>34.0.75</MicrosoftNETSdkAndroidManifest80100PackageVersion>
+    <MicrosoftNETSdkAndroidManifest80100PackageVersion>34.0.41</MicrosoftNETSdkAndroidManifest80100PackageVersion>
     <MicrosoftNETSdkiOSManifest80100PackageVersion>17.2.8012</MicrosoftNETSdkiOSManifest80100PackageVersion>
     <MicrosoftNETSdktvOSManifest80100PackageVersion>17.2.8012</MicrosoftNETSdktvOSManifest80100PackageVersion>
     <MicrosoftNETSdkMacCatalystManifest80100PackageVersion>17.2.8012</MicrosoftNETSdkMacCatalystManifest80100PackageVersion>
