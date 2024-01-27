@@ -47,7 +47,7 @@
     <MauiFeatureBand>8.0.100</MauiFeatureBand>
     <MicrosoftNETSdkAndroidManifest80100PackageVersion>34.0.75</MicrosoftNETSdkAndroidManifest80100PackageVersion>
     <MicrosoftNETSdkiOSManifest80100PackageVersion>17.2.8017</MicrosoftNETSdkiOSManifest80100PackageVersion>
-    <MicrosoftNETSdktvOSManifest80100PackageVersion>17.2.8012</MicrosoftNETSdktvOSManifest80100PackageVersion>
+    <MicrosoftNETSdktvOSManifest80100PackageVersion>17.2.8017</MicrosoftNETSdktvOSManifest80100PackageVersion>
     <MicrosoftNETSdkMacCatalystManifest80100PackageVersion>17.2.8012</MicrosoftNETSdkMacCatalystManifest80100PackageVersion>
     <MicrosoftNETSdkmacOSManifest80100PackageVersion>14.2.8012</MicrosoftNETSdkmacOSManifest80100PackageVersion>
     <MauiWorkloadManifestVersion>8.0.3</MauiWorkloadManifestVersion>
