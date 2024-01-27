@@ -17,9 +17,9 @@
       <Uri>https://github.com/xamarin/xamarin-android</Uri>
       <Sha>c22c17fbe9c37d1152b8413d418a197079bb2361</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-8.0.100" Version="17.2.8017">
+    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-8.0.100" Version="17.2.8019">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>34c1f67fb38916a770b52d93789e52c7d1516746</Sha>
+      <Sha>4513346725d82432270fb24e940aba04b7afc97a</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-8.0.100" Version="17.2.8019">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
