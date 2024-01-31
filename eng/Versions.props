@@ -65,8 +65,8 @@
     <MonoWorkloadFeatureBand>9.0.100$([System.Text.RegularExpressions.Regex]::Match($(MonoWorkloadManifestVersion), `-[A-z]*[\.]*\d*`))</MonoWorkloadFeatureBand>
   </PropertyGroup>
   <PropertyGroup Label="AspireWorkloads">
-    <AspireFeatureBand>9.0.100-alpha1</AspireFeatureBand>
-    <MicrosoftNETSdkAspireManifest90100alpha1PackageVersion>9.0.0-alpha.1.24072.6</MicrosoftNETSdkAspireManifest90100alpha1PackageVersion>
-    <AspireWorkloadManifestVersion>$(MicrosoftNETSdkAspireManifest90100PackageVersion)</AspireWorkloadManifestVersion>
+    <AspireFeatureBand>9.0.100-preview1</AspireFeatureBand>
+    <MicrosoftNETSdkAspireManifest90100preview1PackageVersion>9.0.0-preview.1.24079.4</MicrosoftNETSdkAspireManifest90100preview1PackageVersion>
+    <AspireWorkloadManifestVersion>$(MicrosoftNETSdkAspireManifest90100preview1PackageVersion)</AspireWorkloadManifestVersion>
   </PropertyGroup>
 </Project>
