@@ -91,7 +91,7 @@
 
   <Target Name="CreateVisualStudioMsi" AfterTargets="Build" DependsOnTargets="GetAssemblyVersion;_GenerateMsiVersionString">
     <ItemGroup>
-      <WorkloadSetPackage Include="$(ArtifactsShippingPackagesDir)/Microsoft.NET.Workloads*.nupkg" Exclude="$(ArtifactsShippingPackagesDir)/Microsoft.NET.Workloads*Msi*.nupkg" />
+      <WorkloadSetPackage Include="$(ArtifactsShippingPackagesDir)/Microsoft.NET.Workloads.$(SDKFeatureBand)*.nupkg" Exclude="$(ArtifactsShippingPackagesDir)/Microsoft.NET.Workloads*Msi*.nupkg" />
     </ItemGroup>
 
     <CreateVisualStudioWorkloadSet
