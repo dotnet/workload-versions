@@ -8,8 +8,11 @@
     <VersionMajor>8</VersionMajor>
     <VersionMinor>0</VersionMinor>
     <VersionSDKMinor>2</VersionSDKMinor>
+    <!-- Use the feature version for each monthly servicng release -->
+    <!-- Use the patch version for intra-monthly releases and hotfixes -->
     <VersionFeature>00</VersionFeature>
-    <VersionPrefix>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</VersionPrefix>
+    <VersionPatch>00</VersionPatch>
+    <VersionPrefix>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)$(VersionPatch)</VersionPrefix>
     <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
     <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
     <SDKFeatureBand>$(CliProductBandVersion)00</SDKFeatureBand>
