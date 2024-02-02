@@ -89,7 +89,7 @@
     </GenerateMsiVersion>
   </Target>
 
-  <Target Name="CreateVisualStudioMsi" AfterTargets="Build" DependsOnTargets="GetAssemblyVersion;_GenerateMsiVersionString">
+  <Target Name="CreateVisualStudioMsi" AfterTargets="Build" DependsOnTargets="_GenerateMsiVersionString">
     <ItemGroup>
       <WorkloadSetPackage Include="$(ArtifactsShippingPackagesDir)/Microsoft.NET.Workloads.$(SDKFeatureBand)*.nupkg" Exclude="$(ArtifactsShippingPackagesDir)/Microsoft.NET.Workloads*Msi*.nupkg" />
     </ItemGroup>
