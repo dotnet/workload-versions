@@ -17,7 +17,7 @@
     <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
     <SDKFeatureBand>$(CliProductBandVersion)00</SDKFeatureBand>
     <!-- Enable to remove prerelease label. -->
-    <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">true</StabilizePackageVersion>
+    <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">false</StabilizePackageVersion>
     <DotNetFinalVersionKind Condition="'$(StabilizePackageVersion)' == 'true'">release</DotNetFinalVersionKind>
     <!-- Calculate prerelease label -->
     <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' != 'true'">preview</PreReleaseVersionLabel>
