@@ -1,3 +1,3 @@
 ## .NET SDK Workload Versions manifest
 
-This package contains .NET SDK Workloads Version {SDKWVersion} which is a set of compatible workloads versions for .NET SDK feature band {SDKFeatureBand}
+This package contains .NET SDK Workloads version {SDKWVersion}. This package is not meant to be directly referenced but instead used with the .NET SDK CLI.

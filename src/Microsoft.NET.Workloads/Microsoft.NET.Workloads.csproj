@@ -14,8 +14,8 @@
     <PackageId>$(MSBuildProjectName).$(SDKFeatureBand)</PackageId>
     <!-- Adds a README.md to the NuGet package. -->
     <!-- See: https://devblogs.microsoft.com/nuget/add-a-readme-to-your-nuget-package/ -->
-    <ReadmeFile>$(ArtifactsNonShippingPackagesDir)README.md</ReadmeFile>
-    <ReadmeFileTemplate>README.md</ReadmeFileTemplate>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <ReadmeFile>$(IntermediateOutputPath)README.md</ReadmeFile>
     <!-- LGHT1105: Warning generated from MSI creation process. -->
     <!-- See: https://github.com/orgs/wixtoolset/discussions/6715 -->
     <NoWarn>LGHT1105</NoWarn>
@@ -93,14 +93,14 @@
   <Target Name="ReplaceVersionStrings" BeforeTargets="GenerateNuspec">
     <WriteLinesToFile
         File="$(ReadmeFile)"
-        Lines="$([System.IO.File]::ReadAllText($(ReadmeFileTemplate)).Replace('{SDKWVersion}','$(WorkloadsVersion)').Replace('{SDKFeatureBand}','$(SDKFeatureBand)'))"
+        Lines="$([System.IO.File]::ReadAllText($(PackageReadmeFile)).Replace('{SDKWVersion}','$(WorkloadsVersion)'))"
         Overwrite="true"
         Encoding="Unicode"/>
   </Target>
 
   <Target Name="CreateVisualStudioMsi" AfterTargets="Build" DependsOnTargets="GetAssemblyVersion;_GenerateMsiVersionString">
     <ItemGroup>
-      <WorkloadSetPackage Include="$(ArtifactsShippingPackagesDir)/Microsoft.NET.Workloads.$(SDKFeatureBand)*.nupkg" Exclude="$(ArtifactsShippingPackagesDir)/Microsoft.NET.Workloads*Msi*.nupkg" />
+      <WorkloadSetPackage Include="$(ArtifactsShippingPackagesDir)/Microsoft.NET.Workloads.$(SDKFeatureBand).$(VersionMajor)*.nupkg" />
     </ItemGroup>
 
     <CreateVisualStudioWorkloadSet
