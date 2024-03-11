@@ -92,8 +92,8 @@ extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
     pool:
-      name: Azure-Pipelines-1ESPT-ExDShared
-      image: windows-2022
+      name: $(DncEngInternalBuildPool)
+      image: 1es-windows-2022-pt
       os: windows
     customBuildTags:
     - ES365AIMigrationTooling
@@ -106,7 +106,7 @@ extends:
           artifacts:
             publish:
               artifacts: true
-              logs: true
+              logs: false
               manifests: true
           enableMicrobuild: true
           enablePublishUsingPipelines: true
