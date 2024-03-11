@@ -13,7 +13,7 @@ pr: none
 # Note: Only add pipeline variables if they apply to most of the stages/jobs.
 variables:
 # The configuration for the build is used throughout the various pipelines as the file paths for output contain the build configuration as a folder name.
-- template: /eng/common/templates/variables/pool-providers.yml@self
+- template: /eng/common/templates-official/variables/pool-providers.yml@self
 - name: BuildConfiguration
   value: Release
   # https://docs.microsoft.com/dotnet/core/tools/dotnet-environment-variables#dotnet_skip_first_time_experience
@@ -101,7 +101,7 @@ extends:
     - stage: Build
       displayName: Build
       jobs:
-      - template: /eng/common/templates/jobs/jobs.yml@self
+      - template: /eng/common/templates-official/jobs/jobs.yml@self
         parameters:
           artifacts:
             publish:
@@ -137,7 +137,7 @@ extends:
             - script: eng\common\CIBuild.cmd -configuration $(_BuildConfig) -prepareMachine $(_AdditionalBuildArgs) $(_InternalBuildArgs)
               displayName: $(_BuildJobDisplayName)
     - ${{ if eq(variables._RunAsInternal, True) }}:
-      - template: /eng/common/templates/post-build/post-build.yml@self
+      - template: /eng/common/templates-official/post-build/post-build.yml@self
         parameters:
           publishAssetsImmediately: true
           SDLValidationParameters:
