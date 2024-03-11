@@ -48,7 +48,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="$(OutputPath)workloadset.json" Pack="true" PackagePath="data" />
+    <Content Include="$(OutputPath)microsoft.net.workloads.workloadset.json" Pack="true" PackagePath="data" />
     <None Include="$(ReadmeFile)" Pack="true" PackagePath="\"/>
     <!-- <ItemsToSign Include="$(PackageId).nupkg" /> -->
   </ItemGroup>
@@ -61,7 +61,7 @@
       <!-- ',;' is used so each workload is treated as a new line via semi-colon and has the appropriate commas for JSON properties. -->
       <WorkloadsJson>@(WorkloadManifest->'%20%20&quot;%(Identity)&quot;: &quot;%(Version)/%(FeatureBand)&quot;', ',;')</WorkloadsJson>
     </PropertyGroup>
-    <WriteLinesToFile File="$(OutputPath)workloadset.json" Lines="{;$(WorkloadsJson);}" Overwrite="true" />
+    <WriteLinesToFile File="$(OutputPath)microsoft.net.workloads.workloadset.json" Lines="{;$(WorkloadsJson);}" Overwrite="true" />
   </Target>
 
   <Target Name="_GenerateMsiVersionString">
