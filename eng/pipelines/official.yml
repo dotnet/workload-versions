@@ -8,12 +8,19 @@
 ###################################################################################################################################################################
 # PIPELINE METADATA
 ###################################################################################################################################################################
+
+# Activates the pipeline after a PR is merged.
+# See: https://docs.microsoft.com/azure/devops/pipelines/yaml-schema/trigger?view=azure-pipelines
 trigger: none
+
+# Activates PR builds for this pipeline.
+# See: https://docs.microsoft.com/azure/devops/pipelines/yaml-schema/pr?view=azure-pipelines#examples
 pr: none
+
 # Note: Only add pipeline variables if they apply to most of the stages/jobs.
 variables:
-# The configuration for the build is used throughout the various pipelines as the file paths for output contain the build configuration as a folder name.
 - template: /eng/common/templates-official/variables/pool-providers.yml@self
+# The configuration for the build is used throughout the various pipelines as the file paths for output contain the build configuration as a folder name.
 - name: BuildConfiguration
   value: Release
   # https://docs.microsoft.com/dotnet/core/tools/dotnet-environment-variables#dotnet_skip_first_time_experience
@@ -79,7 +86,10 @@ variables:
   - group: DotNet-HelixApi-Access
   - group: SDL_Settings
   - name: _InternalBuildArgs
-    value: /p:DotNetSignType=$(_SignType) /p:TeamName=$(_TeamName) /p:DotNetPublishUsingPipelines=true /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
+    value: /p:DotNetSignType=$(_SignType) 
+      /p:TeamName=$(_TeamName) 
+      /p:DotNetPublishUsingPipelines=true 
+      /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
   - name: PostBuildSign
     value: true
 resources:
@@ -134,7 +144,11 @@ extends:
               fetchDepth: 0
               clean: true
             steps:
-            - script: eng\common\CIBuild.cmd -configuration $(_BuildConfig) -prepareMachine $(_AdditionalBuildArgs) $(_InternalBuildArgs)
+            - script: eng\common\CIBuild.cmd
+                -configuration $(_BuildConfig)
+                -prepareMachine
+                $(_AdditionalBuildArgs)
+                $(_InternalBuildArgs)
               displayName: $(_BuildJobDisplayName)
     - ${{ if eq(variables._RunAsInternal, True) }}:
       - template: /eng/common/templates-official/post-build/post-build.yml@self
@@ -142,4 +156,14 @@ extends:
           publishAssetsImmediately: true
           SDLValidationParameters:
             enable: false
-            params: ' -SourceToolsList $(_TsaSourceToolsList) -TsaInstanceURL $(_TsaInstanceURL) -TsaProjectName $(_TsaProjectName) -TsaNotificationEmail $(_TsaNotificationEmail) -TsaCodebaseAdmin $(_TsaCodebaseAdmin) -TsaBugAreaPath $(_TsaBugAreaPath) -TsaIterationPath $(_TsaIterationPath) -TsaRepositoryName $(_TsaRepositoryName) -TsaCodebaseName $(_TsaCodebaseName) -TsaOnboard $(_TsaOnboard) -TsaPublish $(_TsaPublish)'
+            params: ' -SourceToolsList $(_TsaSourceToolsList) 
+              -TsaInstanceURL $(_TsaInstanceURL)
+              -TsaProjectName $(_TsaProjectName)
+              -TsaNotificationEmail $(_TsaNotificationEmail)
+              -TsaCodebaseAdmin $(_TsaCodebaseAdmin)
+              -TsaBugAreaPath $(_TsaBugAreaPath)
+              -TsaIterationPath $(_TsaIterationPath)
+              -TsaRepositoryName $(_TsaRepositoryName)
+              -TsaCodebaseName $(_TsaCodebaseName)
+              -TsaOnboard $(_TsaOnboard)
+              -TsaPublish $(_TsaPublish)'
