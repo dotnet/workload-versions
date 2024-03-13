@@ -19,7 +19,7 @@ pr: none
 
 # Note: Only add pipeline variables if they apply to most of the stages/jobs.
 variables:
-- template: /eng/common/templates/variables/pool-providers.yml
+- template: /eng/common/templates-official/variables/pool-providers.yml@self
   # The configuration for the build is used throughout the various pipelines as the file paths for output contain the build configuration as a folder name.
 - name: BuildConfiguration
   value: Release
@@ -30,7 +30,7 @@ variables:
 - name: DOTNET_NOLOGO
   value: true
   # https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/26284/Enabling-SBOM-For-Your-Component-Insertion-into-VS?anchor=1.-add-the-%27manifest-generator-task%27-to-your-pipeline
-- name: ackaging.EnableSBOMSigning
+- name: packaging.EnableSBOMSigning
   value: true
   # Opt out of automatically injecting Codesign Validation into the pipeline. We run Codesign Validation as part of the Compliance pipeline.
   # See: https://aka.ms/gdn-injection
@@ -92,68 +92,78 @@ variables:
       /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
   - name: PostBuildSign
     value: true
-
-###################################################################################################################################################################
-# STAGES
-###################################################################################################################################################################
-
-stages:
-- stage: Build
-  displayName: Build
-  jobs:
-  - template: /eng/common/templates/jobs/jobs.yml
-    parameters:
-      artifacts:
-        publish:
-          artifacts: true
-          logs: true
-          manifests: true
-      enableMicrobuild: true
-      enablePublishUsingPipelines: true
-      publishAssetsImmediately: true
-      enablePublishTestResults: true
-      testResultsFormat: vstest
-      enableSourceIndex: ${{ and(eq(variables._RunAsInternal, True), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}
-      workspace:
-        clean: all
+resources:
+  repositories:
+  - repository: 1ESPipelineTemplates
+    type: git
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/release
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+  parameters:
+    pool:
+      name: $(DncEngInternalBuildPool)
+      image: 1es-windows-2022-pt
+      os: windows
+    customBuildTags:
+    - ES365AIMigrationTooling
+    stages:
+    - stage: Build
+      displayName: Build
       jobs:
-      - job: windows
-        timeoutInMinutes: 60
-        pool:
-          ${{ if eq(variables._RunAsPublic, True) }}:
-            vmImage: windows-latest
-          ${{ if eq(variables._RunAsInternal, True) }}:
-            name: $(DncEngInternalBuildPool)
-            demands: ImageOverride -equals 1es-windows-2022
-        strategy:
-          matrix:
-            release:
-              _BuildConfig: Release
-        preSteps:
-        - checkout: self
-          fetchDepth: 0
-          clean: true
-        steps:
-        - script: eng\common\CIBuild.cmd
-            -configuration $(_BuildConfig)
-            -prepareMachine
-            $(_AdditionalBuildArgs)
-            $(_InternalBuildArgs)
-          displayName: $(_BuildJobDisplayName)
-- ${{ if eq(variables._RunAsInternal, True) }}:
-  - template: /eng/common/templates/post-build/post-build.yml
-    parameters:
-      publishAssetsImmediately: true
-      SDLValidationParameters:
-        enable: false
-        params: ' -SourceToolsList $(_TsaSourceToolsList)
-          -TsaInstanceURL $(_TsaInstanceURL)
-          -TsaProjectName $(_TsaProjectName)
-          -TsaNotificationEmail $(_TsaNotificationEmail)
-          -TsaCodebaseAdmin $(_TsaCodebaseAdmin)
-          -TsaBugAreaPath $(_TsaBugAreaPath)
-          -TsaIterationPath $(_TsaIterationPath)
-          -TsaRepositoryName $(_TsaRepositoryName)
-          -TsaCodebaseName $(_TsaCodebaseName)
-          -TsaOnboard $(_TsaOnboard)
-          -TsaPublish $(_TsaPublish)'
+      - template: /eng/common/templates-official/jobs/jobs.yml@self
+        parameters:
+          artifacts:
+            publish:
+              artifacts: true
+              logs: false
+              manifests: true
+          enableMicrobuild: true
+          enablePublishUsingPipelines: true
+          publishAssetsImmediately: true
+          enablePublishTestResults: true
+          testResultsFormat: vstest
+          enableSourceIndex: ${{ and(eq(variables._RunAsInternal, True), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}
+          workspace:
+            clean: all
+          jobs:
+          - job: windows
+            timeoutInMinutes: 60
+            pool:
+              ${{ if eq(variables._RunAsPublic, True) }}:
+                vmImage: windows-latest
+              ${{ if eq(variables._RunAsInternal, True) }}:
+                name: $(DncEngInternalBuildPool)
+                demands: ImageOverride -equals 1es-windows-2022-pt
+            strategy:
+              matrix:
+                release:
+                  _BuildConfig: Release
+            preSteps:
+            - checkout: self
+              fetchDepth: 0
+              clean: true
+            steps:
+            - script: eng\common\CIBuild.cmd
+                -configuration $(_BuildConfig)
+                -prepareMachine
+                $(_AdditionalBuildArgs)
+                $(_InternalBuildArgs)
+              displayName: $(_BuildJobDisplayName)
+    - ${{ if eq(variables._RunAsInternal, True) }}:
+      - template: /eng/common/templates-official/post-build/post-build.yml@self
+        parameters:
+          publishAssetsImmediately: true
+          SDLValidationParameters:
+            enable: false
+            params: ' -SourceToolsList $(_TsaSourceToolsList) 
+              -TsaInstanceURL $(_TsaInstanceURL)
+              -TsaProjectName $(_TsaProjectName)
+              -TsaNotificationEmail $(_TsaNotificationEmail)
+              -TsaCodebaseAdmin $(_TsaCodebaseAdmin)
+              -TsaBugAreaPath $(_TsaBugAreaPath)
+              -TsaIterationPath $(_TsaIterationPath)
+              -TsaRepositoryName $(_TsaRepositoryName)
+              -TsaCodebaseName $(_TsaCodebaseName)
+              -TsaOnboard $(_TsaOnboard)
+              -TsaPublish $(_TsaPublish)'
