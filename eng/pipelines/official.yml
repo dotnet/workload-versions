@@ -20,7 +20,7 @@ pr: none
 # Note: Only add pipeline variables if they apply to most of the stages/jobs.
 variables:
 - template: /eng/common/templates-official/variables/pool-providers.yml@self
-# The configuration for the build is used throughout the various pipelines as the file paths for output contain the build configuration as a folder name.
+  # The configuration for the build is used throughout the various pipelines as the file paths for output contain the build configuration as a folder name.
 - name: BuildConfiguration
   value: Release
   # https://docs.microsoft.com/dotnet/core/tools/dotnet-environment-variables#dotnet_skip_first_time_experience
@@ -86,9 +86,9 @@ variables:
   - group: DotNet-HelixApi-Access
   - group: SDL_Settings
   - name: _InternalBuildArgs
-    value: /p:DotNetSignType=$(_SignType) 
-      /p:TeamName=$(_TeamName) 
-      /p:DotNetPublishUsingPipelines=true 
+    value: /p:DotNetSignType=$(_SignType)
+      /p:TeamName=$(_TeamName)
+      /p:DotNetPublishUsingPipelines=true
       /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
   - name: PostBuildSign
     value: true
