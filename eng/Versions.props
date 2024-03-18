@@ -34,11 +34,11 @@
     <DotNetPrivateAssetRootUrl Condition="'$(DotNetPrivateAssetRootUrl)'==''">https://dotnetclimsrc.blob.core.windows.net/dotnet/</DotNetPrivateAssetRootUrl>
   </PropertyGroup>
   <PropertyGroup>
-    <MicrosoftDotNetBuildTasksInstallersVersion>9.0.0-beta.23552.3</MicrosoftDotNetBuildTasksInstallersVersion>
-    <MicrosoftDotNetBuildTasksWorkloadsPackageVersion>9.0.0-beta.23552.3</MicrosoftDotNetBuildTasksWorkloadsPackageVersion>
+    <MicrosoftDotNetBuildTasksInstallersVersion>$(ArcadeSdkVersion)</MicrosoftDotNetBuildTasksInstallersVersion>
+    <MicrosoftDotNetBuildTasksWorkloadsPackageVersion>$(ArcadeSdkVersion)</MicrosoftDotNetBuildTasksWorkloadsPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <WixPackageVersion>1.0.0-v3.14.0.5722</WixPackageVersion>
+    <WixPackageVersion>3.14.0-8606.20240208.1</WixPackageVersion>
     <SwixPackageVersion>1.1.87-gba258badda</SwixPackageVersion>
   </PropertyGroup>
   <PropertyGroup Label="EmscriptenWorkloads">
