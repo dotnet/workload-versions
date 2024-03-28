@@ -9,9 +9,9 @@
       <Uri>https://github.com/dotnet/emsdk</Uri>
       <Sha>08a90ca2c88b17f1b5d081318354a41db0882cff</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Aspire.Manifest-8.0.100" Version="8.0.0-preview.5.24177.9">
+    <Dependency Name="Microsoft.NET.Sdk.Aspire.Manifest-8.0.100" Version="8.0.0-preview.5.24177.11">
       <Uri>https://github.com/dotnet/aspire</Uri>
-      <Sha>df199371f73d3995652c9e6e449d3e4d496657ea</Sha>
+      <Sha>527504fcc2f8d4bd3fca9c707ae915a29fc96ed7</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-8.0.100" Version="34.0.79">
       <Uri>https://github.com/xamarin/xamarin-android</Uri>
