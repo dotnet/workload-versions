@@ -71,7 +71,7 @@
   </PropertyGroup>
   <PropertyGroup Label="AspireWorkloads">
     <AspireFeatureBand>8.0.100</AspireFeatureBand>
-    <MicrosoftNETSdkAspireManifest80100PackageVersion>8.0.0-preview.6.24210.28</MicrosoftNETSdkAspireManifest80100PackageVersion>
+    <MicrosoftNETSdkAspireManifest80100PackageVersion>8.0.0-preview.6.24211.2</MicrosoftNETSdkAspireManifest80100PackageVersion>
     <AspireWorkloadManifestVersion>$(MicrosoftNETSdkAspireManifest80100PackageVersion)</AspireWorkloadManifestVersion>
   </PropertyGroup>
 </Project>
