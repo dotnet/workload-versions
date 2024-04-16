@@ -51,7 +51,7 @@
   <PropertyGroup Label="MauiWorkloads">
     <MauiFeatureBand>8.0.100</MauiFeatureBand>
     <MicrosoftNETSdkAndroidManifest80100PackageVersion>34.0.85</MicrosoftNETSdkAndroidManifest80100PackageVersion>
-    <MicrosoftNETSdkiOSManifest80100PackageVersion>17.2.8054</MicrosoftNETSdkiOSManifest80100PackageVersion>
+    <MicrosoftNETSdkiOSManifest80100PackageVersion>17.2.8058</MicrosoftNETSdkiOSManifest80100PackageVersion>
     <MicrosoftNETSdktvOSManifest80100PackageVersion>17.2.8054</MicrosoftNETSdktvOSManifest80100PackageVersion>
     <MicrosoftNETSdkMacCatalystManifest80100PackageVersion>17.2.8054</MicrosoftNETSdkMacCatalystManifest80100PackageVersion>
     <MicrosoftNETSdkmacOSManifest80100PackageVersion>14.2.8054</MicrosoftNETSdkmacOSManifest80100PackageVersion>
