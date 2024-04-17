@@ -44,18 +44,18 @@
   </PropertyGroup>
   <PropertyGroup Label="EmscriptenWorkloads">
     <!-- Workloads from dotnet/emsdk -->
-    <MicrosoftNETWorkloadEmscriptenCurrentManifest80100PackageVersion>8.0.2</MicrosoftNETWorkloadEmscriptenCurrentManifest80100PackageVersion>
+    <MicrosoftNETWorkloadEmscriptenCurrentManifest80100PackageVersion>8.0.3</MicrosoftNETWorkloadEmscriptenCurrentManifest80100PackageVersion>
     <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest80100PackageVersion)</EmscriptenWorkloadManifestVersion>
     <!-- emsdk workload prerelease version band must match the emsdk feature band -->
     <EmscriptenWorkloadFeatureBand>8.0.100$([System.Text.RegularExpressions.Regex]::Match($(EmscriptenWorkloadManifestVersion), `-[A-z]*[\.]*\d*`))</EmscriptenWorkloadFeatureBand>
   </PropertyGroup>
   <PropertyGroup Label="MauiWorkloads">
     <MauiFeatureBand>8.0.100</MauiFeatureBand>
-    <MicrosoftNETSdkAndroidManifest80100PackageVersion>34.0.79</MicrosoftNETSdkAndroidManifest80100PackageVersion>
-    <MicrosoftNETSdkiOSManifest80100PackageVersion>17.2.8043</MicrosoftNETSdkiOSManifest80100PackageVersion>
-    <MicrosoftNETSdktvOSManifest80100PackageVersion>17.2.8043</MicrosoftNETSdktvOSManifest80100PackageVersion>
-    <MicrosoftNETSdkMacCatalystManifest80100PackageVersion>17.2.8043</MicrosoftNETSdkMacCatalystManifest80100PackageVersion>
-    <MicrosoftNETSdkmacOSManifest80100PackageVersion>14.2.8043</MicrosoftNETSdkmacOSManifest80100PackageVersion>
+    <MicrosoftNETSdkAndroidManifest80100PackageVersion>34.0.95</MicrosoftNETSdkAndroidManifest80100PackageVersion>
+    <MicrosoftNETSdkiOSManifest80100PackageVersion>17.2.8053</MicrosoftNETSdkiOSManifest80100PackageVersion>
+    <MicrosoftNETSdktvOSManifest80100PackageVersion>17.2.8053</MicrosoftNETSdktvOSManifest80100PackageVersion>
+    <MicrosoftNETSdkMacCatalystManifest80100PackageVersion>17.2.8053</MicrosoftNETSdkMacCatalystManifest80100PackageVersion>
+    <MicrosoftNETSdkmacOSManifest80100PackageVersion>14.2.8053</MicrosoftNETSdkmacOSManifest80100PackageVersion>
     <MauiWorkloadManifestVersion>8.0.7</MauiWorkloadManifestVersion>
     <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest80100PackageVersion)</XamarinAndroidWorkloadManifestVersion>
     <XamarinIOSWorkloadManifestVersion>$(MicrosoftNETSdkiOSManifest80100PackageVersion)</XamarinIOSWorkloadManifestVersion>
@@ -64,7 +64,7 @@
     <XamarinTvOSWorkloadManifestVersion>$(MicrosoftNETSdktvOSManifest80100PackageVersion)</XamarinTvOSWorkloadManifestVersion>
   </PropertyGroup>
   <PropertyGroup Label="MonoWorkloads">
-    <MicrosoftNETCoreAppRefPackageVersion>8.0.2</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>8.0.3</MicrosoftNETCoreAppRefPackageVersion>
     <!-- Workloads from dotnet/runtime use MicrosoftNETCoreAppRefPackageVersion because it has a stable name that does not include the full feature band -->
     <MonoWorkloadManifestVersion>$(MicrosoftNETCoreAppRefPackageVersion)</MonoWorkloadManifestVersion>
     <!-- mono workload prerelease version band must match the runtime feature band -->
@@ -72,7 +72,7 @@
   </PropertyGroup>
   <PropertyGroup Label="AspireWorkloads">
     <AspireFeatureBand>8.0.100</AspireFeatureBand>
-    <MicrosoftNETSdkAspireManifest80100PackageVersion>8.0.0-preview.4.24156.9</MicrosoftNETSdkAspireManifest80100PackageVersion>
+    <MicrosoftNETSdkAspireManifest80100PackageVersion>8.0.0-preview.5.24201.12</MicrosoftNETSdkAspireManifest80100PackageVersion>
     <AspireWorkloadManifestVersion>$(MicrosoftNETSdkAspireManifest80100PackageVersion)</AspireWorkloadManifestVersion>
   </PropertyGroup>
 </Project>
