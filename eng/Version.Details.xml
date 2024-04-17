@@ -10,9 +10,9 @@
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>8e5e748c5c06d3e40244c725bd2124f06998f6c1</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Aspire.Manifest-9.0.100-preview.1" Version="9.0.0-preview.4.24215.2">
+    <Dependency Name="Microsoft.NET.Sdk.Aspire.Manifest-9.0.100-preview.1" Version="9.0.0-preview.4.24216.5">
       <Uri>https://github.com/dotnet/aspire</Uri>
-      <Sha>1d0ce6be6367718735afb1de59b3e7a5f4fd6a77</Sha>
+      <Sha>18726851d13e989aecb44b2de28169880f774c87</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-9.0.100-preview.2" Version="34.99.0-preview.1.151">
       <Uri>https://github.com/xamarin/xamarin-android</Uri>
