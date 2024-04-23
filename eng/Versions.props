@@ -55,7 +55,7 @@
     <MicrosoftNETSdkiOSManifest80100PackageVersion>17.2.8061</MicrosoftNETSdkiOSManifest80100PackageVersion>
     <MicrosoftNETSdktvOSManifest80100PackageVersion>17.2.8061</MicrosoftNETSdktvOSManifest80100PackageVersion>
     <MicrosoftNETSdkMacCatalystManifest80100PackageVersion>17.2.8061</MicrosoftNETSdkMacCatalystManifest80100PackageVersion>
-    <MicrosoftNETSdkmacOSManifest80100PackageVersion>14.0.8522</MicrosoftNETSdkmacOSManifest80100PackageVersion>
+    <MicrosoftNETSdkmacOSManifest80100PackageVersion>14.2.8061</MicrosoftNETSdkmacOSManifest80100PackageVersion>
     <MauiWorkloadManifestVersion>8.0.7</MauiWorkloadManifestVersion>
     <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest80100PackageVersion)</XamarinAndroidWorkloadManifestVersion>
     <XamarinIOSWorkloadManifestVersion>$(MicrosoftNETSdkiOSManifest80100PackageVersion)</XamarinIOSWorkloadManifestVersion>
