@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-9.0.100.Transport" Version="9.0.0-preview.2.24123.4" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-9.0.100.Transport" Version="9.0.0-preview.3.24171.4" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>f87c7165942d0bb19fc6ee33a55b49d574ec142a</Sha>
+      <Sha>cf04702e491fda54fa8f729cf494b01d96a9738e</Sha>
       <SourceBuild RepoName="emsdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0-preview.2.24128.5">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0-preview.3.24172.9">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>8e5e748c5c06d3e40244c725bd2124f06998f6c1</Sha>
+      <Sha>9e6ba1f68c6a9c7206dacdf1e4cac67ea19931eb</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Aspire.Manifest-9.0.100-preview.1" Version="9.0.0-preview.4.24223.11">
+    <Dependency Name="Microsoft.NET.Sdk.Aspire.Manifest-9.0.100-preview.1" Version="9.0.0-preview.3.24210.17">
       <Uri>https://github.com/dotnet/aspire</Uri>
-      <Sha>1090970d16021e76f540116431570ad69eb28b6a</Sha>
+      <Sha>c2d83148f169bdf4980393a66eff2a28e94eb6c9</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-9.0.100-preview.2" Version="34.99.0-preview.1.151">
+    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-9.0.100-preview.3" Version="34.99.0-preview.3.231">
       <Uri>https://github.com/xamarin/xamarin-android</Uri>
       <Sha>efadb7d1cf3a360f416cf18457d5ae5e41baf1d8</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-9.0.100-preview.2" Version="17.2.9244-net9-p2">
+    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-9.0.100-preview.3" Version="17.2.9433-net9-p3">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>7e44e75fe7da855ac0716cf94c3420c98e3a14e1</Sha>
+      <Sha>4eda4114602e7bf173d351f6ffc88a304b1f4aab</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-9.0.100-preview.2" Version="17.2.9244-net9-p2">
+    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-9.0.100-preview.3" Version="17.2.9433-net9-p3">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>7e44e75fe7da855ac0716cf94c3420c98e3a14e1</Sha>
+      <Sha>4eda4114602e7bf173d351f6ffc88a304b1f4aab</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-9.0.100-preview.2" Version="17.2.9244-net9-p2">
+    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-9.0.100-preview.3" Version="17.2.9433-net9-p3">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>7e44e75fe7da855ac0716cf94c3420c98e3a14e1</Sha>
+      <Sha>4eda4114602e7bf173d351f6ffc88a304b1f4aab</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-9.0.100-preview.2" Version="14.2.9244-net9-p2">
+    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-9.0.100-preview.3" Version="14.2.9433-net9-p3">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>7e44e75fe7da855ac0716cf94c3420c98e3a14e1</Sha>
+      <Sha>4eda4114602e7bf173d351f6ffc88a304b1f4aab</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
