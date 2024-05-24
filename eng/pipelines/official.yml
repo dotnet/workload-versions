@@ -17,6 +17,17 @@ trigger: none
 # See: https://docs.microsoft.com/azure/devops/pipelines/yaml-schema/pr?view=azure-pipelines#examples
 pr: none
 
+parameters:
+# When true, tries to publish
+- name: publishToFeed
+  displayName: Publish to feed
+  type: boolean
+  default: false
+- name: feedToPublishTo
+  displayName: Feed to publish to
+  type: string
+  default: 'dotnet8-workloads'
+
 # Note: Only add pipeline variables if they apply to most of the stages/jobs.
 variables:
 - template: /eng/common/templates-official/variables/pool-providers.yml@self
@@ -150,6 +161,14 @@ extends:
                 $(_AdditionalBuildArgs)
                 $(_InternalBuildArgs)
               displayName: $(_BuildJobDisplayName)
+            - ${{ if eq(variables.publishToFeed, True) }}:
+              - task: NuGetCommand@2
+                displayName: NuGet push
+                inputs:
+                  command: push
+                  packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+                  publishVstsFeed: '$(feedToPublishTo)'
+                  allowPackageConflicts: false
     - ${{ if eq(variables._RunAsInternal, True) }}:
       - template: /eng/common/templates-official/post-build/post-build.yml@self
         parameters:
