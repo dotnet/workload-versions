@@ -43,7 +43,7 @@
   </PropertyGroup>
   <PropertyGroup Label="EmscriptenWorkloads">
     <!-- Workloads from dotnet/emsdk -->
-    <MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion>9.0.0-preview.3.24171.4</MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion>
+    <MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion>9.0.0-preview.6.24272.2</MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion>
     <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion)</EmscriptenWorkloadManifestVersion>
     <!-- emsdk workload prerelease version band must match the emsdk feature band -->
     <EmscriptenWorkloadFeatureBand>9.0.100$([System.Text.RegularExpressions.Regex]::Match($(EmscriptenWorkloadManifestVersion), `-[A-z]*[\.]*\d*`))</EmscriptenWorkloadFeatureBand>
