@@ -26,7 +26,7 @@ parameters:
 - name: feedToPublishTo
   displayName: Feed to publish to
   type: string
-  default: 'dotnet8-workloads'
+  default: 'public/dotnet8-workloads'
 
 # Note: Only add pipeline variables if they apply to most of the stages/jobs.
 variables:
@@ -161,14 +161,17 @@ extends:
                 $(_AdditionalBuildArgs)
                 $(_InternalBuildArgs)
               displayName: $(_BuildJobDisplayName)
-            - ${{ if eq(variables.publishToFeed, True) }}:
-              - task: NuGetCommand@2
-                displayName: NuGet push
+            - ${{ if eq(parameters.publishToFeed, true) }}:
+              - task: 1ES.PublishNuget@1
+                displayName: Publish Nuget package
                 inputs:
-                  command: push
-                  packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
-                  publishVstsFeed: '$(feedToPublishTo)'
-                  allowPackageConflicts: false
+                  useDotNetTask: true # The default is false to use the NuGetCommand task. Set to true to use the DotNetCoreCLI task to publish packages.
+                  packagesToPush: '$(Build.SourcesDirectory)/artifacts/packages/**/*.nupkg'
+                  packageParentPath: '$(Build.SourcesDirectory)/artifacts/packages'
+                  publishVstsFeed: ${{ parameters.feedToPublishTo }} # Required when pushing to internal feed.
+                  nuGetFeedType: internal  # Change to external when publishing to external feed
+                  allowPackageConflicts: false # Optional. NuGetCommand task only.
+                  publishPackageMetadata: true # Optional
     - ${{ if eq(variables._RunAsInternal, True) }}:
       - template: /eng/common/templates-official/post-build/post-build.yml@self
         parameters:
