@@ -44,19 +44,19 @@
   </PropertyGroup>
   <PropertyGroup Label="EmscriptenWorkloads">
     <!-- Workloads from dotnet/emsdk -->
-    <MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion>9.0.0-preview.3.24171.4</MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion>
+    <MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion>9.0.0-preview.5.24306.1</MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion>
     <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion)</EmscriptenWorkloadManifestVersion>
     <!-- emsdk workload prerelease version band must match the emsdk feature band -->
     <EmscriptenWorkloadFeatureBand>9.0.100$([System.Text.RegularExpressions.Regex]::Match($(EmscriptenWorkloadManifestVersion), `-[A-z]*[\.]*\d*`))</EmscriptenWorkloadFeatureBand>
   </PropertyGroup>
   <PropertyGroup Label="MauiWorkloads">
-    <MauiFeatureBand>9.0.100-preview3</MauiFeatureBand>
+    <MauiFeatureBand>9.0.100-preview5</MauiFeatureBand>
     <MicrosoftNETSdkAndroidManifest90100preview3PackageVersion>34.99.0-preview.3.231</MicrosoftNETSdkAndroidManifest90100preview3PackageVersion>
     <MicrosoftNETSdkiOSManifest90100preview3PackageVersion>17.2.9433-net9-p3</MicrosoftNETSdkiOSManifest90100preview3PackageVersion>
     <MicrosoftNETSdktvOSManifest90100preview3PackageVersion>17.2.9433-net9-p3</MicrosoftNETSdktvOSManifest90100preview3PackageVersion>
     <MicrosoftNETSdkMacCatalystManifest90100preview3PackageVersion>17.2.9433-net9-p3</MicrosoftNETSdkMacCatalystManifest90100preview3PackageVersion>
     <MicrosoftNETSdkmacOSManifest90100preview3PackageVersion>14.2.9433-net9-p3</MicrosoftNETSdkmacOSManifest90100preview3PackageVersion>
-    <MauiWorkloadManifestVersion>9.0.0-preview.3.10457</MauiWorkloadManifestVersion>
+    <MauiWorkloadManifestVersion>9.0.0-preview.5.24307.10</MauiWorkloadManifestVersion>
     <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest90100preview3PackageVersion)</XamarinAndroidWorkloadManifestVersion>
     <XamarinIOSWorkloadManifestVersion>$(MicrosoftNETSdkiOSManifest90100preview3PackageVersion)</XamarinIOSWorkloadManifestVersion>
     <XamarinMacCatalystWorkloadManifestVersion>$(MicrosoftNETSdkMacCatalystManifest90100preview3PackageVersion)</XamarinMacCatalystWorkloadManifestVersion>
@@ -64,7 +64,7 @@
     <XamarinTvOSWorkloadManifestVersion>$(MicrosoftNETSdktvOSManifest90100preview3PackageVersion)</XamarinTvOSWorkloadManifestVersion>
   </PropertyGroup>
   <PropertyGroup Label="MonoWorkloads">
-    <MicrosoftNETCoreAppRefPackageVersion>9.0.0-preview.3.24172.9</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>9.0.0-preview.5.24306.7</MicrosoftNETCoreAppRefPackageVersion>
     <!-- Workloads from dotnet/runtime use MicrosoftNETCoreAppRefPackageVersion because it has a stable name that does not include the full feature band -->
     <MonoWorkloadManifestVersion>$(MicrosoftNETCoreAppRefPackageVersion)</MonoWorkloadManifestVersion>
     <!-- mono workload prerelease version band must match the runtime feature band -->
