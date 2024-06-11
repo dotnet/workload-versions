@@ -26,7 +26,7 @@ parameters:
 - name: feedToPublishTo
   displayName: Feed to publish to
   type: string
-  default: 'public/dotnet8-workloads'
+  default: 'public/dotnet9-workloads'
 
 # Note: Only add pipeline variables if they apply to most of the stages/jobs.
 variables:
