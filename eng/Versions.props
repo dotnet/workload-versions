@@ -50,7 +50,7 @@
     <EmscriptenWorkloadFeatureBand>9.0.100$([System.Text.RegularExpressions.Regex]::Match($(EmscriptenWorkloadManifestVersion), `-[A-z]*[\.]*\d*`))</EmscriptenWorkloadFeatureBand>
   </PropertyGroup>
   <PropertyGroup Label="MauiWorkloads">
-    <MauiFeatureBand>9.0.100-preview5</MauiFeatureBand>
+    <MauiFeatureBand>9.0.100-preview.5</MauiFeatureBand>
     <MicrosoftNETSdkAndroidManifest90100preview5PackageVersion>34.99.0-preview.5.308</MicrosoftNETSdkAndroidManifest90100preview5PackageVersion>
     <MicrosoftNETSdkiOSManifest90100preview5PackageVersion>17.2.9639-net9-p5</MicrosoftNETSdkiOSManifest90100preview5PackageVersion>
     <MicrosoftNETSdktvOSManifest90100preview5PackageVersion>17.2.9639-net9-p5</MicrosoftNETSdktvOSManifest90100preview5PackageVersion>
