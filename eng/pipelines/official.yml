@@ -17,6 +17,17 @@ trigger: none
 # See: https://docs.microsoft.com/azure/devops/pipelines/yaml-schema/pr?view=azure-pipelines#examples
 pr: none
 
+parameters:
+# When true, tries to publish
+- name: publishToFeed
+  displayName: Publish to feed
+  type: boolean
+  default: false
+- name: feedToPublishTo
+  displayName: Feed to publish to
+  type: string
+  default: 'public/dotnet9-workloads'
+
 # Note: Only add pipeline variables if they apply to most of the stages/jobs.
 variables:
 - template: /eng/common/templates-official/variables/pool-providers.yml@self
@@ -103,7 +114,7 @@ extends:
   parameters:
     pool:
       name: $(DncEngInternalBuildPool)
-      image: 1es-windows-2022-pt
+      image: 1es-windows-2022
       os: windows
     customBuildTags:
     - ES365AIMigrationTooling
@@ -123,7 +134,7 @@ extends:
           publishAssetsImmediately: true
           enablePublishTestResults: true
           testResultsFormat: vstest
-          enableSourceIndex: false
+          enableSourceIndex: ${{ and(eq(variables._RunAsInternal, True), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}
           workspace:
             clean: all
           jobs:
@@ -134,7 +145,7 @@ extends:
                 vmImage: windows-latest
               ${{ if eq(variables._RunAsInternal, True) }}:
                 name: $(DncEngInternalBuildPool)
-                demands: ImageOverride -equals 1es-windows-2022-pt
+                demands: ImageOverride -equals 1es-windows-2022
             strategy:
               matrix:
                 release:
@@ -150,6 +161,17 @@ extends:
                 $(_AdditionalBuildArgs)
                 $(_InternalBuildArgs)
               displayName: $(_BuildJobDisplayName)
+            - ${{ if eq(parameters.publishToFeed, true) }}:
+              - task: 1ES.PublishNuget@1
+                displayName: Publish Nuget package
+                inputs:
+                  useDotNetTask: true # The default is false to use the NuGetCommand task. Set to true to use the DotNetCoreCLI task to publish packages.
+                  packagesToPush: '$(Build.SourcesDirectory)/artifacts/packages/**/*.nupkg'
+                  packageParentPath: '$(Build.SourcesDirectory)/artifacts/packages'
+                  publishVstsFeed: ${{ parameters.feedToPublishTo }} # Required when pushing to internal feed.
+                  nuGetFeedType: internal  # Change to external when publishing to external feed
+                  allowPackageConflicts: false # Optional. NuGetCommand task only.
+                  publishPackageMetadata: true # Optional
     - ${{ if eq(variables._RunAsInternal, True) }}:
       - template: /eng/common/templates-official/post-build/post-build.yml@self
         parameters:
