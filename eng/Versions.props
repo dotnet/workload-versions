@@ -25,7 +25,7 @@
     <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' != 'true'">preview</PreReleaseVersionLabel>
     <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' == 'true' and '$(VersionFeature)' == '00'">rtm</PreReleaseVersionLabel>
     <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' == 'true' and '$(VersionFeature)' != '00'">servicing</PreReleaseVersionLabel>
-    <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'">5</PreReleaseVersionIteration>
+    <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'">6</PreReleaseVersionIteration>
     <SDKFeatureBand Condition="'$(StabilizePackageVersion)' != 'true'">$(SDKFeatureBand)-$(PreReleaseVersionLabel).$(PreReleaseVersionIteration)</SDKFeatureBand>
   </PropertyGroup>
   <!-- Restore feeds -->
@@ -44,35 +44,35 @@
   </PropertyGroup>
   <PropertyGroup Label="EmscriptenWorkloads">
     <!-- Workloads from dotnet/emsdk -->
-    <MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion>9.0.0-preview.5.24306.1</MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion>
+    <MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion>9.0.0-preview.6.24327.1</MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion>
     <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion)</EmscriptenWorkloadManifestVersion>
     <!-- emsdk workload prerelease version band must match the emsdk feature band -->
     <EmscriptenWorkloadFeatureBand>9.0.100$([System.Text.RegularExpressions.Regex]::Match($(EmscriptenWorkloadManifestVersion), `-[A-z]*[\.]*\d*`))</EmscriptenWorkloadFeatureBand>
   </PropertyGroup>
   <PropertyGroup Label="MauiWorkloads">
-    <MauiFeatureBand>9.0.100-preview.5</MauiFeatureBand>
-    <MicrosoftNETSdkAndroidManifest90100preview5PackageVersion>34.99.0-preview.5.308</MicrosoftNETSdkAndroidManifest90100preview5PackageVersion>
-    <MicrosoftNETSdkiOSManifest90100preview5PackageVersion>17.2.9639-net9-p5</MicrosoftNETSdkiOSManifest90100preview5PackageVersion>
-    <MicrosoftNETSdktvOSManifest90100preview5PackageVersion>17.2.9639-net9-p5</MicrosoftNETSdktvOSManifest90100preview5PackageVersion>
-    <MicrosoftNETSdkMacCatalystManifest90100preview5PackageVersion>17.2.9639-net9-p5</MicrosoftNETSdkMacCatalystManifest90100preview5PackageVersion>
-    <MicrosoftNETSdkmacOSManifest90100preview5PackageVersion>14.2.9639-net9-p5</MicrosoftNETSdkmacOSManifest90100preview5PackageVersion>
-    <MauiWorkloadManifestVersion>9.0.0-preview.5.24307.10</MauiWorkloadManifestVersion>
-    <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest90100preview5PackageVersion)</XamarinAndroidWorkloadManifestVersion>
-    <XamarinIOSWorkloadManifestVersion>$(MicrosoftNETSdkiOSManifest90100preview5PackageVersion)</XamarinIOSWorkloadManifestVersion>
-    <XamarinMacCatalystWorkloadManifestVersion>$(MicrosoftNETSdkMacCatalystManifest90100preview5PackageVersion)</XamarinMacCatalystWorkloadManifestVersion>
-    <XamarinMacOSWorkloadManifestVersion>$(MicrosoftNETSdkmacOSManifest90100preview5PackageVersion)</XamarinMacOSWorkloadManifestVersion>
-    <XamarinTvOSWorkloadManifestVersion>$(MicrosoftNETSdktvOSManifest90100preview5PackageVersion)</XamarinTvOSWorkloadManifestVersion>
+    <MauiFeatureBand>9.0.100-preview.6</MauiFeatureBand>
+    <MicrosoftNETSdkAndroidManifest90100preview6PackageVersion>34.99.0-preview.6.340</MicrosoftNETSdkAndroidManifest90100preview6PackageVersion>
+    <MicrosoftNETSdkiOSManifest90100preview6PackageVersion>17.2.9713-net9-p6</MicrosoftNETSdkiOSManifest90100preview6PackageVersion>
+    <MicrosoftNETSdktvOSManifest90100preview6PackageVersion>17.2.9713-net9-p6</MicrosoftNETSdktvOSManifest90100preview6PackageVersion>
+    <MicrosoftNETSdkMacCatalystManifest90100preview6PackageVersion>17.2.9713-net9-p6</MicrosoftNETSdkMacCatalystManifest90100preview6PackageVersion>
+    <MicrosoftNETSdkmacOSManifest90100preview6PackageVersion>14.2.9713-net9-p6</MicrosoftNETSdkmacOSManifest90100preview6PackageVersion>
+    <MauiWorkloadManifestVersion>9.0.0-preview.6.24327.7</MauiWorkloadManifestVersion>
+    <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest90100preview6PackageVersion)</XamarinAndroidWorkloadManifestVersion>
+    <XamarinIOSWorkloadManifestVersion>$(MicrosoftNETSdkiOSManifest90100preview6PackageVersion)</XamarinIOSWorkloadManifestVersion>
+    <XamarinMacCatalystWorkloadManifestVersion>$(MicrosoftNETSdkMacCatalystManifest90100preview6PackageVersion)</XamarinMacCatalystWorkloadManifestVersion>
+    <XamarinMacOSWorkloadManifestVersion>$(MicrosoftNETSdkmacOSManifest90100preview6PackageVersion)</XamarinMacOSWorkloadManifestVersion>
+    <XamarinTvOSWorkloadManifestVersion>$(MicrosoftNETSdktvOSManifest90100preview6PackageVersion)</XamarinTvOSWorkloadManifestVersion>
   </PropertyGroup>
   <PropertyGroup Label="MonoWorkloads">
-    <MicrosoftNETCoreAppRefPackageVersion>9.0.0-preview.5.24306.7</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>9.0.0-preview.6.24327.7</MicrosoftNETCoreAppRefPackageVersion>
     <!-- Workloads from dotnet/runtime use MicrosoftNETCoreAppRefPackageVersion because it has a stable name that does not include the full feature band -->
     <MonoWorkloadManifestVersion>$(MicrosoftNETCoreAppRefPackageVersion)</MonoWorkloadManifestVersion>
     <!-- mono workload prerelease version band must match the runtime feature band -->
     <MonoWorkloadFeatureBand>9.0.100$([System.Text.RegularExpressions.Regex]::Match($(MonoWorkloadManifestVersion), `-[A-z]*[\.]*\d*`))</MonoWorkloadFeatureBand>
   </PropertyGroup>
   <PropertyGroup Label="AspireWorkloads">
-    <AspireFeatureBand>9.0.100-preview.1</AspireFeatureBand>
-    <MicrosoftNETSdkAspireManifest90100preview1PackageVersion>9.0.0-preview.3.24210.17</MicrosoftNETSdkAspireManifest90100preview1PackageVersion>
-    <AspireWorkloadManifestVersion>$(MicrosoftNETSdkAspireManifest90100preview1PackageVersion)</AspireWorkloadManifestVersion>
+    <AspireFeatureBand>8.0.100</AspireFeatureBand>
+    <MicrosoftNETSdkAspireManifest80100PackageVersion>8.0.2</MicrosoftNETSdkAspireManifest80100PackageVersion>
+    <AspireWorkloadManifestVersion>$(MicrosoftNETSdkAspireManifest80100PackageVersion)</AspireWorkloadManifestVersion>
   </PropertyGroup>
 </Project>
