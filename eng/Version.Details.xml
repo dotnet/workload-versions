@@ -18,21 +18,21 @@
       <Uri>https://github.com/dotnet/android</Uri>
       <Sha>ef5fd216aa83867f13b8abdc0986d9373151a14e</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-9.0.100-preview.6" Version="17.2.9713-net9-p6">
+    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-9.0.100-preview.6" Version="17.2.9714-net9-p6">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>76d918731875a58e0257fd0b6d2bd2a3e063f3d1</Sha>
+      <Sha>4741d540eee2390fa075d0bdb49083cb58e43048</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-9.0.100-preview.6" Version="17.2.9713-net9-p6">
+    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-9.0.100-preview.6" Version="17.2.9714-net9-p6">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>76d918731875a58e0257fd0b6d2bd2a3e063f3d1</Sha>
+      <Sha>4741d540eee2390fa075d0bdb49083cb58e43048</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-9.0.100-preview.6" Version="17.2.9713-net9-p6">
+    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-9.0.100-preview.6" Version="17.2.9714-net9-p6">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>76d918731875a58e0257fd0b6d2bd2a3e063f3d1</Sha>
+      <Sha>4741d540eee2390fa075d0bdb49083cb58e43048</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-9.0.100-preview.6" Version="14.2.9713-net9-p6">
+    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-9.0.100-preview.6" Version="14.2.9714-net9-p6">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>76d918731875a58e0257fd0b6d2bd2a3e063f3d1</Sha>
+      <Sha>4741d540eee2390fa075d0bdb49083cb58e43048</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
