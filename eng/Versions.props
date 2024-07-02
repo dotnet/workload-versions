@@ -52,10 +52,10 @@
   <PropertyGroup Label="MauiWorkloads">
     <MauiFeatureBand>9.0.100-preview.6</MauiFeatureBand>
     <MicrosoftNETSdkAndroidManifest90100preview6PackageVersion>34.99.0-preview.6.340</MicrosoftNETSdkAndroidManifest90100preview6PackageVersion>
-    <MicrosoftNETSdkiOSManifest90100preview6PackageVersion>17.2.9713-net9-p6</MicrosoftNETSdkiOSManifest90100preview6PackageVersion>
-    <MicrosoftNETSdktvOSManifest90100preview6PackageVersion>17.2.9713-net9-p6</MicrosoftNETSdktvOSManifest90100preview6PackageVersion>
-    <MicrosoftNETSdkMacCatalystManifest90100preview6PackageVersion>17.2.9713-net9-p6</MicrosoftNETSdkMacCatalystManifest90100preview6PackageVersion>
-    <MicrosoftNETSdkmacOSManifest90100preview6PackageVersion>14.2.9713-net9-p6</MicrosoftNETSdkmacOSManifest90100preview6PackageVersion>
+    <MicrosoftNETSdkiOSManifest90100preview6PackageVersion>17.2.9714-net9-p6</MicrosoftNETSdkiOSManifest90100preview6PackageVersion>
+    <MicrosoftNETSdktvOSManifest90100preview6PackageVersion>17.2.9714-net9-p6</MicrosoftNETSdktvOSManifest90100preview6PackageVersion>
+    <MicrosoftNETSdkMacCatalystManifest90100preview6PackageVersion>17.2.9714-net9-p6</MicrosoftNETSdkMacCatalystManifest90100preview6PackageVersion>
+    <MicrosoftNETSdkmacOSManifest90100preview6PackageVersion>14.2.9714-net9-p6</MicrosoftNETSdkmacOSManifest90100preview6PackageVersion>
     <MauiWorkloadManifestVersion>9.0.0-preview.6.24327.7</MauiWorkloadManifestVersion>
     <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest90100preview6PackageVersion)</XamarinAndroidWorkloadManifestVersion>
     <XamarinIOSWorkloadManifestVersion>$(MicrosoftNETSdkiOSManifest90100preview6PackageVersion)</XamarinIOSWorkloadManifestVersion>
