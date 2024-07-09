@@ -10,7 +10,7 @@
     <VersionSDKMinor>3</VersionSDKMinor>
     <!-- Use the feature version for each monthly servicng release -->
     <!-- Use the patch version for intra-monthly releases and hotfixes -->
-    <VersionFeature>01</VersionFeature>
+    <VersionFeature>03</VersionFeature>
     <VersionPatch>0</VersionPatch>
     <VersionPrefix>$(VersionMajor).$(VersionSDKMinor)$(VersionFeature).$(VersionPatch)</VersionPrefix>
     <!-- Use four part version for the workloads version and include in the readme -->
