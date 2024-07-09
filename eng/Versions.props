@@ -51,12 +51,13 @@
   </PropertyGroup>
   <PropertyGroup Label="MauiWorkloads">
     <MauiFeatureBand>8.0.100</MauiFeatureBand>
-    <MicrosoftNETSdkAndroidManifest80100PackageVersion>34.0.95</MicrosoftNETSdkAndroidManifest80100PackageVersion>
-    <MicrosoftNETSdkiOSManifest80100PackageVersion>17.2.8079</MicrosoftNETSdkiOSManifest80100PackageVersion>
-    <MicrosoftNETSdktvOSManifest80100PackageVersion>17.2.8079</MicrosoftNETSdktvOSManifest80100PackageVersion>
-    <MicrosoftNETSdkMacCatalystManifest80100PackageVersion>17.2.8079</MicrosoftNETSdkMacCatalystManifest80100PackageVersion>
-    <MicrosoftNETSdkmacOSManifest80100PackageVersion>14.2.8079</MicrosoftNETSdkmacOSManifest80100PackageVersion>
-    <MauiWorkloadManifestVersion>8.0.21</MauiWorkloadManifestVersion>
+    <MicrosoftNETSdkAndroidManifest80100PackageVersion>34.0.113</MicrosoftNETSdkAndroidManifest80100PackageVersion>
+    <MicrosoftNETSdkiOSManifest80100PackageVersion>17.2.8078</MicrosoftNETSdkiOSManifest80100PackageVersion>
+    <MicrosoftNETSdktvOSManifest80100PackageVersion>17.2.8078</MicrosoftNETSdktvOSManifest80100PackageVersion>
+    <MicrosoftNETSdkMacCatalystManifest80100PackageVersion>17.2.8078</MicrosoftNETSdkMacCatalystManifest80100PackageVersion>
+    <MicrosoftNETSdkmacOSManifest80100PackageVersion>14.2.8078</MicrosoftNETSdkmacOSManifest80100PackageVersion>
+    <MicrosoftNETSdkMauiManifest80100PackageVersion>8.0.61</MicrosoftNETSdkMauiManifest80100PackageVersion>
+    <MauiWorkloadManifestVersion>$(MicrosoftNETSdkMauiManifest80100PackageVersion)</MauiWorkloadManifestVersion>
     <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest80100PackageVersion)</XamarinAndroidWorkloadManifestVersion>
     <XamarinIOSWorkloadManifestVersion>$(MicrosoftNETSdkiOSManifest80100PackageVersion)</XamarinIOSWorkloadManifestVersion>
     <XamarinMacCatalystWorkloadManifestVersion>$(MicrosoftNETSdkMacCatalystManifest80100PackageVersion)</XamarinMacCatalystWorkloadManifestVersion>
@@ -64,7 +65,7 @@
     <XamarinTvOSWorkloadManifestVersion>$(MicrosoftNETSdktvOSManifest80100PackageVersion)</XamarinTvOSWorkloadManifestVersion>
   </PropertyGroup>
   <PropertyGroup Label="MonoWorkloads">
-    <MicrosoftNETCoreAppRefPackageVersion>8.0.8</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>8.0.7</MicrosoftNETCoreAppRefPackageVersion>
     <!-- Workloads from dotnet/runtime use MicrosoftNETCoreAppRefPackageVersion because it has a stable name that does not include the full feature band -->
     <MonoWorkloadManifestVersion>$(MicrosoftNETCoreAppRefPackageVersion)</MonoWorkloadManifestVersion>
     <!-- mono workload prerelease version band must match the runtime feature band -->
