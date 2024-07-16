@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.7">
-      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
-      <Sha>2aade6beb02ea367fd97c4070a4198802fe61c03</Sha>
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.8">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>2d5c0b720cf0c7244996512dabcb504acdbaa221</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100" Version="8.0.7" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100" Version="8.0.8" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>a64772f521c578bc9925578b1384d3a08a02d31d</Sha>
+      <Sha>e92f92efe5854b6fe013787830b59166cb9b4ed9</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Aspire.Manifest-8.0.100" Version="8.0.2">
       <Uri>https://github.com/dotnet/aspire</Uri>
