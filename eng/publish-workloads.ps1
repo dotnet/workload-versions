@@ -36,8 +36,11 @@ $versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency
 
 
 
-$workloadOutputPath = $PSScriptRoot\..\artifacts\workloads
-$versionDetails | & $darc gather-drop --include-released --repo $_.Uri --commit $_.Sha --output-dir $workloadOutputPath
+$workloadOutputPath = "$PSScriptRoot\..\artifacts\workloads"
+# $darcArgs = @('gather-drop', '--include-released', '--repo', $_.Uri, '--commit', $_.Sha, '--output-dir', $workloadOutputPath)
+# $versionDetails | & $darc $darcArgs
+# $versionDetails | & $darc gather-drop --include-released --repo $_.Uri --commit $_.Sha --output-dir $workloadOutputPath
+$versionDetails | ForEach-Object { & $darc gather-drop --include-released --repo $_.Uri --commit $_.Sha --output-dir $workloadOutputPath }
 
 # if ($LastExitCode -ne 0) {
 #   Write-Host "Problems using Darc to promote build ${buildId} to default channels. Stopping execution..."
