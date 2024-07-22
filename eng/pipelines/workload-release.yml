@@ -1,0 +1,68 @@
+# Pipeline: https://dev.azure.com/dnceng/internal/_build?definitionId=1298
+
+trigger: none
+
+pr: none
+
+variables:
+- template: /eng/common/templates-official/variables/pool-providers.yml@self
+- name: _TeamName
+  value: DotNetCore
+- name: _SignType
+  value: test
+- name: PostBuildSign
+  value: true
+
+resources:
+  repositories:
+  - repository: 1ESPipelineTemplates
+    type: git
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/release
+
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+  parameters:
+    pool:
+      name: $(DncEngInternalBuildPool)
+      image: 1es-windows-2022
+      os: windows
+    stages:
+    - stage: build
+      displayName: Build
+      jobs:
+      - template: /eng/common/templates-official/jobs/jobs.yml@self
+        parameters:
+          artifacts:
+            publish:
+              artifacts: true
+              logs: false
+              manifests: true
+          enableMicrobuild: true
+          enablePublishUsingPipelines: true
+          publishAssetsImmediately: true
+          enablePublishTestResults: true
+          testResultsFormat: vstest
+          jobs:
+          - job: Publish
+            timeoutInMinutes: 60
+            steps:
+            - pwsh: ./eng/publish-workloads.ps1
+              displayName: Publish Workloads
+
+    - template: /eng/common/templates-official/post-build/post-build.yml@self
+      parameters:
+        publishAssetsImmediately: true
+        SDLValidationParameters:
+          enable: false
+          params: ' -SourceToolsList $(_TsaSourceToolsList)
+            -TsaInstanceURL $(_TsaInstanceURL)
+            -TsaProjectName $(_TsaProjectName)
+            -TsaNotificationEmail $(_TsaNotificationEmail)
+            -TsaCodebaseAdmin $(_TsaCodebaseAdmin)
+            -TsaBugAreaPath $(_TsaBugAreaPath)
+            -TsaIterationPath $(_TsaIterationPath)
+            -TsaRepositoryName $(_TsaRepositoryName)
+            -TsaCodebaseName $(_TsaCodebaseName)
+            -TsaOnboard $(_TsaOnboard)
+            -TsaPublish $(_TsaPublish)'
