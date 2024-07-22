@@ -155,12 +155,14 @@ extends:
               fetchDepth: 0
               clean: true
             steps:
-            - script: eng\common\CIBuild.cmd
-                -configuration $(_BuildConfig)
-                -prepareMachine
-                $(_AdditionalBuildArgs)
-                $(_InternalBuildArgs)
-              displayName: $(_BuildJobDisplayName)
+            - pwsh: ./eng/publish-workloads.ps1
+              displayName: Publish Workloads
+            # - script: eng\common\CIBuild.cmd
+            #     -configuration $(_BuildConfig)
+            #     -prepareMachine
+            #     $(_AdditionalBuildArgs)
+            #     $(_InternalBuildArgs)
+            #   displayName: $(_BuildJobDisplayName)
             - ${{ if eq(parameters.publishToFeed, true) }}:
               - task: 1ES.PublishNuget@1
                 displayName: Publish Nuget package
