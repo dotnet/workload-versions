@@ -17,5 +17,21 @@ $versionDetails | ForEach-Object { & $darc gather-drop --include-released --repo
 #   exit 1
 # }
 
+Write-Host 'Downloaded:'
 # https://stackoverflow.com/a/9570030/294804
 Get-ChildItem $workloadOutputPath -Recurse | Select-Object -Expand FullName
+
+
+
+# $workloads = Get-ChildItem $workloadOutputPath -Filter 'Workload.VSDrop*' -Recurse
+$workloads = Get-ChildItem $workloadOutputPath -Include 'Workload.VSDrop*' -Recurse
+$dropPath = (New-Item "$workloadOutputPath\drops" -Type Container -Force).FullName
+$workloads | Move-Item -Destination $dropPath
+
+Write-Host 'Drop:'
+Get-ChildItem $dropPath -Recurse | Select-Object -Expand FullName
+
+# $workloads | Copy-Item -Destination $dropPath
+# $workloads | Copy-Item -Destination "$dropPath\$($_.Name)"
+# $workloads | Move-Item -Destination $dropPath
+# $workloads | ForEach-Object { Copy-Item -Path $_.FullName -Destination $dropPath -Force }
