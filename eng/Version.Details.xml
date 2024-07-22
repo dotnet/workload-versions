@@ -11,7 +11,7 @@
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Aspire.Manifest-8.0.100" Version="8.1.0">
       <Uri>https://github.com/dotnet/aspire</Uri>
-      <Sha>9aaf59ccfadddc583de72fefa56781f221e44abb</Sha>
+      <Sha>72c1a7365f2638946654ac5de7e00c348e6f982d</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-8.0.100" Version="34.0.113">
       <Uri>https://github.com/xamarin/xamarin-android</Uri>
