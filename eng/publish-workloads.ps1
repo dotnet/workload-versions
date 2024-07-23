@@ -14,13 +14,14 @@ $versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency
 $workloadOutputPath = "$PSScriptRoot\..\artifacts\workloads"
 $versionDetails | ForEach-Object {
   & $darc gather-drop `
-    --ci `
-    --use-azure-credential-for-blobs `
+    --asset-filter 'Workload\.VSDrop.*' `
     --repo $_.Uri `
     --commit $_.Sha `
     --output-path $workloadOutputPath `
+    --ci `
     --include-released `
     --continue-on-error `
+    --use-azure-credential-for-blobs `
     --github-pat $gitHubPat `
     --azdev-pat $azDevPat `
     --password $password
