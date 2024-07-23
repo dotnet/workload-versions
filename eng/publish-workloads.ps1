@@ -1,3 +1,5 @@
+param ([Parameter(Mandatory=$true)] [SecureString] $gitHubPat, [Parameter(Mandatory=$true)] [SecureString] $azDevPat, [Parameter(Mandatory=$true)] [SecureString] $password)
+
 # Darc access copied from: eng/common/post-build/publish-using-darc.ps1
 $ci = $true
 $disableConfigureToolsetImport = $true
@@ -10,7 +12,19 @@ $versionDetailsXml = [Xml.XmlDocument](Get-Content $versionDetailsPath)
 $versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Uri, Sha -Unique
 
 $workloadOutputPath = "$PSScriptRoot\..\artifacts\workloads"
-$versionDetails | ForEach-Object { & $darc gather-drop --include-released --repo $_.Uri --commit $_.Sha --output-dir $workloadOutputPath }
+$versionDetails | ForEach-Object {
+  & $darc gather-drop `
+    --ci `
+    --use-azure-credential-for-blobs `
+    --repo $_.Uri `
+    --commit $_.Sha `
+    --output-path $workloadOutputPath `
+    --include-released `
+    --continue-on-error `
+    --github-pat $gitHubPat `
+    --azdev-pat $azDevPat `
+    --password $password
+}
 
 Write-Host 'Downloaded:'
 # https://stackoverflow.com/a/9570030/294804
