@@ -12,7 +12,7 @@
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Aspire.Manifest-8.0.100" Version="8.1.0">
       <Uri>https://github.com/dotnet/aspire</Uri>
-      <Sha>72c1a7365f2638946654ac5de7e00c348e6f982d</Sha>
+      <Sha>d304c5f6f15bcd4f34f1841b33870cfab88e6937</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-9.0.100-preview.6" Version="34.99.0-preview.6.340">
       <Uri>https://github.com/dotnet/android</Uri>
