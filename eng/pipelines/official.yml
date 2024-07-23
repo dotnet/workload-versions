@@ -17,7 +17,7 @@ trigger: none
 # See: https://docs.microsoft.com/azure/devops/pipelines/yaml-schema/pr?view=azure-pipelines#examples
 pr: none
 
-parameters:
+# parameters:
 # When true, tries to publish
 - name: StabilizePackageVersion
   displayName: Stabilize Package Version
