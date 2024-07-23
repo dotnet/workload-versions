@@ -107,6 +107,8 @@ variables:
       /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
   - name: PostBuildSign
     value: true
+  # Release-Pipeline provides: MaestroAccessToken, BotAccount-dotnet-bot-repo-PAT, dn-bot-all-drop-rw-code-rw-release-all
+  - group: Release-Pipeline
 resources:
   repositories:
   - repository: 1ESPipelineTemplates
@@ -164,8 +166,17 @@ extends:
               fetchDepth: 0
               clean: true
             steps:
-            - pwsh: ./eng/publish-workloads.ps1
-              displayName: Publish Workloads
+            # - pwsh: ./eng/publish-workloads.ps1
+            #   displayName: Publish Workloads
+            - task: AzureCLI@2
+              displayName: Gather Workloads
+              inputs:
+                # TODO: Need our own subscription
+                azureSubscription: DotNetStaging
+                scriptType: pscore
+                scriptPath: $(Build.SourcesDirectory)/eng/publish-workloads.ps1
+                arguments: '-gitHubPat $(BotAccount-dotnet-bot-repo-PAT) -azDevPat $(dn-bot-all-drop-rw-code-rw-release-all) -password $(MaestroAccessToken)'
+
             # - script: eng\common\CIBuild.cmd
             #     -configuration $(_BuildConfig)
             #     -prepareMachine
