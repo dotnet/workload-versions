@@ -32,11 +32,12 @@ $versionDetails | ForEach-Object {
 
 Write-Host 'Downloaded:'
 # https://stackoverflow.com/a/9570030/294804
-Get-ChildItem $workloadOutputPath -Recurse | Select-Object -Expand FullName
+Get-ChildItem $workloadOutputPath -File -Recurse | Select-Object -Expand FullName
 
 $workloads = Get-ChildItem $workloadOutputPath -Include 'Workload.VSDrop*' -Recurse
 $dropPath = (New-Item "$workloadOutputPath\drops" -Type Container -Force).FullName
-$workloads | Move-Item -Destination $dropPath
+$workloads | ForEach-Object { Expand-Archive -Path $_.FullName -DestinationPath "$dropPath\$([IO.Path]::GetFileNameWithoutExtension($_.Name))" }
+# $workloads | Move-Item -Destination $dropPath
 
 Write-Host 'Drop:'
-Get-ChildItem $dropPath -Recurse | Select-Object -Expand FullName
+Get-ChildItem $dropPath -Directory -Recurse | Select-Object -Expand FullName
