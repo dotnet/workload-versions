@@ -22,9 +22,9 @@ $versionDetails | ForEach-Object {
     --include-released `
     --continue-on-error `
     --use-azure-credential-for-blobs `
-    --github-pat $gitHubPat `
-    --azdev-pat $azDevPat `
-    --password $password
+    --github-pat (ConvertFrom-SecureString -SecureString $gitHubPat -AsPlainText) `
+    --azdev-pat (ConvertFrom-SecureString -SecureString $azDevPat -AsPlainText) `
+    --password (ConvertFrom-SecureString -SecureString $password -AsPlainText)
 }
 
 Write-Host 'Downloaded:'
