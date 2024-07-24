@@ -175,7 +175,7 @@ extends:
                 azureSubscription: DotNetStaging
                 scriptType: pscore
                 scriptPath: $(Build.SourcesDirectory)/eng/publish-workloads.ps1
-                arguments: '-gitHubPat $(BotAccount-dotnet-bot-repo-PAT) -azDevPat $(dn-bot-all-drop-rw-code-rw-release-all) -password $(MaestroAccessToken)'
+                arguments: '-gitHubPat (ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)") -azDevPat (ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)") -password (ConvertTo-SecureString -String "$(MaestroAccessToken)")'
 
             # - script: eng\common\CIBuild.cmd
             #     -configuration $(_BuildConfig)
