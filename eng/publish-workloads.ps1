@@ -12,19 +12,22 @@ $versionDetailsXml = [Xml.XmlDocument](Get-Content $versionDetailsPath)
 $versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Uri, Sha -Unique
 
 $workloadOutputPath = "$PSScriptRoot\..\artifacts\workloads"
+$gitHubPatPlain = ConvertFrom-SecureString -SecureString $gitHubPat -AsPlainText
+$azDevPatPlain = ConvertFrom-SecureString -SecureString $azDevPat -AsPlainText
+$passwordPlain = ConvertFrom-SecureString -SecureString $password -AsPlainText
 $versionDetails | ForEach-Object {
   & $darc gather-drop `
     --asset-filter 'Workload\.VSDrop.*' `
     --repo $_.Uri `
     --commit $_.Sha `
-    --output-path $workloadOutputPath `
+    --output-dir $workloadOutputPath `
     --ci `
     --include-released `
     --continue-on-error `
     --use-azure-credential-for-blobs `
-    --github-pat (ConvertFrom-SecureString -SecureString $gitHubPat -AsPlainText) `
-    --azdev-pat (ConvertFrom-SecureString -SecureString $azDevPat -AsPlainText) `
-    --password (ConvertFrom-SecureString -SecureString $password -AsPlainText)
+    --github-pat $gitHubPatPlain `
+    --azdev-pat $azDevPatPlain `
+    --password $passwordPlain
 }
 
 Write-Host 'Downloaded:'
