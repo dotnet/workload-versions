@@ -64,7 +64,7 @@
     <XamarinTvOSWorkloadManifestVersion>$(MicrosoftNETSdktvOSManifest90100preview6PackageVersion)</XamarinTvOSWorkloadManifestVersion>
   </PropertyGroup>
   <PropertyGroup Label="MonoWorkloads">
-    <MicrosoftNETCoreAppRefPackageVersion>9.0.0-preview.7.24360.6</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>9.0.0-preview.7.24362.7</MicrosoftNETCoreAppRefPackageVersion>
     <!-- Workloads from dotnet/runtime use MicrosoftNETCoreAppRefPackageVersion because it has a stable name that does not include the full feature band -->
     <MonoWorkloadManifestVersion>$(MicrosoftNETCoreAppRefPackageVersion)</MonoWorkloadManifestVersion>
     <!-- mono workload prerelease version band must match the runtime feature band -->
