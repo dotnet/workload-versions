@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.7">
-      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
-      <Sha>2aade6beb02ea367fd97c4070a4198802fe61c03</Sha>
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.8">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>b764692d18e66561c7cff2101d642b0f789dae0c</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100" Version="8.0.7" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100" Version="8.0.8" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>a64772f521c578bc9925578b1384d3a08a02d31d</Sha>
+      <Sha>2674f580a4b1d27322914df8488498065e71a3f2</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Aspire.Manifest-8.0.100" Version="8.0.1">
+    <Dependency Name="Microsoft.NET.Sdk.Aspire.Manifest-8.0.100" Version="8.1.0">
       <Uri>https://github.com/dotnet/aspire</Uri>
-      <Sha>a6e341ebbf956bbcec0dda304109815fcbae70c9</Sha>
+      <Sha>d304c5f6f15bcd4f34f1841b33870cfab88e6937</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-8.0.100" Version="34.0.113">
       <Uri>https://github.com/xamarin/xamarin-android</Uri>
@@ -33,9 +33,9 @@
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
       <Sha>80944cffcc493f49a32645737f515a227c5740e4</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-8.0.100" Version="8.0.61">
+    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-8.0.100" Version="8.0.71">
       <Uri>https://github.com/dotnet/maui</Uri>
-      <Sha>a3d46448186a6cac3f72729cab4fe9369d176442</Sha>
+      <Sha>c2482dda651f2f6348ca516b9619327f9333bece</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
