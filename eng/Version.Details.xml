@@ -6,9 +6,9 @@
       <Sha>75567e63c265cb0a69bb11f8024349eda83f0878</Sha>
       <SourceBuild RepoName="emsdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0-rc.1.24381.5">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0-rc.1.24401.5">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>7f2b222f92d323b7ca522a06c7116f1ec25d12ca</Sha>
+      <Sha>ae30cbaf993d757eec8bfc3420b152e1a7bc4af0</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Aspire.Manifest-8.0.100" Version="8.1.0">
       <Uri>https://github.com/dotnet/aspire</Uri>
