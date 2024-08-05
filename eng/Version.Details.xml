@@ -34,6 +34,10 @@
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
       <Sha>41fe010737e439bd0161c45ebdb7dee0c3fb4183</Sha>
     </Dependency>
+    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-9.0.100-preview.7" Version="9.0.0-preview.7.24405.3">
+      <Uri>https://github.com/dotnet/maui</Uri>
+      <Sha>20e456ec80dbabb597785a4850a217d7d7969715</Sha>
+    </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
     <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="9.0.0-beta.24379.1">
