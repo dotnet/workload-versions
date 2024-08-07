@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.8">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.9">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>b764692d18e66561c7cff2101d642b0f789dae0c</Sha>
+      <Sha>d72b1cbd9f476aa9f43539223198794d58c63cff</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100" Version="8.0.8" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
