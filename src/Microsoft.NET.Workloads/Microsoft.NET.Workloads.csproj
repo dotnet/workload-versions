@@ -95,7 +95,7 @@
         File="$(ReadmeFile)"
         Lines="$([System.IO.File]::ReadAllText($(PackageReadmeFile)).Replace('{SDKWVersion}','$(WorkloadsVersion)'))"
         Overwrite="true"
-        Encoding="Unicode"/>
+        Encoding="UTF-8"/>
   </Target>
 
   <Target Name="CreateVisualStudioMsi" AfterTargets="Build" DependsOnTargets="GetAssemblyVersion;_GenerateMsiVersionString">
