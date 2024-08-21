@@ -13,8 +13,9 @@
     <VersionFeature>01</VersionFeature>
     <VersionPatch>0</VersionPatch>
     <VersionPrefix>$(VersionMajor).$(VersionSDKMinor)$(VersionFeature).$(VersionPatch)</VersionPrefix>
-    <!-- Use four part version for the workloads version and include in the readme -->
-    <WorkloadsVersion>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature).$(VersionPatch)</WorkloadsVersion>
+    <!-- Set the workloads version to include in the readme, use four part if non-zero patch -->
+    <WorkloadsVersion>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</WorkloadsVersion>
+    <WorkloadsVersion Condition="'$(VersionPatch)' != '0'">$(WorkloadsVersion).$(VersionPatch)</WorkloadsVersion>
     <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
     <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
     <SdkFeatureBand>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)00</SdkFeatureBand>
