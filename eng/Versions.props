@@ -10,11 +10,12 @@
     <VersionSDKMinor>4</VersionSDKMinor>
     <!-- Use the feature version for each monthly servicng release -->
     <!-- Use the patch version for intra-monthly releases and hotfixes -->
-    <VersionFeature>00</VersionFeature>
+    <VersionFeature>01</VersionFeature>
     <VersionPatch>0</VersionPatch>
     <VersionPrefix>$(VersionMajor).$(VersionSDKMinor)$(VersionFeature).$(VersionPatch)</VersionPrefix>
-    <!-- Use four part version for the workloads version and include in the readme -->
-    <WorkloadsVersion>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature).$(VersionPatch)</WorkloadsVersion>
+    <!-- Set the workloads version to include in the readme, use four part if non-zero patch -->
+    <WorkloadsVersion>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</WorkloadsVersion>
+    <WorkloadsVersion Condition="'$(VersionPatch)' != '0'">$(WorkloadsVersion).$(VersionPatch)</WorkloadsVersion>
     <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
     <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
     <SdkFeatureBand>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)00</SdkFeatureBand>
@@ -52,11 +53,11 @@
   <PropertyGroup Label="MauiWorkloads">
     <MauiFeatureBand>8.0.100</MauiFeatureBand>
     <MicrosoftNETSdkAndroidManifest80100PackageVersion>34.0.113</MicrosoftNETSdkAndroidManifest80100PackageVersion>
-    <MicrosoftNETSdkiOSManifest80100PackageVersion>17.2.8078</MicrosoftNETSdkiOSManifest80100PackageVersion>
-    <MicrosoftNETSdktvOSManifest80100PackageVersion>17.2.8078</MicrosoftNETSdktvOSManifest80100PackageVersion>
-    <MicrosoftNETSdkMacCatalystManifest80100PackageVersion>17.2.8078</MicrosoftNETSdkMacCatalystManifest80100PackageVersion>
-    <MicrosoftNETSdkmacOSManifest80100PackageVersion>14.2.8078</MicrosoftNETSdkmacOSManifest80100PackageVersion>
-    <MicrosoftNETSdkMauiManifest80100PackageVersion>8.0.71</MicrosoftNETSdkMauiManifest80100PackageVersion>
+    <MicrosoftNETSdkiOSManifest80100PackageVersion>17.5.8020</MicrosoftNETSdkiOSManifest80100PackageVersion>
+    <MicrosoftNETSdktvOSManifest80100PackageVersion>17.5.8020</MicrosoftNETSdktvOSManifest80100PackageVersion>
+    <MicrosoftNETSdkMacCatalystManifest80100PackageVersion>17.5.8020</MicrosoftNETSdkMacCatalystManifest80100PackageVersion>
+    <MicrosoftNETSdkmacOSManifest80100PackageVersion>14.5.8020</MicrosoftNETSdkmacOSManifest80100PackageVersion>
+    <MicrosoftNETSdkMauiManifest80100PackageVersion>8.0.72</MicrosoftNETSdkMauiManifest80100PackageVersion>
     <MauiWorkloadManifestVersion>$(MicrosoftNETSdkMauiManifest80100PackageVersion)</MauiWorkloadManifestVersion>
     <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest80100PackageVersion)</XamarinAndroidWorkloadManifestVersion>
     <XamarinIOSWorkloadManifestVersion>$(MicrosoftNETSdkiOSManifest80100PackageVersion)</XamarinIOSWorkloadManifestVersion>
