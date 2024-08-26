@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.VisualStudio.Internal.MicroBuild.Vsman">
+
+  <PropertyGroup>
+    <!-- <TargetFramework>$(SdkTargetFramework)</TargetFramework> -->
+    <TargetFramework>net472</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MergeManifest Include="D:\Workspace\drops\**\*.json" />
+  </ItemGroup>
+
+</Project>
