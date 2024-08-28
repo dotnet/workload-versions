@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <MergeManifest Include="D:\Workspace\drops\**\*.json" />
+    <MergeManifest Include="D:\Workspace\drops\Workload.VSDrop.aspire.net.8.0-8.0.100.components\**\*.json" />
   </ItemGroup>
 
 </Project>
