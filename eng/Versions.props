@@ -51,7 +51,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <WixPackageVersion>3.14.0-8606.20240208.1</WixPackageVersion>
-    <SwixPackageVersion>1.1.87-gba258badda</SwixPackageVersion>
+    <SwixPackageVersion>1.1.392</SwixPackageVersion>
   </PropertyGroup>
   <PropertyGroup Label="EmscriptenWorkloads">
     <!-- Workloads from dotnet/emsdk -->

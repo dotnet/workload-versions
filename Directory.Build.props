@@ -3,12 +3,14 @@
   <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
 
   <PropertyGroup>
-    <SdkTargetFramework>net8.0</SdkTargetFramework>
+    <SdkTargetFramework>net472</SdkTargetFramework>
     <Copyright>$(CopyrightNetFoundation)</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <LangVersion>Latest</LangVersion>
     <VstsDropNames>TestDropName</VstsDropNames>
+    <NoSwixBuildPlugin>true</NoSwixBuildPlugin>
+    <VsixOutputPath>$(ArtifactsBinDir)VSSetup/</VsixOutputPath>
   </PropertyGroup>
 
 </Project>
