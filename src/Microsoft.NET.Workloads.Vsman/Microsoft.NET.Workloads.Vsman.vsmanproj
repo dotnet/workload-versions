@@ -1,8 +1,7 @@
 <Project Sdk="Microsoft.VisualStudio.Internal.MicroBuild.Vsman">
 
   <PropertyGroup>
-    <!-- <TargetFramework>$(SdkTargetFramework)</TargetFramework> -->
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>$(SdkTargetFramework)</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
