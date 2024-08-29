@@ -2,8 +2,7 @@
 <Project Sdk="Microsoft.Build.NoTargets">
 
   <PropertyGroup>
-    <!-- <TargetFramework>$(SdkTargetFramework)</TargetFramework> -->
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>$(SdkTargetFramework)</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
