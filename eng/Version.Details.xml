@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-9.0.100.Transport" Version="9.0.0-rc.1.24420.5" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-9.0.100.Transport" Version="9.0.0-rc.1.24430.3" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>459c92904b224d125a350a3f3e431fe90152a95e</Sha>
+      <Sha>08499c128ade77a490b735a268f6539f6c7ea0ff</Sha>
       <SourceBuild RepoName="emsdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0-rc.1.24421.1">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0-rc.1.24431.7">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>c4a79875fcb2c76b2e92ff50940d4ea9264e2eeb</Sha>
+      <Sha>c4d7f7c6f2e2f34f07e64c6caa3bf9b2ce915cc1</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Aspire.Manifest-8.0.100" Version="8.2.0">
       <Uri>https://github.com/dotnet/aspire</Uri>
       <Sha>75fdcff28495bdd643f6323133a7d411df71ab70</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-9.0.100-rc.1" Version="35.0.0-rc.1.78">
+    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-9.0.100-rc.1" Version="35.0.0-rc.1.80">
       <Uri>https://github.com/dotnet/android</Uri>
-      <Sha>033928361fdfe7a1e1674564ef6eba1120d712e9</Sha>
+      <Sha>48e3ff420b194f8cd8ba5652574f35272b71efaa</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-9.0.100-rc.1" Version="17.5.9270-net9-rc1">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
@@ -34,9 +34,9 @@
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
       <Sha>41241b1e0abb934f3eb2a796cd7c2d37b9b2dd81</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-9.0.100-rc.1" Version="9.0.0-rc.1.24428.4">
+    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-9.0.100-rc.1" Version="9.0.0-rc.1.24453.9">
       <Uri>https://github.com/dotnet/maui</Uri>
-      <Sha>e1a78f403fe753871ef8644d98efa34eb82f07bc</Sha>
+      <Sha>74d73099759d223e87d3fb7051588cb4474f9491</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
