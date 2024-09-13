@@ -13,8 +13,8 @@
     <VersionFeature>00</VersionFeature>
     <VersionPatch>0</VersionPatch>
     <VersionPrefix>$(VersionMajor).$(VersionSDKMinor)$(VersionFeature).$(VersionPatch)</VersionPrefix>
-    <!-- Use four part version for the workloads version and include in the readme -->
-    <WorkloadsVersion>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature).$(VersionPatch)</WorkloadsVersion>
+    <!-- Use three part version for the workloads version and include in the readme if it's the .0 release or a preview -->
+    <WorkloadsVersion>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</WorkloadsVersion>
     <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
     <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
     <SdkFeatureBand>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)00</SdkFeatureBand>
@@ -27,6 +27,8 @@
     <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' == 'true' and '$(VersionFeature)' != '00'">servicing</PreReleaseVersionLabel>
     <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'">1</PreReleaseVersionIteration>
     <SDKFeatureBand Condition="'$(StabilizePackageVersion)' != 'true'">$(SDKFeatureBand)-$(PreReleaseVersionLabel).$(PreReleaseVersionIteration)</SDKFeatureBand>
+    <!-- Use four part version if it's not a preview and not the .0 release-->
+    <WorkloadsVersion Condition="'$(StabilizePackageVersion)' == 'true' and '$(VersionPatch)' != '0'">$(WorkloadsVersion).$(VersionPatch)</WorkloadsVersion>
   </PropertyGroup>
   <!-- Restore feeds -->
   <PropertyGroup Label="Restore feeds">
