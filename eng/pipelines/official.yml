@@ -112,6 +112,11 @@ resources:
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
+    sdl:
+      policheck:
+        enabled: true
+      tsa:
+        enabled: true
     pool:
       name: $(DncEngInternalBuildPool)
       image: 1es-windows-2022
@@ -172,20 +177,3 @@ extends:
                   nuGetFeedType: internal  # Change to external when publishing to external feed
                   allowPackageConflicts: false # Optional. NuGetCommand task only.
                   publishPackageMetadata: true # Optional
-    - ${{ if eq(variables._RunAsInternal, True) }}:
-      - template: /eng/common/templates-official/post-build/post-build.yml@self
-        parameters:
-          publishAssetsImmediately: true
-          SDLValidationParameters:
-            enable: false
-            params: ' -SourceToolsList $(_TsaSourceToolsList) 
-              -TsaInstanceURL $(_TsaInstanceURL)
-              -TsaProjectName $(_TsaProjectName)
-              -TsaNotificationEmail $(_TsaNotificationEmail)
-              -TsaCodebaseAdmin $(_TsaCodebaseAdmin)
-              -TsaBugAreaPath $(_TsaBugAreaPath)
-              -TsaIterationPath $(_TsaIterationPath)
-              -TsaRepositoryName $(_TsaRepositoryName)
-              -TsaCodebaseName $(_TsaCodebaseName)
-              -TsaOnboard $(_TsaOnboard)
-              -TsaPublish $(_TsaPublish)'
