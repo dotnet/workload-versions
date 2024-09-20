@@ -4,8 +4,11 @@ Based on https://github.com/dotnet/sdk/issues/41607
 
 ## Ideal Process
 
-**Note:** This process may vary based on the workload owners.
-**Note:** Most of this process today is done through disparate builds in each workload repo and this repo (or manually). Below is outlining our desired goal.
+> [!NOTE]
+> This process may vary based on the workload owners.
+
+> [!NOTE]
+> Most of this process today is done through disparate builds in each workload repo and this repo (or manually). Below is outlining our desired goal.
 
 1. **Publishing Release-Ready Versions**
     - Each workload owner publishes release-ready versions to the `dotnet8-workloads` and `dotnet9-workloads` channels.
@@ -22,12 +25,13 @@ Based on https://github.com/dotnet/sdk/issues/41607
             - 9.0.102-servicing.12345.6
             - 9.0.102
         2. Publish the unstable version to the workloads feed.
-        3a. If we're not in servicing/golive:
-            - Publish runtime, emsdk, maui, and aspire to the workloads feed.
-        3b. If we're in servicing/golive:
-            - Only publish maui and the unstable workload set to the workloads feed.
-            - Additionally, create a stable workloads feed and publish the runtime, emsdk, maui, aspire, and stable workload to that feed.
-              - To enable this step, the .NET staging pipeline iwll have to be modified to publish the runtime and emsdk builds to the appropriate workloads channels. Today, that publishing is done in the runtime public build.
+        3. The process is different depending on if we're in servicing/golive.
+            1. If we're **not** in servicing/golive:
+                - Publish runtime, emsdk, maui, and aspire to the workloads feed.
+            2. If we're in servicing/golive:
+                - Only publish maui and the unstable workload set to the workloads feed.
+                - Additionally, create a stable workloads feed and publish the runtime, emsdk, maui, aspire, and stable workload to that feed.
+                  - To enable this step, the .NET staging pipeline will have to be modified to publish the runtime and emsdk builds to the appropriate workloads channels. Today, that publishing is done in the runtime public build.
         4. Create a vsdrop for each workload.
 
 6. **Creating a VS PR**
