@@ -19,7 +19,7 @@ Based on https://github.com/dotnet/sdk/issues/41607
 3. **Review and Merge PRs**
     - A person reviews the PR, approves it, merges it, and a build is triggered automatically.
 
-5. **Build Process**
+4. **Build Process**
     - There are a few phases to the build process:
         1. Create a stable and unstable version of the workload set (a stable version is only needed in servicing).
             - 9.0.102-servicing.12345.6
@@ -34,13 +34,13 @@ Based on https://github.com/dotnet/sdk/issues/41607
                   - To enable this step, the .NET staging pipeline will have to be modified to publish the runtime and emsdk builds to the appropriate workloads channels. Today, that publishing is done in the runtime public build.
         4. Create a vsdrop for each workload.
 
-6. **Creating a VS PR**
+5. **Creating a VS PR**
     - Creates a Visual Studio (VS) PR with the workloads JSON file updated.
 
-7. **Testing and Merging**
+6. **Testing and Merging**
     - Test the VS PR, sign off, and merge the workload set and all workloads together.
 
-8. **Publish to nuget.org** (on release day)
+7. **Publish to nuget.org** (on release day)
     - Publish packs for all workloads
     - Query nuget.org until the packs are available
     - Publish manifests for all workloads
@@ -51,7 +51,7 @@ Based on https://github.com/dotnet/sdk/issues/41607
 
 ### Approvals
 
-In the above steps, step 3 will require approval in GitHub. Additionally, steps 5.2, 5.3, 6, and 8 should each require approval in the workload staging pipeline. 
+In the above steps, step 3 will require approval in GitHub. Additionally, steps 4.b, 4.c, 5, and 7 should each require approval in the workload staging pipeline (specifically any step that does publishing to feeds, NuGet, or VS should require an approval within the pipeline). The reason for this is so we can have the pipeline run automatically on all PRs but only publish the changes we want to. Workload partners may have changes they want to publish internally for testing but not go to NuGet or VS, teams may have changes they want to publish on NuGet.org but not publish to VS, etc.
 
 Basically, everything should happen automatically once merged but we want to control whether we publish the workloads to the feeds, to VS, and to nuget.org so we don't publish by default.
 
