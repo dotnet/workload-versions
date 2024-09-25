@@ -8,7 +8,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <LangVersion>Latest</LangVersion>
-    <VstsDropNames>TestDropName</VstsDropNames>
+    <!-- <VstsDropNames>TestDropName</VstsDropNames> -->
     <NoSwixBuildPlugin>true</NoSwixBuildPlugin>
     <VsixOutputPath>$(ArtifactsBinDir)VSSetup/</VsixOutputPath>
   </PropertyGroup>
