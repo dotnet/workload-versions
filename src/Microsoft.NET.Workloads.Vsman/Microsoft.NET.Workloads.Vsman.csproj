@@ -3,6 +3,7 @@
 
   <PropertyGroup>
     <TargetFramework>$(SdkTargetFramework)</TargetFramework>
+    <CreateVSInsertion>true</CreateVSInsertion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,7 +12,28 @@
     <!-- If Restore isn't explicitly sent, the Microsoft.VisualStudio.Internal.MicroBuild.Vsman PackageReference in the vsmanproj will not be restored. -->
     <!-- <ProjectReference Include="Microsoft.NET.Workloads.Vsman.vsmanproj" ReferenceOutputAssembly="false" Targets="Restore;Build" /> -->
     <!-- <ProjectReference Include="Microsoft.NET.Workloads.Vsman.vsmanproj" /> -->
-    <ProjectReference Include="Microsoft.NET.Workloads.Vsman.vsmanproj" Targets="Restore;Build" />
+    <!-- <ProjectReference Include="Microsoft.NET.Workloads.Vsman.vsmanproj" Targets="Restore;Build" Properties="LanguageTargets=$(MSBuildToolsPath)\Microsoft.CSharp.targets" /> -->
+    <!-- <ProjectReference Include="Microsoft.NET.Workloads.Vsman.vsmanproj" Targets="Restore;Build" Properties="Language=C#" /> -->
+    <!-- <ProjectReference Include="Microsoft.NET.Workloads.Vsman.vsmanproj" Targets="Restore;Build" /> -->
   </ItemGroup>
+
+  <!-- <MSBuild Projects="Microsoft.NET.Workloads.Vsman.vsmanproj" Targets="Restore;Build" Properties="Configuration=$(Configuration);Platform=$(Platform)" /> -->
+  <Target Name="BuildVsmanProj" AfterTargets="Build" Condition="'$(CreateVSInsertion)' == 'true'">
+
+    <!-- $(ArtifactsDir)workloads\drops -->
+
+    <!-- Gets the name of each drop folder and truncates them to only the workload name. -->
+    <Exec ConsoleToMSBuild="true" Command="powershell -NonInteractive -NoLogo -NoProfile -Command &quot;Get-ChildItem -Path D:\Workspace\drops -Directory | Foreach-Object { $_.Name.Replace('Workload.VSDrop.', '') }&quot;">
+      <Output TaskParameter="ConsoleOutput" ItemName="WorkloadName" />
+    </Exec>
+
+    <Message Importance="High" Text="ThisThing: %(WorkloadName.Identity)" />
+
+    <!-- <Exec Command='
+"$(MSBuildToolsPath)\MSBuild.exe" Microsoft.NET.Workloads.Vsman.vsmanproj /restore /t:Build ^
+  /p:VstsDropNames=Products/dotnet/dotnet-emsdk/9.0-preview6/20240723.100418.429; ^
+  AssemblyName=$(Configuration); ^
+' /> -->
+  </Target>
 
 </Project>

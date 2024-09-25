@@ -1,6 +1,6 @@
 {
   "tools": {
-    "dotnet": "9.0.100-preview.5.24307.3",
+    "dotnet": "9.0.100-rc.1.24452.12",
     "xcopy-msbuild": "17.10.0-pre.4.0"
   },
   "msbuild-sdks": {
