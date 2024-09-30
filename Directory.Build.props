@@ -10,7 +10,11 @@
     <LangVersion>Latest</LangVersion>
     <!-- <VstsDropNames>TestDropName</VstsDropNames> -->
     <NoSwixBuildPlugin>true</NoSwixBuildPlugin>
-    <VsixOutputPath>$(ArtifactsBinDir)VSSetup/</VsixOutputPath>
+    <!-- <WorkloadDropDirectory>$(ArtifactsDir)workloads\drops</WorkloadDropDirectory> -->
+    <WorkloadDropDirectory>D:\Workspace\drops\</WorkloadDropDirectory>
+    <!-- <VsixOutputPath>$(ArtifactsBinDir)VSSetup/</VsixOutputPath> -->
+    <!-- <VsixOutputPath>$(ArtifactsBinDir)VSSetup\$(AssemblyName)\</VsixOutputPath> -->
+    <VsixOutputPath>$(WorkloadDropDirectory)Workload.VSDrop.$(AssemblyName)\</VsixOutputPath>
   </PropertyGroup>
 
 </Project>
