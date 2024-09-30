@@ -20,20 +20,24 @@
   <!-- <MSBuild Projects="Microsoft.NET.Workloads.Vsman.vsmanproj" Targets="Restore;Build" Properties="Configuration=$(Configuration);Platform=$(Platform)" /> -->
   <Target Name="BuildVsmanProj" AfterTargets="Build" Condition="'$(CreateVSInsertion)' == 'true'">
 
-    <!-- $(ArtifactsDir)workloads\drops -->
+    <!-- <PropertyGroup> -->
+      <!-- <WorkloadDropDirectory>$(ArtifactsDir)workloads\drops</WorkloadDropDirectory> -->
+      <!-- <WorkloadDropDirectory>D:\Workspace\drops\</WorkloadDropDirectory> -->
+    <!-- </PropertyGroup> -->
 
     <!-- Gets the name of each drop folder and truncates them to only the workload name. -->
-    <Exec ConsoleToMSBuild="true" Command="powershell -NonInteractive -NoLogo -NoProfile -Command &quot;Get-ChildItem -Path D:\Workspace\drops -Directory | Foreach-Object { $_.Name.Replace('Workload.VSDrop.', '') }&quot;">
+    <Exec ConsoleToMSBuild="true" Command="powershell -NonInteractive -NoLogo -NoProfile -Command &quot;Get-ChildItem -Path $(WorkloadDropDirectory) -Directory | Foreach-Object { $_.Name.Replace('Workload.VSDrop.', '') }&quot;">
       <Output TaskParameter="ConsoleOutput" ItemName="WorkloadName" />
     </Exec>
 
-    <Message Importance="High" Text="ThisThing: %(WorkloadName.Identity)" />
+    <!-- <Message Importance="High" Text="ThisThing: %(WorkloadName.Identity)" /> -->
 
-    <!-- <Exec Command='
+    <Exec Command='
 "$(MSBuildToolsPath)\MSBuild.exe" Microsoft.NET.Workloads.Vsman.vsmanproj /restore /t:Build ^
-  /p:VstsDropNames=Products/dotnet/dotnet-emsdk/9.0-preview6/20240723.100418.429; ^
-  AssemblyName=$(Configuration); ^
-' /> -->
+  /p:VstsDropNames=Products/dotnet/workloads/%(WorkloadName.Identity)/$([System.DateTime]::Now.ToString("yyyyMMdd.hhmmss.fff")) ^
+  /p:AssemblyName=%(WorkloadName.Identity) ^
+  /p:WorkloadDropDirectory=$(WorkloadDropDirectory)
+' />
   </Target>
 
 </Project>
