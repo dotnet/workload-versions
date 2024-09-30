@@ -28,8 +28,23 @@ pr: none
 #   type: string
 #   default: 'public/dotnet8-workloads'
 
+parameters:
+- name: workloadsToPublish
+  displayName: Workloads to publish
+  type: object
+  default:
+  - 'aspire'
+  - 'emsdk'
+  - 'mono'
+
 # Note: Only add pipeline variables if they apply to most of the stages/jobs.
 variables:
+- name: aspire_test
+  value: AspireTestWorks
+- name: emsdk_test
+  value: EmsdkTestWorks
+- name: mono_test
+  value: MonoTestWorks
 - template: /eng/common/templates-official/variables/pool-providers.yml@self
   # The configuration for the build is used throughout the various pipelines as the file paths for output contain the build configuration as a folder name.
 - name: BuildConfiguration
@@ -157,6 +172,10 @@ extends:
               fetchDepth: 0
               clean: true
             steps:
+            - ${{ each workload in parameters.workloadsToPublish }}:
+              - pwsh: "Write-Host 'Workload: $(${{ workload }}_test)'"
+                displayName: Display ${{ workload }}
+
             # - pwsh: ./eng/publish-workloads.ps1
             #   displayName: Publish Workloads
             - task: AzureCLI@2
