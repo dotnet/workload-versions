@@ -20,11 +20,13 @@
   <Target Name="BuildVsmanProj" AfterTargets="Build" Condition="'$(CreateVSInsertion)' == 'true'">
 
     <PropertyGroup>
-      <WorkloadDropDirectory>$(ArtifactsDir)workloads\drops</WorkloadDropDirectory>
+      <WorkloadDirectory>$(ArtifactsDir)workloads\</WorkloadDirectory>
+      <WorkloadDropDirectory>$(WorkloadDirectory)drops\</WorkloadDropDirectory>
       <!-- <WorkloadDropDirectory>D:\Workspace\drops\</WorkloadDropDirectory> -->
+      <WorkloadCIArguments Condition="'$(WorkloadGitHubPat)' != '' AND '$(WorkloadAzDOPat)' != ''">-gitHubPat $(WorkloadGitHubPat) -azDOPat $(WorkloadAzDOPat)</WorkloadCIArguments>
     </PropertyGroup>
 
-    
+    <Exec Command="powershell -NonInteractive -NoLogo -NoProfile -Command &quot;%26 $(RepositoryEngineeringDir)download-workloads.ps1 -workloadOutputPath $(WorkloadDirectory) $(WorkloadCIArguments)&quot;" />
 
     <!-- Gets the name of each drop folder and truncates them to only the workload name. -->
     <Exec ConsoleToMSBuild="true" Command="powershell -NonInteractive -NoLogo -NoProfile -Command &quot;Get-ChildItem -Path $(WorkloadDropDirectory) -Directory | Foreach-Object { $_.Name.Replace('Workload.VSDrop.', '') }&quot;">

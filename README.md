@@ -16,3 +16,5 @@ This repository contains the version information for .NET SDK Workloads.
 4. [Install Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli-windows#install-or-update)
 5. Run `az login` to authenticate
   - When it asks for a subscription to select, just press Enter. The default subscription selection does not affect DARC.
+6. Install the latest [Visual Studio](https://visualstudio.microsoft.com/downloads/) with the .NET Desktop workload
+  - Make sure to restart your PC after the installation is complete.
