@@ -3,7 +3,6 @@
 
   <PropertyGroup>
     <TargetFramework>$(SdkTargetFramework)</TargetFramework>
-    <CreateVSInsertion>true</CreateVSInsertion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,10 +19,12 @@
   <!-- <MSBuild Projects="Microsoft.NET.Workloads.Vsman.vsmanproj" Targets="Restore;Build" Properties="Configuration=$(Configuration);Platform=$(Platform)" /> -->
   <Target Name="BuildVsmanProj" AfterTargets="Build" Condition="'$(CreateVSInsertion)' == 'true'">
 
-    <!-- <PropertyGroup> -->
-      <!-- <WorkloadDropDirectory>$(ArtifactsDir)workloads\drops</WorkloadDropDirectory> -->
+    <PropertyGroup>
+      <WorkloadDropDirectory>$(ArtifactsDir)workloads\drops</WorkloadDropDirectory>
       <!-- <WorkloadDropDirectory>D:\Workspace\drops\</WorkloadDropDirectory> -->
-    <!-- </PropertyGroup> -->
+    </PropertyGroup>
+
+    
 
     <!-- Gets the name of each drop folder and truncates them to only the workload name. -->
     <Exec ConsoleToMSBuild="true" Command="powershell -NonInteractive -NoLogo -NoProfile -Command &quot;Get-ChildItem -Path $(WorkloadDropDirectory) -Directory | Foreach-Object { $_.Name.Replace('Workload.VSDrop.', '') }&quot;">
@@ -32,11 +33,16 @@
 
     <!-- <Message Importance="High" Text="ThisThing: %(WorkloadName.Identity)" /> -->
 
+    <!--
+      VstsDropNames: Sets the URL partial path for the VSDrop that is written into the VSMAN file.
+      VsixOutputPath: Sets the output directory for the VSMAN file when the .vsmanproj is built.
+      AssemblyName: Sets the name of the VSMAN file.
+    -->
     <Exec Command='
 "$(MSBuildToolsPath)\MSBuild.exe" Microsoft.NET.Workloads.Vsman.vsmanproj /restore /t:Build ^
   /p:VstsDropNames=Products/dotnet/workloads/%(WorkloadName.Identity)/$([System.DateTime]::Now.ToString("yyyyMMdd.hhmmss.fff")) ^
-  /p:AssemblyName=%(WorkloadName.Identity) ^
-  /p:WorkloadDropDirectory=$(WorkloadDropDirectory)
+  /p:VsixOutputPath=$(WorkloadDropDirectory)Workload.VSDrop.%(WorkloadName.Identity)\ ^
+  /p:AssemblyName=%(WorkloadName.Identity)
 ' />
   </Target>
 
