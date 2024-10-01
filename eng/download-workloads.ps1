@@ -1,4 +1,5 @@
-param ([Parameter(Mandatory=$true)] [SecureString] $gitHubPat, [Parameter(Mandatory=$true)] [SecureString] $azDevPat, [Parameter(Mandatory=$true)] [SecureString] $password)
+# param ([Parameter(Mandatory=$true)] [SecureString] $gitHubPat, [Parameter(Mandatory=$true)] [SecureString] $azDevPat, [Parameter(Mandatory=$true)] [SecureString] $password)
+param ([Parameter(Mandatory=$true)] [string] $workloadOutputPath, [SecureString] $gitHubPat, [SecureString] $azDOPat)
 
 # Darc access copied from: eng/common/post-build/publish-using-darc.ps1
 $ci = $true
@@ -11,23 +12,27 @@ $versionDetailsPath = (Get-Item "$PSScriptRoot\Version.Details.xml").FullName
 $versionDetailsXml = [Xml.XmlDocument](Get-Content $versionDetailsPath)
 $versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Uri, Sha -Unique
 
-$workloadOutputPath = "$PSScriptRoot\..\artifacts\workloads"
-$gitHubPatPlain = ConvertFrom-SecureString -SecureString $gitHubPat -AsPlainText
-$azDevPatPlain = ConvertFrom-SecureString -SecureString $azDevPat -AsPlainText
-$passwordPlain = ConvertFrom-SecureString -SecureString $password -AsPlainText
+# $workloadOutputPath = "$PSScriptRoot\..\artifacts\workloads"
+$ciArguments = ''
+
+if ($gitHubPat -and $azDOPat) {
+  $gitHubPatPlain = ConvertFrom-SecureString -SecureString $gitHubPat -AsPlainText
+  $azDOPatPlain = ConvertFrom-SecureString -SecureString $azDOPat -AsPlainText
+# $passwordPlain = ConvertFrom-SecureString -SecureString $password -AsPlainText
+  $ciArguments = "--ci --github-pat $gitHubPatPlain --azdev-pat $azDOPatPlain"
+#     --password $passwordPlain
+}
+
 $versionDetails | ForEach-Object {
   & $darc gather-drop `
     --asset-filter 'Workload\.VSDrop.*' `
     --repo $_.Uri `
     --commit $_.Sha `
     --output-dir $workloadOutputPath `
-    --ci `
+    $ciArguments `
     --include-released `
     --continue-on-error `
-    --use-azure-credential-for-blobs `
-    --github-pat $gitHubPatPlain `
-    --azdev-pat $azDevPatPlain `
-    --password $passwordPlain
+    --use-azure-credential-for-blobs
 }
 
 Write-Host 'Downloaded:'
