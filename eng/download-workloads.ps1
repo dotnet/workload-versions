@@ -1,27 +1,31 @@
 # param ([Parameter(Mandatory=$true)] [SecureString] $gitHubPat, [Parameter(Mandatory=$true)] [SecureString] $azDevPat, [Parameter(Mandatory=$true)] [SecureString] $password)
 param ([Parameter(Mandatory=$true)] [string] $workloadOutputPath, [SecureString] $gitHubPat, [SecureString] $azDOPat)
 
-# Darc access copied from: eng/common/post-build/publish-using-darc.ps1
-$ci = $true
-$disableConfigureToolsetImport = $true
-. $PSScriptRoot\common\tools.ps1
-
-$darc = Get-Darc
-
-$versionDetailsPath = (Get-Item "$PSScriptRoot\Version.Details.xml").FullName
-$versionDetailsXml = [Xml.XmlDocument](Get-Content $versionDetailsPath)
-$versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Uri, Sha -Unique
-
-# $workloadOutputPath = "$PSScriptRoot\..\artifacts\workloads"
+# Local usage of this script
+$darc = 'darc'
 $ciArguments = ''
 
+# CI usage of this script
 if ($gitHubPat -and $azDOPat) {
+  # Darc access copied from: eng/common/post-build/publish-using-darc.ps1
+  $ci = $true
+  $disableConfigureToolsetImport = $true
+  . $PSScriptRoot\common\tools.ps1
+
+  $darc = Get-Darc
   $gitHubPatPlain = ConvertFrom-SecureString -SecureString $gitHubPat -AsPlainText
   $azDOPatPlain = ConvertFrom-SecureString -SecureString $azDOPat -AsPlainText
 # $passwordPlain = ConvertFrom-SecureString -SecureString $password -AsPlainText
   $ciArguments = "--ci --github-pat $gitHubPatPlain --azdev-pat $azDOPatPlain"
 #     --password $passwordPlain
 }
+
+$versionDetailsPath = (Get-Item "$PSScriptRoot\Version.Details.xml").FullName
+$versionDetailsXml = [Xml.XmlDocument](Get-Content $versionDetailsPath)
+$versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Uri, Sha -Unique
+
+# $workloadOutputPath = "$PSScriptRoot\..\artifacts\workloads"
+# $ciArguments = ''
 
 $versionDetails | ForEach-Object {
   & $darc gather-drop `
