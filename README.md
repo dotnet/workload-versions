@@ -18,3 +18,4 @@ This repository contains the version information for .NET SDK Workloads.
   - When it asks for a subscription to select, just press Enter. The default subscription selection does not affect DARC.
 6. Install the latest [Visual Studio](https://visualstudio.microsoft.com/downloads/) with the .NET Desktop workload
   - Make sure to restart your PC after the installation is complete.
+7. **TODO**: Test to see if PowerShell Core is required.
