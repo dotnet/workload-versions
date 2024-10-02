@@ -1,86 +1,31 @@
-# Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE.md file in the project root for more information.
+# Pipeline: https://dev.azure.com/dnceng/internal/_build?definitionId=1298
 
-# Name: dotnet-workload-versions-official-ci
-# URL: https://dev.azure.com/dnceng/internal/_build?definitionId=1298
-
-# Produces the signed NuGet packages for workload versioning.
-
-###################################################################################################################################################################
-# PIPELINE METADATA
-###################################################################################################################################################################
-
-# Activates the pipeline after a PR is merged.
-# See: https://docs.microsoft.com/azure/devops/pipelines/yaml-schema/trigger?view=azure-pipelines
 trigger: none
-
-# Activates PR builds for this pipeline.
-# See: https://docs.microsoft.com/azure/devops/pipelines/yaml-schema/pr?view=azure-pipelines#examples
 pr: none
 
-# parameters:
-# When true, tries to publish
-- name: StabilizePackageVersion
-  displayName: Stabilize Package Version
-  type: boolean
-  default: false
+parameters:
 - name: publishToFeed
   displayName: Publish to feed
   type: boolean
   default: false
-- name: feedToPublishTo
-  displayName: Feed to publish to
+- name: feedForPublishing
+  displayName: Feed for publishing
   type: string
-  default: 'public/dotnet9-workloads'
-
-parameters:
-- name: workloadsToPublish
-  displayName: Workloads to publish
+  default: public/dotnet8-workloads
+- name: createVSInsertion
+  displayName: Create VS insertion
+  type: boolean
+  default: false
+- name: workloadsForVSInsertion
+  displayName: Workloads for VS insertion
   type: object
   default:
-  - 'aspire'
-  - 'emsdk'
-  - 'mono'
+  - aspire
+  - emsdk
+  - mono
 
-# Note: Only add pipeline variables if they apply to most of the stages/jobs.
 variables:
-- name: aspire_test
-  value: AspireTestWorks
-- name: emsdk_test
-  value: EmsdkTestWorks
-- name: mono_test
-  value: MonoTestWorks
 - template: /eng/common/templates-official/variables/pool-providers.yml@self
-  # The configuration for the build is used throughout the various pipelines as the file paths for output contain the build configuration as a folder name.
-- name: BuildConfiguration
-  value: Release
-  # https://docs.microsoft.com/dotnet/core/tools/dotnet-environment-variables#dotnet_skip_first_time_experience
-- name: DOTNET_SKIP_FIRST_TIME_EXPERIENCE
-  value: true
-  # https://docs.microsoft.com/dotnet/core/tools/dotnet-environment-variables#dotnet_nologo
-- name: DOTNET_NOLOGO
-  value: true
-  # https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/26284/Enabling-SBOM-For-Your-Component-Insertion-into-VS?anchor=1.-add-the-%27manifest-generator-task%27-to-your-pipeline
-- name: packaging.EnableSBOMSigning
-  value: true
-  # Opt out of automatically injecting Codesign Validation into the pipeline. We run Codesign Validation as part of the Compliance pipeline.
-  # See: https://aka.ms/gdn-injection
-- name: runCodesignValidationInjection
-  value: false
-  # Suspend enforcement of NuGet Single Feed Policy. See:
-  # - https://aka.ms/nugetmultifeed
-  # - https://docs.opensource.microsoft.com/tools/nuget_security_analysis/nuget_security_analysis/
-  # - https://docs.opensource.microsoft.com/tools/cg/how-to/nuget-multifeed-configuration/
-  # - https://onebranch.visualstudio.com/OneBranch/_wiki/wikis/OneBranch.wiki/5205/TSG-Build-Broken-Due-to-Using-Multiple-Feeds?anchor=setting-nugetsecurityanalysiswarninglevel-in-cdp
-- name: NugetSecurityAnalysisWarningLevel
-  value: none
-  # Allows CodeQL to run on our Build job.
-  # https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/codeql/configuring-codeql3000-ado-pipelines
-- name: Codeql.Enabled
-  value: true
-  # Default to skipping auto-injection for CodeQL. It is not skipped in the Build job only.
-  # https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/codeql/configuring-codeql3000-ado-pipelines#monolithic-repos-and-multistage-pipelines
-- name: Codeql.SkipTaskAutoInjection
-  value: true
 - ${{ if eq(variables['_RunAsPublic'], 'true') }}:
   - name: _AdditionalBuildArgs
     value: ''
@@ -124,77 +69,71 @@ variables:
     value: true
   # Release-Pipeline provides: MaestroAccessToken, BotAccount-dotnet-bot-repo-PAT, dn-bot-all-drop-rw-code-rw-release-all
   - group: Release-Pipeline
+
 resources:
   repositories:
-  - repository: 1ESPipelineTemplates
+  - repository: 1esPipelines
     type: git
     name: 1ESPipelineTemplates/1ESPipelineTemplates
     ref: refs/tags/release
+
 extends:
-  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+  template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
   parameters:
     sdl:
+      sourceAnalysisPool:
+        name: $(DncEngInternalBuildPool)
+        image: 1es-windows-2022
+        os: windows
       policheck:
         enabled: true
       tsa:
         enabled: true
-    pool:
-      name: $(DncEngInternalBuildPool)
-      image: 1es-windows-2022
-      os: windows
-    customBuildTags:
-    - ES365AIMigrationTooling
     stages:
     - stage: Build
       displayName: Build
       jobs:
       - template: /eng/common/templates-official/jobs/jobs.yml@self
         parameters:
-          artifacts:
-            publish:
-              artifacts: true
-              logs: false
-              manifests: true
+          # artifacts:
+          #   publish:
+          #     artifacts: true
+          #     logs: false
+          #     manifests: true
           enableMicrobuild: true
+          enablePublishBuildAssets: true
+          enableTelemetry: true
           enablePublishUsingPipelines: true
           publishAssetsImmediately: true
-          enablePublishTestResults: true
-          testResultsFormat: vstest
-          enableSourceIndex: ${{ and(eq(variables._RunAsInternal, True), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}
-          workspace:
-            clean: all
+          enableSbom: true
           jobs:
           - job: windows
             timeoutInMinutes: 60
             pool:
-              ${{ if eq(variables._RunAsPublic, True) }}:
-                vmImage: windows-latest
-              ${{ if eq(variables._RunAsInternal, True) }}:
-                name: $(DncEngInternalBuildPool)
-                demands: ImageOverride -equals 1es-windows-2022
-            strategy:
-              matrix:
-                release:
-                  _BuildConfig: Release
-            preSteps:
-            - checkout: self
-              fetchDepth: 0
-              clean: true
+              name: $(DncEngInternalBuildPool)
+              image: 1es-windows-2022
+              os: windows
             steps:
-            - ${{ each workload in parameters.workloadsToPublish }}:
-              - pwsh: "Write-Host 'Workload: $(${{ workload }}_test)'"
-                displayName: Display ${{ workload }}
-
-            # - pwsh: ./eng/publish-workloads.ps1
-            #   displayName: Publish Workloads
+            # - task: AzureCLI@2
+            #   displayName: Gather Workloads
+            #   inputs:
+            #     # TODO: Need our own subscription
+            #     azureSubscription: DotNetStaging
+            #     scriptType: pscore
+            #     scriptPath: $(Build.SourcesDirectory)/eng/publish-workloads.ps1
+            #     arguments: '-gitHubPat (ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force) -azDevPat (ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force) -password (ConvertTo-SecureString -String "$(MaestroAccessToken)" -AsPlainText -Force)'
             - task: AzureCLI@2
-              displayName: Gather Workloads
+              displayName: Build solution
               inputs:
                 # TODO: Need our own subscription
                 azureSubscription: DotNetStaging
                 scriptType: pscore
-                scriptPath: $(Build.SourcesDirectory)/eng/publish-workloads.ps1
-                arguments: '-gitHubPat (ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force) -azDevPat (ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force) -password (ConvertTo-SecureString -String "$(MaestroAccessToken)" -AsPlainText -Force)'
+                scriptPath: $(Build.SourcesDirectory)eng\common\build.ps1
+                arguments: >-
+                  -restore -build -ci -msbuildEngine vs -configuration Release
+                  /p:CreateVSInsertion=${{ parameters.createVSInsertion }}
+                  /p:WorkloadGitHubPat=(ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force)
+                  /p:WorkloadAzDOPat=(ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force)
 
             # - script: eng\common\CIBuild.cmd
             #     -configuration $(_BuildConfig)
@@ -202,14 +141,29 @@ extends:
             #     $(_AdditionalBuildArgs)
             #     $(_InternalBuildArgs)
             #   displayName: $(_BuildJobDisplayName)
-            # - ${{ if eq(parameters.publishToFeed, true) }}:
-            #   - task: 1ES.PublishNuget@1
-            #     displayName: Publish Nuget package
-            #     inputs:
-            #       useDotNetTask: true # The default is false to use the NuGetCommand task. Set to true to use the DotNetCoreCLI task to publish packages.
-            #       packagesToPush: '$(Build.SourcesDirectory)/artifacts/packages/**/*.nupkg'
-            #       packageParentPath: '$(Build.SourcesDirectory)/artifacts/packages'
-            #       publishVstsFeed: ${{ parameters.feedToPublishTo }} # Required when pushing to internal feed.
-            #       nuGetFeedType: internal  # Change to external when publishing to external feed
-            #       allowPackageConflicts: false # Optional. NuGetCommand task only.
-            #       publishPackageMetadata: true # Optional
+            - ${{ if eq(parameters.publishToFeed, true) }}:
+              - task: 1ES.PublishNuget@1
+                displayName: Publish Nuget package
+                inputs:
+                  useDotNetTask: true
+                  packagesToPush: $(Build.SourcesDirectory)/artifacts/packages/**/*.nupkg
+                  packageParentPath: $(Build.SourcesDirectory)/artifacts/packages
+                  publishVstsFeed: ${{ parameters.feedForPublishing }}
+                  nuGetFeedType: internal
+                  allowPackageConflicts: false
+                  publishPackageMetadata: true
+            - ${{ if eq(parameters.createVSInsertion, true) }}:
+              - ${{ each workloadShortName in parameters.workloadsForVSInsertion }}:
+                # - pwsh: "Write-Host 'Workload: $(${{ workload }}_test)'"
+                #   displayName: Display ${{ workload }}
+                
+                # YAML reference: https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
+                - task: MicroBuildUploadVstsDropFolder@2
+                  displayName: Publish Insertion Data
+                  inputs:
+                    DropFolder: $(${{ workloadShortName }})
+                    DropName: $(${{ workloadShortName }})
+                    # See: https://dev.azure.com/devdiv/DevDiv/_wiki/wikis/DevDiv.wiki/35351/Retain-Drops
+                    DropRetentionDays: 183
+                    # When this isn't provided, the tool sets the --AadAuth flag instead of using --PatAuthEnvVar. The AadAuth doesn't seem to work for this situation.
+                    AccessToken: $(System.AccessToken)
