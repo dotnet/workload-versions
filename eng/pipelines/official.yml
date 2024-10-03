@@ -166,12 +166,12 @@ extends:
                   #   displayName: Display ${{ workload }}
 
                   # YAML reference: https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
-                  - task: MicroBuildUploadVstsDropFolder@2
+                  - task: 1ES.MicroBuildVstsDrop@1
                     displayName: Publish Insertion Data
                     inputs:
-                      DropFolder: $(${{ workloadShortName }}_${{ workloadType }}_dir)
-                      DropName: $(${{ workloadShortName }}_${{ workloadType }}_name)
+                      dropFolder: $(${{ workloadShortName }}_${{ workloadType }}_dir)
+                      dropName: $(${{ workloadShortName }}_${{ workloadType }}_name)
                       # See: https://dev.azure.com/devdiv/DevDiv/_wiki/wikis/DevDiv.wiki/35351/Retain-Drops
-                      DropRetentionDays: 183
+                      dropRetentionDays: 183
                       # When this isn't provided, the tool sets the --AadAuth flag instead of using --PatAuthEnvVar. The AadAuth doesn't seem to work for this situation.
-                      AccessToken: $(System.AccessToken)
+                      accessToken: $(System.AccessToken)
