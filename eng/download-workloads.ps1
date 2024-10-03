@@ -1,5 +1,6 @@
 # param ([Parameter(Mandatory=$true)] [SecureString] $gitHubPat, [Parameter(Mandatory=$true)] [SecureString] $azDevPat, [Parameter(Mandatory=$true)] [SecureString] $password)
-param ([Parameter(Mandatory=$true)] [string] $workloadOutputPath, [Parameter(Mandatory=$true)] [string] $msBuildToolsPath, [SecureString] $gitHubPat, [SecureString] $azDOPat)
+# param ([Parameter(Mandatory=$true)] [string] $workloadOutputPath, [Parameter(Mandatory=$true)] [string] $msBuildToolsPath, [SecureString] $gitHubPat, [SecureString] $azDOPat)
+param ([Parameter(Mandatory=$true)] [string] $workloadOutputPath, [Parameter(Mandatory=$true)] [string] $msBuildToolsPath, [string] $gitHubPat, [string] $azDOPat)
 
 # Local Build
 # Local build requires the installation of DARC. See: https://github.com/dotnet/arcade/blob/main/Documentation/Darc.md#setting-up-your-darc-client
@@ -14,11 +15,12 @@ if ($ci) {
   . $PSScriptRoot\common\tools.ps1
 
   $darc = Get-Darc
-  $gitHubPatPlain = ConvertFrom-SecureString -SecureString $gitHubPat -AsPlainText
-  $azDOPatPlain = ConvertFrom-SecureString -SecureString $azDOPat -AsPlainText
+  # $gitHubPatPlain = ConvertFrom-SecureString -SecureString $gitHubPat -AsPlainText
+  # $azDOPatPlain = ConvertFrom-SecureString -SecureString $azDOPat -AsPlainText
 # $passwordPlain = ConvertFrom-SecureString -SecureString $password -AsPlainText
-  $ciArguments = "--ci --github-pat $gitHubPatPlain --azdev-pat $azDOPatPlain"
+  # $ciArguments = "--ci --github-pat $gitHubPatPlain --azdev-pat $azDOPatPlain"
 #     --password $passwordPlain
+  $ciArguments = "--ci --github-pat $gitHubPat --azdev-pat $azDOPat"
 }
 
 # Reads the Version.Details.xml file and downloads the workload drops.

@@ -139,8 +139,11 @@ extends:
                 arguments: >-
                   -restore -build -ci -msbuildEngine vs -configuration Release
                   /p:CreateVSInsertion=${{ parameters.createVSInsertion }}
-                  /p:WorkloadGitHubPat=(ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force)
-                  /p:WorkloadAzDOPat=(ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force)
+                  /p:WorkloadGitHubPat=$(BotAccount-dotnet-bot-repo-PAT)
+                  /p:WorkloadAzDOPat=$(dn-bot-all-drop-rw-code-rw-release-all)
+
+            # /p:WorkloadGitHubPat=(ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force)
+            # /p:WorkloadAzDOPat=(ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force)
 
             # - script: eng\common\CIBuild.cmd
             #     -configuration $(_BuildConfig)
