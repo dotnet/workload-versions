@@ -135,7 +135,7 @@ extends:
                 # TODO: Need our own subscription
                 azureSubscription: DotNetStaging
                 scriptType: pscore
-                scriptPath: $(Build.SourcesDirectory)eng\common\build.ps1
+                scriptPath: $(Build.SourcesDirectory)/eng/common/build.ps1
                 arguments: >-
                   -restore -build -ci -msbuildEngine vs -configuration Release
                   /p:CreateVSInsertion=${{ parameters.createVSInsertion }}
@@ -167,7 +167,7 @@ extends:
 
                   # YAML reference: https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
                   - task: 1ES.MicroBuildVstsDrop@1
-                    displayName: Publish Insertion Data
+                    displayName: 'Publish Insertion Drop: ${{ workloadShortName }}_${{ workloadType }}'
                     inputs:
                       dropFolder: $(${{ workloadShortName }}_${{ workloadType }}_dir)
                       dropName: $(${{ workloadShortName }}_${{ workloadType }}_name)
