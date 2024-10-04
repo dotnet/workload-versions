@@ -1,12 +1,9 @@
-# param ([Parameter(Mandatory=$true)] [SecureString] $gitHubPat, [Parameter(Mandatory=$true)] [SecureString] $azDevPat, [Parameter(Mandatory=$true)] [SecureString] $password)
-# param ([Parameter(Mandatory=$true)] [string] $workloadOutputPath, [Parameter(Mandatory=$true)] [string] $msBuildToolsPath, [SecureString] $gitHubPat, [SecureString] $azDOPat)
-# param ([Parameter(Mandatory=$true)] [string] $workloadOutputPath, [Parameter(Mandatory=$true)] [string] $msBuildToolsPath, [string] $gitHubPat, [string] $azDOPat)
-param ([Parameter(Mandatory=$true)] [string] $workloadOutputPath, [SecureString] $gitHubPat, [SecureString] $azDOPat)
+param ([Parameter(Mandatory=$true)] [string] $workloadPath, [SecureString] $gitHubPat, [SecureString] $azDOPat)
 
 # Local Build
 # Local build requires the installation of DARC. See: https://github.com/dotnet/arcade/blob/main/Documentation/Darc.md#setting-up-your-darc-client
 $darc = 'darc'
-$ciArguments = ''
+$ciArguments = @()
 $ci = $gitHubPat -and $azDOPat
 
 # CI Build
@@ -18,10 +15,6 @@ if ($ci) {
   $darc = Get-Darc
   $gitHubPatPlain = ConvertFrom-SecureString -SecureString $gitHubPat -AsPlainText
   $azDOPatPlain = ConvertFrom-SecureString -SecureString $azDOPat -AsPlainText
-# $passwordPlain = ConvertFrom-SecureString -SecureString $password -AsPlainText
-  # $ciArguments = "--ci --github-pat '$gitHubPatPlain' --azdev-pat '$azDOPatPlain'"
-#     --password $passwordPlain
-  # $ciArguments = "--ci --github-pat $gitHubPat --azdev-pat $azDOPat"
   $ciArguments = @(
     '--ci'
     '--github-pat'
@@ -31,36 +24,13 @@ if ($ci) {
   )
 }
 
-# Reads the Version.Details.xml file and downloads the workload drops.
+# Reads the Version.Details.xml file to get the workloads.
 $versionDetailsPath = (Get-Item "$PSScriptRoot\Version.Details.xml").FullName
 $versionDetailsXml = [Xml.XmlDocument](Get-Content $versionDetailsPath)
 $versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Uri, Sha -Unique
 
+# Runs DARC against each workload to download the drop.
 $versionDetails | ForEach-Object {
-    # $darcArguments = "gather-drop --asset-filter 'Workload\.VSDrop.*' --repo $($_.Uri) --commit $($_.Sha) --output-dir '$workloadOutputPath' $ciArguments --include-released --skip-existing --continue-on-error --use-azure-credential-for-blobs"
-#   $darcArguments = @"
-# gather-drop
-# --asset-filter 'Workload\.VSDrop.*'
-# --repo $($_.Uri)
-# --commit $($_.Sha)
-# --output-dir '$workloadOutputPath'
-# $ciArguments
-# --include-released
-# --skip-existing
-# --continue-on-error
-# --use-azure-credential-for-blobs
-# "@
-  # & $darc gather-drop `
-  #   --asset-filter 'Workload\.VSDrop.*' `
-  #   --repo $_.Uri `
-  #   --commit $_.Sha `
-  #   --output-dir "$workloadOutputPath" `
-  #   $ciArguments `
-  #   --include-released `
-  #   --skip-existing `
-  #   --continue-on-error `
-  #   --use-azure-credential-for-blobs
-
   $darcArguments = @(
     'gather-drop'
     '--asset-filter'
@@ -70,7 +40,7 @@ $versionDetails | ForEach-Object {
     '--commit'
     $_.Sha
     '--output-dir'
-    $workloadOutputPath
+    $workloadPath
     '--include-released'
     '--skip-existing'
     '--continue-on-error'
@@ -82,4 +52,4 @@ $versionDetails | ForEach-Object {
 
 Write-Host 'Workload drops downloaded:'
 # https://stackoverflow.com/a/9570030/294804
-Get-ChildItem $workloadOutputPath -File -Include 'Workload.VSDrop.*.zip' -Recurse | Select-Object -Expand FullName
+Get-ChildItem $workloadPath -File -Include 'Workload.VSDrop.*.zip' -Recurse | Select-Object -Expand FullName

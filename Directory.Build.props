@@ -8,17 +8,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <LangVersion>Latest</LangVersion>
-    <!-- REMOVE LATER: This should be set in CI insertion builds. -->
-    <CreateVSInsertion>true</CreateVSInsertion>
-    <!-- <VstsDropNames>TestDropName</VstsDropNames> -->
     <NoSwixBuildPlugin>true</NoSwixBuildPlugin>
-    <!-- <WorkloadDropDirectory>$(ArtifactsDir)workloads\drops</WorkloadDropDirectory> -->
-    <!-- <WorkloadDropDirectory>D:\Workspace\drops\</WorkloadDropDirectory> -->
-    <!-- <VsixOutputPath>$(ArtifactsBinDir)VSSetup/</VsixOutputPath> -->
-    <!-- <VsixOutputPath>$(ArtifactsBinDir)VSSetup\$(AssemblyName)\</VsixOutputPath> -->
-    <!-- Sets the output path for the VSMAN file, created by the .vsmanproj build. -->
-    <!-- This needs to be set in Directory.Build.props as it is required prior to evaluating the .vsmanproj project. -->
-    <!-- <VsixOutputPath>$(WorkloadDropDirectory)Workload.VSDrop.$(AssemblyName)\</VsixOutputPath> -->
   </PropertyGroup>
 
 </Project>
