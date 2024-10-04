@@ -138,7 +138,7 @@ extends:
                   scriptType: pscore
                   scriptPath: $(Build.SourcesDirectory)/eng/download-workloads.ps1
                   arguments: >-
-                    -workloadOutputPath $(Build.SourcesDirectory)/artifacts/workloads
+                    -workloadPath $(Build.SourcesDirectory)/artifacts/workloads
                     -gitHubPat (ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force)
                     -azDOPat (ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force)
 

@@ -14,46 +14,11 @@
       <WorkloadCIArguments Condition="'$(WorkloadGitHubPat)' != '' AND '$(WorkloadAzDOPat)' != ''">-gitHubPat $(WorkloadGitHubPat) -azDOPat $(WorkloadAzDOPat)</WorkloadCIArguments> -->
     </PropertyGroup>
 
-    <!-- Downloads the workloads using DARC based on the dependencies in Version.Details.xml. -->
+    <!-- This downloads the workloads using DARC for LOCAL BUILD ONLY. In CI, we need to pass PATs to this, so it runs in Azure Pipelines only (not through MSBuild). For local builds, some preconfiguration is necessary. -->
+    <Exec Condition="'$(TF_BUILD)' != 'true'" Command="powershell -NonInteractive -NoLogo -NoProfile -Command &quot;. $(RepositoryEngineeringDir)download-workloads.ps1 -workloadPath '$(WorkloadDirectory)'&quot;" />
+
+    <!-- Using the downloaded workloads, this creates the VS drops to upload for VS insertion. It builds the Microsoft.NET.Workloads.Vsman.vsmanproj per workload ZIP, which creates the appropriate VSMAN file. -->
     <Exec Command="powershell -NonInteractive -NoLogo -NoProfile -Command &quot;. $(RepositoryEngineeringDir)create-workload-drops.ps1 -workloadPath '$(WorkloadDirectory)' -msBuildToolsPath '$(MSBuildToolsPath)'&quot;" />
-    <!-- <Exec Command="powershell -NonInteractive -NoLogo -NoProfile -Command &quot;. $(RepositoryEngineeringDir)download-workloads.ps1 -workloadOutputPath '$(WorkloadDirectory)' -msBuildToolsPath '$(MSBuildToolsPath)' $(WorkloadCIArguments)&quot;" /> -->
-
-    <!-- Gets the name of each drop folder and truncates them to only the workload name. -->
-    <!-- <Exec ConsoleToMSBuild="true" Command="powershell -NonInteractive -NoLogo -NoProfile -Command &quot;Get-ChildItem -Path $(WorkloadDropDirectory) -Directory | ForEach-Object { $_.Name.Replace('Workload.VSDrop.', '') }&quot;">
-      <Output TaskParameter="ConsoleOutput" ItemName="WorkloadName" />
-    </Exec> -->
-
-    <!-- <Exec ConsoleToMSBuild="true" Command="powershell -NonInteractive -NoLogo -NoProfile -Command &quot;. $(RepositoryEngineeringDir)get-workload-info.ps1 -workloadDropPath $(WorkloadDropDirectory)&quot;">
-      <Output TaskParameter="ConsoleOutput" ItemName="WorkloadInfo" />
-    </Exec> -->
-
-    <!-- <Exec ConsoleToMSBuild="true" Command="powershell -NonInteractive -NoLogo -NoProfile -Command &quot;Get-ChildItem -Path $(WorkloadDropDirectory) -Directory | ForEach-Object { $null = $_.Name -match '^Workload\.VSDrop\.(?&lt;full&gt;(?&lt;short&gt;\w*)\..*?(?&lt;type&gt;(pre\.)?components$|packs$))'; $Matches.full + ';' + $Matches.short + ';' + $Matches.type.Replace('.', '') }&quot;">
-      <Output TaskParameter="ConsoleOutput" ItemName="WorkloadInfo" />
-    </Exec> -->
-
-    <!-- <ItemGroup>
-      <WorkloadInfo Update="@(WorkloadInfo)" Full="$([System.String]::Copy('%(Identity)').Split(';')[0])" Short="$([System.String]::Copy('%(Identity)').Split(';')[1])" Type="$([System.String]::Copy('%(Identity)').Split(';')[2])" />
-    </ItemGroup> -->
-
-    <!-- Builds the .vsmanproj per each workload drop. Directly calling MSBuild.exe is required as the /restore flag is necessary for it to build properly (and doesn't exist in the MSBuild task). -->
-    <!--
-      VstsDropNames: Sets the URL partial path for the VSDrop that is written into the VSMAN file.
-      VsixOutputPath: Sets the output directory for the VSMAN file when the .vsmanproj is built.
-      AssemblyName: Sets the name of the VSMAN file.
-    -->
-    <!-- <Exec Command='
-set DropName=Products/dotnet/workloads/%(WorkloadInfo.Identity)/$([System.DateTime]::Now.ToString("yyyyMMdd.hhmmss.fff")) &amp;&amp; ^
-set DropDir=$(WorkloadDropDirectory)Workload.VSDrop.%(WorkloadInfo.Identity)\ &amp;&amp; ^
-"$(MSBuildToolsPath)\MSBuild.exe" Microsoft.NET.Workloads.Vsman.vsmanproj /restore /t:Build ^
-  /p:VstsDropNames=%DropName% ^
-  /p:VsixOutputPath=%DropDir% ^
-  /p:AssemblyName=%(WorkloadInfo.Identity) &amp;&amp; ^
-echo ##vso[task.setvariable variable=%(WorkloadInfo.Short)_%(WorkloadInfo.Type)_name]%DropName% &amp;&amp; ^
-echo ##vso[task.setvariable variable=%(WorkloadInfo.Short)_%(WorkloadInfo.Type)_dir]%DropDir%
-' /> -->
-
-    <!-- Clean up intermediate build files in the workload drop folders. -->
-    <!-- <Exec Command="powershell -NonInteractive -NoLogo -NoProfile -Command &quot;Get-ChildItem -Path $(WorkloadDropDirectory) -Include *.json, *.vsmand, files.txt -Recurse | Remove-Item&quot;" /> -->
 
   </Target>
 
