@@ -30,18 +30,19 @@ $versionDetailsXml = [Xml.XmlDocument](Get-Content $versionDetailsPath)
 $versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Uri, Sha -Unique
 
 $versionDetails | ForEach-Object {
-  $darcArguments = @"
-gather-drop
---asset-filter 'Workload\.VSDrop.*'
---repo $($_.Uri)
---commit $($_.Sha)
---output-dir '$workloadOutputPath'
-$ciArguments
---include-released
---skip-existing
---continue-on-error
---use-azure-credential-for-blobs
-"@
+    $darcArguments = "gather-drop --asset-filter 'Workload\.VSDrop.*' --repo $($_.Uri) --commit $($_.Sha) --output-dir '$workloadOutputPath' $ciArguments --include-released --skip-existing --continue-on-error --use-azure-credential-for-blobs"
+#   $darcArguments = @"
+# gather-drop
+# --asset-filter 'Workload\.VSDrop.*'
+# --repo $($_.Uri)
+# --commit $($_.Sha)
+# --output-dir '$workloadOutputPath'
+# $ciArguments
+# --include-released
+# --skip-existing
+# --continue-on-error
+# --use-azure-credential-for-blobs
+# "@
   # & $darc gather-drop `
   #   --asset-filter 'Workload\.VSDrop.*' `
   #   --repo $_.Uri `
