@@ -114,13 +114,34 @@ extends:
           publishAssetsImmediately: true
           enableSbom: true
           jobs:
-          - job: windows
+          - job: buildRepo
+            displayName: Build Repo
             timeoutInMinutes: 60
             pool:
               name: $(DncEngInternalBuildPool)
               image: windows.vs2022preview.amd64
               os: windows
             steps:
+            # - pwsh: >-
+            #     $workloadGitHubPat = ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force
+            #     $workloadAzDOPat
+            #     Write-Host "##vso[task.setvariable variable=WorkloadGitHubPat]$workloadGitHubPat"
+            #     Write-Host "##vso[task.setvariable variable=WorkloadAzDOPat]$vsDropName"
+            #   displayName: Set PAT variables
+
+            - ${{ if eq(parameters.createVSInsertion, true) }}:
+              - task: AzureCLI@2
+                displayName: Download workloads for VS insertion
+                inputs:
+                  # TODO: Need our own subscription
+                  azureSubscription: DotNetStaging
+                  scriptType: pscore
+                  scriptPath: $(Build.SourcesDirectory)/eng/download-workloads.ps1
+                  arguments: >-
+                    -workloadOutputPath $(Build.SourcesDirectory)/artifacts/workloads
+                    -gitHubPat (ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force)
+                    -azDevPat (ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force)
+
             # - task: AzureCLI@2
             #   displayName: Gather Workloads
             #   inputs:
@@ -129,21 +150,27 @@ extends:
             #     scriptType: pscore
             #     scriptPath: $(Build.SourcesDirectory)/eng/publish-workloads.ps1
             #     arguments: '-gitHubPat (ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force) -azDevPat (ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force) -password (ConvertTo-SecureString -String "$(MaestroAccessToken)" -AsPlainText -Force)'
-            - task: AzureCLI@2
-              displayName: Build solution
-              inputs:
-                # TODO: Need our own subscription
-                azureSubscription: DotNetStaging
-                scriptType: pscore
-                scriptPath: $(Build.SourcesDirectory)/eng/common/build.ps1
-                arguments: >-
-                  -restore -build -ci -msbuildEngine vs -configuration Release
-                  /p:CreateVSInsertion=${{ parameters.createVSInsertion }}
-                  /p:WorkloadGitHubPat=$(BotAccount-dotnet-bot-repo-PAT)
-                  /p:WorkloadAzDOPat=$(dn-bot-all-drop-rw-code-rw-release-all)
+            
+            # - task: AzureCLI@2
+            #   displayName: Build Solution
+            #   inputs:
+            #     # TODO: Need our own subscription
+            #     azureSubscription: DotNetStaging
+            #     scriptType: pscore
+            #     scriptPath: $(Build.SourcesDirectory)/eng/common/build.ps1
+            #     arguments: -restore -build -ci -msbuildEngine vs -configuration Release /p:CreateVSInsertion=${{ parameters.createVSInsertion }}
+
+            # /p:WorkloadGitHubPat=$(BotAccount-dotnet-bot-repo-PAT)
+            # /p:WorkloadAzDOPat=$(dn-bot-all-drop-rw-code-rw-release-all)
 
             # /p:WorkloadGitHubPat=(ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force)
             # /p:WorkloadAzDOPat=(ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force)
+
+            - script: >-
+                $(Build.SourcesDirectory)/build.cmd -ci -configuration Release
+                /p:CreateVSInsertion=${{ parameters.createVSInsertion }}
+                /p:WorkloadDirectory=$(Build.SourcesDirectory)/artifacts/workloads
+              displayName: Build solution
 
             # - script: eng\common\CIBuild.cmd
             #     -configuration $(_BuildConfig)
@@ -153,7 +180,7 @@ extends:
             #   displayName: $(_BuildJobDisplayName)
             - ${{ if eq(parameters.publishToFeed, true) }}:
               - task: 1ES.PublishNuget@1
-                displayName: Publish Nuget package
+                displayName: Publish NuGet package
                 inputs:
                   useDotNetTask: true
                   packagesToPush: $(Build.SourcesDirectory)/artifacts/packages/**/*.nupkg
@@ -170,7 +197,7 @@ extends:
 
                   # YAML reference: https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
                   - task: 1ES.MicroBuildVstsDrop@1
-                    displayName: 'Publish Insertion Drop: ${{ workloadShortName }}_${{ workloadType }}'
+                    displayName: 'Publish insertion drop: ${{ workloadShortName }}_${{ workloadType }}'
                     inputs:
                       dropFolder: $(${{ workloadShortName }}_${{ workloadType }}_dir)
                       dropName: $(${{ workloadShortName }}_${{ workloadType }}_name)
