@@ -140,7 +140,7 @@ extends:
                   arguments: >-
                     -workloadOutputPath $(Build.SourcesDirectory)/artifacts/workloads
                     -gitHubPat (ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force)
-                    -azDevPat (ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force)
+                    -azDOPat (ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force)
 
             # - task: AzureCLI@2
             #   displayName: Gather Workloads
