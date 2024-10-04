@@ -19,9 +19,16 @@ if ($ci) {
   $gitHubPatPlain = ConvertFrom-SecureString -SecureString $gitHubPat -AsPlainText
   $azDOPatPlain = ConvertFrom-SecureString -SecureString $azDOPat -AsPlainText
 # $passwordPlain = ConvertFrom-SecureString -SecureString $password -AsPlainText
-  $ciArguments = "--ci --github-pat '$gitHubPatPlain' --azdev-pat '$azDOPatPlain'"
+  # $ciArguments = "--ci --github-pat '$gitHubPatPlain' --azdev-pat '$azDOPatPlain'"
 #     --password $passwordPlain
   # $ciArguments = "--ci --github-pat $gitHubPat --azdev-pat $azDOPat"
+  $ciArguments = @(
+    '--ci'
+    '--github-pat'
+    $gitHubPatPlain
+    '--azdev-pat'
+    $azDOPatPlain
+  )
 }
 
 # Reads the Version.Details.xml file and downloads the workload drops.
@@ -30,7 +37,7 @@ $versionDetailsXml = [Xml.XmlDocument](Get-Content $versionDetailsPath)
 $versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Uri, Sha -Unique
 
 $versionDetails | ForEach-Object {
-    $darcArguments = "gather-drop --asset-filter 'Workload\.VSDrop.*' --repo $($_.Uri) --commit $($_.Sha) --output-dir '$workloadOutputPath' $ciArguments --include-released --skip-existing --continue-on-error --use-azure-credential-for-blobs"
+    # $darcArguments = "gather-drop --asset-filter 'Workload\.VSDrop.*' --repo $($_.Uri) --commit $($_.Sha) --output-dir '$workloadOutputPath' $ciArguments --include-released --skip-existing --continue-on-error --use-azure-credential-for-blobs"
 #   $darcArguments = @"
 # gather-drop
 # --asset-filter 'Workload\.VSDrop.*'
@@ -53,7 +60,24 @@ $versionDetails | ForEach-Object {
   #   --skip-existing `
   #   --continue-on-error `
   #   --use-azure-credential-for-blobs
-  & $darc $darcArguments
+
+  $darcArguments = @(
+    'gather-drop'
+    '--asset-filter'
+    'Workload\.VSDrop.*'
+    '--repo'
+    $_.Uri
+    '--commit'
+    $_.Sha
+    '--output-dir'
+    $workloadOutputPath
+    '--include-released'
+    '--skip-existing'
+    '--continue-on-error'
+    '--use-azure-credential-for-blobs'
+  )
+
+  & $darc ($darcArguments + $ciArguments)
 }
 
 Write-Host 'Workload drops downloaded:'
