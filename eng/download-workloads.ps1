@@ -19,7 +19,7 @@ if ($ci) {
   $gitHubPatPlain = ConvertFrom-SecureString -SecureString $gitHubPat -AsPlainText
   $azDOPatPlain = ConvertFrom-SecureString -SecureString $azDOPat -AsPlainText
 # $passwordPlain = ConvertFrom-SecureString -SecureString $password -AsPlainText
-  $ciArguments = "--ci --github-pat ""$gitHubPatPlain"" --azdev-pat ""$azDOPatPlain"""
+  $ciArguments = "--ci --github-pat '$gitHubPatPlain' --azdev-pat '$azDOPatPlain'"
 #     --password $passwordPlain
   # $ciArguments = "--ci --github-pat $gitHubPat --azdev-pat $azDOPat"
 }
@@ -28,17 +28,31 @@ if ($ci) {
 $versionDetailsPath = (Get-Item "$PSScriptRoot\Version.Details.xml").FullName
 $versionDetailsXml = [Xml.XmlDocument](Get-Content $versionDetailsPath)
 $versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Uri, Sha -Unique
+$darcArguments = @"
+gather-drop
+--asset-filter 'Workload\.VSDrop.*'
+--repo $($_.Uri)
+--commit $($_.Sha)
+--output-dir '$workloadOutputPath'
+$ciArguments
+--include-released
+--skip-existing
+--continue-on-error
+--use-azure-credential-for-blobs
+"@
+
 $versionDetails | ForEach-Object {
-  & $darc gather-drop `
-    --asset-filter 'Workload\.VSDrop.*' `
-    --repo $_.Uri `
-    --commit $_.Sha `
-    --output-dir "$workloadOutputPath" `
-    $ciArguments `
-    --include-released `
-    --skip-existing `
-    --continue-on-error `
-    --use-azure-credential-for-blobs
+  # & $darc gather-drop `
+  #   --asset-filter 'Workload\.VSDrop.*' `
+  #   --repo $_.Uri `
+  #   --commit $_.Sha `
+  #   --output-dir "$workloadOutputPath" `
+  #   $ciArguments `
+  #   --include-released `
+  #   --skip-existing `
+  #   --continue-on-error `
+  #   --use-azure-credential-for-blobs
+  & $darc $darcArguments
 }
 
 Write-Host 'Workload drops downloaded:'
