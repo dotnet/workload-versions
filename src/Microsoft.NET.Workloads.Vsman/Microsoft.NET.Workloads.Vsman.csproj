@@ -9,13 +9,14 @@
   <Target Name="BuildVsmanProj" AfterTargets="Build" Condition="'$(CreateVSInsertion)' == 'true'">
 
     <PropertyGroup>
-      <WorkloadDirectory>$(ArtifactsDir)workloads\</WorkloadDirectory>
-      <WorkloadDropDirectory>$(WorkloadDirectory)drops\</WorkloadDropDirectory>
-      <WorkloadCIArguments Condition="'$(WorkloadGitHubPat)' != '' AND '$(WorkloadAzDOPat)' != ''">-gitHubPat $(WorkloadGitHubPat) -azDOPat $(WorkloadAzDOPat)</WorkloadCIArguments>
+      <WorkloadDirectory Condition="'$(WorkloadDirectory)' == ''">$(ArtifactsDir)workloads\</WorkloadDirectory>
+      <!-- <WorkloadDropDirectory>$(WorkloadDirectory)drops\</WorkloadDropDirectory>
+      <WorkloadCIArguments Condition="'$(WorkloadGitHubPat)' != '' AND '$(WorkloadAzDOPat)' != ''">-gitHubPat $(WorkloadGitHubPat) -azDOPat $(WorkloadAzDOPat)</WorkloadCIArguments> -->
     </PropertyGroup>
 
     <!-- Downloads the workloads using DARC based on the dependencies in Version.Details.xml. -->
-    <Exec Command="powershell -NonInteractive -NoLogo -NoProfile -Command &quot;. $(RepositoryEngineeringDir)download-workloads.ps1 -workloadOutputPath '$(WorkloadDirectory)' -msBuildToolsPath '$(MSBuildToolsPath)' $(WorkloadCIArguments)&quot;" />
+    <Exec Command="powershell -NonInteractive -NoLogo -NoProfile -Command &quot;. $(RepositoryEngineeringDir)create-workload-drops.ps1 -workloadPath '$(WorkloadDirectory)' -msBuildToolsPath '$(MSBuildToolsPath)'&quot;" />
+    <!-- <Exec Command="powershell -NonInteractive -NoLogo -NoProfile -Command &quot;. $(RepositoryEngineeringDir)download-workloads.ps1 -workloadOutputPath '$(WorkloadDirectory)' -msBuildToolsPath '$(MSBuildToolsPath)' $(WorkloadCIArguments)&quot;" /> -->
 
     <!-- Gets the name of each drop folder and truncates them to only the workload name. -->
     <!-- <Exec ConsoleToMSBuild="true" Command="powershell -NonInteractive -NoLogo -NoProfile -Command &quot;Get-ChildItem -Path $(WorkloadDropDirectory) -Directory | ForEach-Object { $_.Name.Replace('Workload.VSDrop.', '') }&quot;">
