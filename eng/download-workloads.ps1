@@ -28,7 +28,9 @@ if ($ci) {
 $versionDetailsPath = (Get-Item "$PSScriptRoot\Version.Details.xml").FullName
 $versionDetailsXml = [Xml.XmlDocument](Get-Content $versionDetailsPath)
 $versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Uri, Sha -Unique
-$darcArguments = @"
+
+$versionDetails | ForEach-Object {
+  $darcArguments = @"
 gather-drop
 --asset-filter 'Workload\.VSDrop.*'
 --repo $($_.Uri)
@@ -40,8 +42,6 @@ $ciArguments
 --continue-on-error
 --use-azure-credential-for-blobs
 "@
-
-$versionDetails | ForEach-Object {
   # & $darc gather-drop `
   #   --asset-filter 'Workload\.VSDrop.*' `
   #   --repo $_.Uri `
