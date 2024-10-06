@@ -16,6 +16,7 @@
     <!-- Set the workloads version to include in the readme, use four part if non-zero patch -->
     <WorkloadsVersion>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</WorkloadsVersion>
     <WorkloadsVersion Condition="'$(VersionPatch)' != '0'">$(WorkloadsVersion).$(VersionPatch)</WorkloadsVersion>
+    <!-- <WorkloadsVsBranches>rel/d17.11</WorkloadsVsBranches> -->
     <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
     <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
     <SdkFeatureBand>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)00</SdkFeatureBand>
