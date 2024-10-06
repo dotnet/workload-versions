@@ -76,6 +76,8 @@ variables:
     value: true
   # Release-Pipeline provides: MaestroAccessToken, BotAccount-dotnet-bot-repo-PAT, dn-bot-all-drop-rw-code-rw-release-all
   - group: Release-Pipeline
+  # DotNet-DevDiv-Insertion-Workflow-Variables provides: dn-bot-devdiv-drop-rw-code-rw
+  - group: DotNet-DevDiv-Insertion-Workflow-Variables
 
 resources:
   repositories:
@@ -203,9 +205,8 @@ extends:
                       dropFolder: $(${{ workloadShortName }}_${{ workloadType }}_dir)
                       dropName: $(${{ workloadShortName }}_${{ workloadType }}_name)
                       # See: https://dev.azure.com/devdiv/DevDiv/_wiki/wikis/DevDiv.wiki/35351/Retain-Drops
-                      # dropRetentionDays: 183
-                      dropRetentionDays: 90
-                      # When this isn't provided, the tool sets the --AadAuth flag instead of using --PatAuthEnvVar. The AadAuth doesn't seem to work for this situation.
-                      accessToken: $(System.AccessToken)
+                      dropRetentionDays: 183
+                      # dropRetentionDays: 90
+                      accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
                       dropServiceUri: https://devdiv.artifacts.visualstudio.com
                       vsDropServiceUri: https://vsdrop.corp.microsoft.com/file/v1
