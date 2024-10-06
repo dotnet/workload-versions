@@ -20,6 +20,7 @@
     <!-- Using the downloaded workloads, this creates the VS drops to upload for VS insertion. It builds the Microsoft.NET.Workloads.Vsman.vsmanproj per workload ZIP, which creates the appropriate VSMAN file. -->
     <Exec Command="powershell -NonInteractive -NoLogo -NoProfile -Command &quot;. $(RepositoryEngineeringDir)create-workload-drops.ps1 -workloadPath '$(WorkloadDirectory)' -msBuildToolsPath '$(MSBuildToolsPath)'&quot;" />
 
+    <!-- <Message Text="##vso[task.setvariable variable=WorkloadsVsBranches]$(WorkloadsVsBranches)" Importance="high" /> -->
   </Target>
 
 </Project>

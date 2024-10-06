@@ -10,6 +10,7 @@ $null = $workloads | ForEach-Object { Expand-Archive -Path $_.FullName -Destinat
 # - short: The short name of the drop. Only contains the first word after 'Workload.VSDrop.'.
 # - type: Either 'pre.components', 'components', or 'packs'.
 $dropInfoRegex = '^Workload\.VSDrop\.(?<full>(?<short>\w*)\..*?(?<type>(pre\.)?components$|packs$))'
+$componentJsonValues = ''
 Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
   $null = $_.Name -match $dropInfoRegex
 
@@ -29,6 +30,10 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
     $dropType = $Matches.type.Replace('.', '')
     Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_name]$vsDropName"
     Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_dir]$dropDir"
+    # Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_full]$assemblyName"
+
+    # Each vsman file is comma-separated. First .vsman is destination and the second is source.
+    $componentJsonValues += "$assemblyName.vsman=https://vsdrop.corp.microsoft.com/file/v1/$vsDropName;$assemblyName.vsman,"
   }
 
   Write-Host 'After upload, your workload drop will be available at:'
@@ -37,3 +42,10 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
 
 # Clean up intermediate build files in the workload drop folders.
 $null = Get-ChildItem -Path $workloadDropPath -Include *.json, *.vsmand, files.txt -Recurse | Remove-Item
+
+# Write the component string for all the vsman files to a variable for the pipeline to use for the VS insertion step.
+if ($componentJsonValues) {
+  # Remove the trailing comma.
+  $componentJsonValues = $componentJsonValues -replace '.$'
+  Write-Host "##vso[task.setvariable variable=ComponentJsonValues]$componentJsonValues"
+}
