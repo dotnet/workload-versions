@@ -208,5 +208,3 @@ extends:
                       dropRetentionDays: 183
                       # dropRetentionDays: 90
                       accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
-                      dropServiceUri: https://devdiv.artifacts.visualstudio.com
-                      vsDropServiceUri: https://vsdrop.corp.microsoft.com/file/v1
