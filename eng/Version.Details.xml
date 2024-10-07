@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.8">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.10">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>b764692d18e66561c7cff2101d642b0f789dae0c</Sha>
+      <Sha>eeb6f525300cd8312185decc2805a1651d312e23</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100" Version="8.0.8" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100" Version="8.0.10" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>2674f580a4b1d27322914df8488498065e71a3f2</Sha>
+      <Sha>91b783edc518e9ea0c0e883016b02261893389db</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Aspire.Manifest-8.0.100" Version="8.2.1">
       <Uri>https://github.com/dotnet/aspire</Uri>
       <Sha>137e8dcae0a7b22c05f48c4e7a5d36fe3f00a8d7</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-8.0.100" Version="34.0.138">
+    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-8.0.100" Version="34.0.143">
       <Uri>https://github.com/dotnet/android</Uri>
-      <Sha>68175bbe5a39140c642dab294cf184ecf72eece0</Sha>
+      <Sha>45bb7f365f1587a7786d5bbbf0daec075d5aabea</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-8.0.100" Version="18.0.8303">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
