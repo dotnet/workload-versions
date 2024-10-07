@@ -123,7 +123,7 @@ extends:
           jobs:
           - job: buildRepo
             displayName: Build Repo
-            timeoutInMinutes: 60
+            timeoutInMinutes: 120
             pool:
               name: $(DncEngInternalBuildPool)
               image: windows.vs2022preview.amd64
@@ -210,8 +210,8 @@ extends:
                       dropFolder: $(${{ workloadShortName }}_${{ workloadType }}_dir)
                       dropName: $(${{ workloadShortName }}_${{ workloadType }}_name)
                       # See: https://dev.azure.com/devdiv/DevDiv/_wiki/wikis/DevDiv.wiki/35351/Retain-Drops
-                      # dropRetentionDays: 183
-                      dropRetentionDays: 90
+                      dropRetentionDays: 183
+                      # dropRetentionDays: 90
                       accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
                     #   accessToken: DEVDIV_ACCESS_TOKEN
                     # env:
