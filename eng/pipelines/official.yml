@@ -210,9 +210,9 @@ extends:
                       dropFolder: $(${{ workloadShortName }}_${{ workloadType }}_dir)
                       dropName: $(${{ workloadShortName }}_${{ workloadType }}_name)
                       # See: https://dev.azure.com/devdiv/DevDiv/_wiki/wikis/DevDiv.wiki/35351/Retain-Drops
-                      dropRetentionDays: 183
-                      # dropRetentionDays: 90
-                      # accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
+                      # dropRetentionDays: 183
+                      dropRetentionDays: 90
+                      accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
                     #   accessToken: DEVDIV_ACCESS_TOKEN
                     # env:
                     #   DEVDIV_ACCESS_TOKEN: $(dn-bot-devdiv-drop-rw-code-rw)
