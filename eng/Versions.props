@@ -10,8 +10,8 @@
     <VersionSDKMinor>4</VersionSDKMinor>
     <!-- Use the feature version for each monthly servicng release -->
     <!-- Use the patch version for intra-monthly releases and hotfixes -->
-    <VersionFeature>02</VersionFeature>
-    <VersionPatch>1</VersionPatch>
+    <VersionFeature>03</VersionFeature>
+    <VersionPatch>0</VersionPatch>
     <VersionPrefix>$(VersionMajor).$(VersionSDKMinor)$(VersionFeature).$(VersionPatch)</VersionPrefix>
     <!-- Set the workloads version to include in the readme, use four part if non-zero patch -->
     <WorkloadsVersion>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</WorkloadsVersion>
