@@ -213,9 +213,9 @@ extends:
                       dropRetentionDays: 183
                       # dropRetentionDays: 90
                       # accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
-                      accessToken: DEVDIV_ACCESS_TOKEN
-                    env:
-                      DEVDIV_ACCESS_TOKEN: $(dn-bot-devdiv-drop-rw-code-rw)
+                    #   accessToken: DEVDIV_ACCESS_TOKEN
+                    # env:
+                    #   DEVDIV_ACCESS_TOKEN: $(dn-bot-devdiv-drop-rw-code-rw)
 
               - ${{ each insertionBranch in parameters.vsInsertionBranches }}:
                 # Creates VS insertion PRs using the VS drops containing the workloads and vsman files.
