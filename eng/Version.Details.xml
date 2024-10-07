@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-9.0.100.Transport" Version="9.0.0-rc.2.24468.8" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-9.0.100.Transport" Version="9.0.0-rtm.24469.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>0b30e0253a0d7c47a99cecd51b0d5ff5c83ad1df</Sha>
+      <Sha>8e660ff41e91879977e3a9d837e068bd72234c26</Sha>
       <SourceBuild RepoName="emsdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0-rc.2.24473.5">
-      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
-      <Sha>990ebf52fc408ca45929fd176d2740675a67fab8</Sha>
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0-rtm.24503.8">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>3429fee9ed58213a8916e1e2aa921fda6ba24aa2</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Aspire.Manifest-8.0.100" Version="8.2.1">
       <Uri>https://github.com/dotnet/aspire</Uri>
