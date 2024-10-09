@@ -53,7 +53,11 @@
     <!-- <ItemsToSign Include="$(PackageId).nupkg" /> -->
   </ItemGroup>
 
-  <Import Project="workloads.props" />
+  <PropertyGroup Condition="'$(WorkloadsProps)' == ''">
+	<WorkloadsProps>workloads.props</WorkloadsProps>
+  </PropertyGroup>
+	
+  <Import Project="$(WorkloadsProps)" />
 
   <Target Name="CreateWorkloadSetJson" BeforeTargets="Build">
     <PropertyGroup>
@@ -100,7 +104,7 @@
 
   <Target Name="CreateVisualStudioMsi" AfterTargets="Build" DependsOnTargets="GetAssemblyVersion;_GenerateMsiVersionString">
     <ItemGroup>
-      <WorkloadSetPackage Include="$(ArtifactsShippingPackagesDir)/Microsoft.NET.Workloads.$(SDKFeatureBand).$(VersionMajor)*.nupkg" />
+      <WorkloadSetPackage Include="$(ArtifactsShippingPackagesDir)/$(PackageId).$(PackageVersion).nupkg" />
     </ItemGroup>
 
     <CreateVisualStudioWorkloadSet
