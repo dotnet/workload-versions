@@ -222,7 +222,7 @@ extends:
                 # One PR is created per branch defined at the top of this file in the vsInsertionBranches parameter.
                 # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/635/Overview?anchor=**build-pipeline**
                 # YAML reference: https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/task.json
-                - task: MicroBuildInsertVsPayload@4
+                - task: MicroBuildInsertVsPayload@3
                   displayName: 'Create VS insertion: ${{ insertionBranch }}'
                   inputs:
                     TargetBranch: ${{ insertionBranch }}
