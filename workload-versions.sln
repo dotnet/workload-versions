@@ -5,6 +5,8 @@ VisualStudioVersion = 17.7.33920.267
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.NET.Workloads", "src\Microsoft.NET.Workloads\Microsoft.NET.Workloads.csproj", "{7EDB5924-188D-472F-B95B-C5BF6461DB41}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenerateTestWorkloadSets", "src\GenerateTestWorkloadSets\GenerateTestWorkloadSets.csproj", "{55BC9CC1-37A9-4472-B1FE-6B4B94DAA363}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{7EDB5924-188D-472F-B95B-C5BF6461DB41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EDB5924-188D-472F-B95B-C5BF6461DB41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EDB5924-188D-472F-B95B-C5BF6461DB41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55BC9CC1-37A9-4472-B1FE-6B4B94DAA363}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55BC9CC1-37A9-4472-B1FE-6B4B94DAA363}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55BC9CC1-37A9-4472-B1FE-6B4B94DAA363}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55BC9CC1-37A9-4472-B1FE-6B4B94DAA363}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
