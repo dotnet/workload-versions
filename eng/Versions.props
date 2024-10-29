@@ -20,11 +20,10 @@
     <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">false</StabilizePackageVersion>
     <DotNetFinalVersionKind Condition="'$(StabilizePackageVersion)' == 'true'">release</DotNetFinalVersionKind>
     <!-- Calculate prerelease label -->
-    <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' != 'true'">rc</PreReleaseVersionLabel>
-    <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' == 'true' and '$(VersionFeature)' == '00'">rtm</PreReleaseVersionLabel>
-    <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' == 'true' and '$(VersionFeature)' != '00'">servicing</PreReleaseVersionLabel>
-    <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'">2</PreReleaseVersionIteration>
-    <SDKFeatureBand Condition="'$(StabilizePackageVersion)' != 'true'">$(SDKFeatureBand)-$(PreReleaseVersionLabel).$(PreReleaseVersionIteration)</SDKFeatureBand>
+    <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' != 'true'">servicing</PreReleaseVersionLabel>
+    <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'">
+    </PreReleaseVersionIteration>
+    <SDKFeatureBand Condition="'$(StabilizePackageVersion)' != 'true' and $(PreReleaseVersionLabel) != 'servicing'">$(SDKFeatureBand)-$(PreReleaseVersionLabel).$(PreReleaseVersionIteration)</SDKFeatureBand>
     <!-- Use four part version if it's not a preview and not the .0 release-->
     <WorkloadsVersion Condition="'$(StabilizePackageVersion)' == 'true' and '$(VersionPatch)' != '0'">$(WorkloadsVersion).$(VersionPatch)</WorkloadsVersion>
   </PropertyGroup>
@@ -44,28 +43,28 @@
   </PropertyGroup>
   <PropertyGroup Label="EmscriptenWorkloads">
     <!-- Workloads from dotnet/emsdk -->
-    <MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion>9.0.0-rc.2.24468.8</MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion>
-    <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest90100TransportPackageVersion)</EmscriptenWorkloadManifestVersion>
+    <MicrosoftNETWorkloadEmscriptenCurrentManifest90100PackageVersion>9.0.0</MicrosoftNETWorkloadEmscriptenCurrentManifest90100PackageVersion>
+    <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest90100PackageVersion)</EmscriptenWorkloadManifestVersion>
     <!-- emsdk workload prerelease version band must match the emsdk feature band -->
     <EmscriptenWorkloadFeatureBand>9.0.100$([System.Text.RegularExpressions.Regex]::Match($(EmscriptenWorkloadManifestVersion), `-[A-z]*[\.]*\d*`))</EmscriptenWorkloadFeatureBand>
   </PropertyGroup>
   <PropertyGroup Label="MauiWorkloads">
-    <MauiFeatureBand>9.0.100-rc.2</MauiFeatureBand>
-    <MicrosoftNETSdkAndroidManifest90100rc2PackageVersion>35.0.0-rc.2.152</MicrosoftNETSdkAndroidManifest90100rc2PackageVersion>
-    <MicrosoftNETSdkiOSManifest90100rc2PackageVersion>18.0.9600-net9-rc2</MicrosoftNETSdkiOSManifest90100rc2PackageVersion>
-    <MicrosoftNETSdktvOSManifest90100rc2PackageVersion>18.0.9600-net9-rc2</MicrosoftNETSdktvOSManifest90100rc2PackageVersion>
-    <MicrosoftNETSdkMacCatalystManifest90100rc2PackageVersion>18.0.9600-net9-rc2</MicrosoftNETSdkMacCatalystManifest90100rc2PackageVersion>
-    <MicrosoftNETSdkmacOSManifest90100rc2PackageVersion>15.0.9600-net9-rc2</MicrosoftNETSdkmacOSManifest90100rc2PackageVersion>
-    <MicrosoftNETSdkMauiManifest90100rc2PackageVersion>9.0.0-rc.2.24503.2</MicrosoftNETSdkMauiManifest90100rc2PackageVersion>
-    <MauiWorkloadManifestVersion>$(MicrosoftNETSdkMauiManifest90100rc2PackageVersion)</MauiWorkloadManifestVersion>
-    <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest90100rc2PackageVersion)</XamarinAndroidWorkloadManifestVersion>
-    <XamarinIOSWorkloadManifestVersion>$(MicrosoftNETSdkiOSManifest90100rc2PackageVersion)</XamarinIOSWorkloadManifestVersion>
-    <XamarinMacCatalystWorkloadManifestVersion>$(MicrosoftNETSdkMacCatalystManifest90100rc2PackageVersion)</XamarinMacCatalystWorkloadManifestVersion>
-    <XamarinMacOSWorkloadManifestVersion>$(MicrosoftNETSdkmacOSManifest90100rc2PackageVersion)</XamarinMacOSWorkloadManifestVersion>
-    <XamarinTvOSWorkloadManifestVersion>$(MicrosoftNETSdktvOSManifest90100rc2PackageVersion)</XamarinTvOSWorkloadManifestVersion>
+    <MauiFeatureBand>9.0.100</MauiFeatureBand>
+    <MicrosoftNETSdkAndroidManifest90100PackageVersion>35.0.7</MicrosoftNETSdkAndroidManifest90100PackageVersion>
+    <MicrosoftNETSdkiOSManifest90100PackageVersion>18.0.9614</MicrosoftNETSdkiOSManifest90100PackageVersion>
+    <MicrosoftNETSdktvOSManifest90100PackageVersion>18.0.9614</MicrosoftNETSdktvOSManifest90100PackageVersion>
+    <MicrosoftNETSdkMacCatalystManifest90100PackageVersion>18.0.9614</MicrosoftNETSdkMacCatalystManifest90100PackageVersion>
+    <MicrosoftNETSdkmacOSManifest90100PackageVersion>15.0.9614</MicrosoftNETSdkmacOSManifest90100PackageVersion>
+    <MicrosoftNETSdkMauiManifest90100PackageVersion>9.0.0</MicrosoftNETSdkMauiManifest90100PackageVersion>
+    <MauiWorkloadManifestVersion>$(MicrosoftNETSdkMauiManifest90100PackageVersion)</MauiWorkloadManifestVersion>
+    <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest90100PackageVersion)</XamarinAndroidWorkloadManifestVersion>
+    <XamarinIOSWorkloadManifestVersion>$(MicrosoftNETSdkiOSManifest90100PackageVersion)</XamarinIOSWorkloadManifestVersion>
+    <XamarinMacCatalystWorkloadManifestVersion>$(MicrosoftNETSdkMacCatalystManifest90100PackageVersion)</XamarinMacCatalystWorkloadManifestVersion>
+    <XamarinMacOSWorkloadManifestVersion>$(MicrosoftNETSdkmacOSManifest90100PackageVersion)</XamarinMacOSWorkloadManifestVersion>
+    <XamarinTvOSWorkloadManifestVersion>$(MicrosoftNETSdktvOSManifest90100PackageVersion)</XamarinTvOSWorkloadManifestVersion>
   </PropertyGroup>
   <PropertyGroup Label="MonoWorkloads">
-    <MicrosoftNETCoreAppRefPackageVersion>9.0.0-rc.2.24473.5</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>9.0.0</MicrosoftNETCoreAppRefPackageVersion>
     <!-- Workloads from dotnet/runtime use MicrosoftNETCoreAppRefPackageVersion because it has a stable name that does not include the full feature band -->
     <MonoWorkloadManifestVersion>$(MicrosoftNETCoreAppRefPackageVersion)</MonoWorkloadManifestVersion>
     <!-- mono workload prerelease version band must match the runtime feature band -->
