@@ -8,7 +8,7 @@
     </Dependency>
     <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>b678c8a49022eb25e8c9de5ed3496d4a26b56e31</Sha>
+      <Sha>197db4ff0ded5f02e2d050f1310f297265d19e3d</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Aspire.Manifest-8.0.100" Version="8.2.2">
       <Uri>https://github.com/dotnet/aspire</Uri>
