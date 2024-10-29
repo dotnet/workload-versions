@@ -29,12 +29,15 @@ $versionDetailsPath = (Get-Item "$PSScriptRoot\Version.Details.xml").FullName
 $versionDetailsXml = [Xml.XmlDocument](Get-Content $versionDetailsPath)
 $versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Uri, Sha -Unique
 
+# TODO: Skipping pre.components for now.
+# $assetFilter = 'Workload\.VSDrop.*'
+$assetFilter = 'Workload\.VSDrop.*(?<!pre\.components\.zip)$'
 # Runs DARC against each workload to download the drop.
 $versionDetails | ForEach-Object {
   $darcArguments = @(
     'gather-drop'
     '--asset-filter'
-    'Workload\.VSDrop.*'
+    $assetFilter
     '--repo'
     $_.Uri
     '--commit'
