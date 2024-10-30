@@ -18,21 +18,21 @@
       <Uri>https://github.com/dotnet/android</Uri>
       <Sha>278e101698269c9bc8840aa94d72e7f24066a96d</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-9.0.100" Version="18.0.9614">
+    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-9.0.100" Version="18.0.9615">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>ad7db649a56adee1ceb987c1ce4dba9343046985</Sha>
+      <Sha>d9f2854558b9aa6549e7d3064e5c1bdfa55a18cf</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-9.0.100" Version="18.0.9614">
+    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-9.0.100" Version="18.0.9615">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>ad7db649a56adee1ceb987c1ce4dba9343046985</Sha>
+      <Sha>d9f2854558b9aa6549e7d3064e5c1bdfa55a18cf</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-9.0.100" Version="18.0.9614">
+    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-9.0.100" Version="18.0.9615">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>ad7db649a56adee1ceb987c1ce4dba9343046985</Sha>
+      <Sha>d9f2854558b9aa6549e7d3064e5c1bdfa55a18cf</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-9.0.100" Version="15.0.9614">
+    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-9.0.100" Version="15.0.9615">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>ad7db649a56adee1ceb987c1ce4dba9343046985</Sha>
+      <Sha>d9f2854558b9aa6549e7d3064e5c1bdfa55a18cf</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-9.0.100" Version="9.0.0">
       <Uri>https://github.com/dotnet/maui</Uri>
