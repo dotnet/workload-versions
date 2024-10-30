@@ -36,7 +36,7 @@
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-9.0.100" Version="9.0.0">
       <Uri>https://github.com/dotnet/maui</Uri>
-      <Sha>9939516e2f2a2681377d161097181587814a43d9</Sha>
+      <Sha>ab6edd64e82a58b73908229dc5ef1a28d45949d5</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
