@@ -19,6 +19,10 @@ pr: none
 
 parameters:
 # When true, tries to publish
+- name: StabilizePackageVersion
+  displayName: Stabilize Package Version
+  type: boolean
+  default: false
 - name: publishToFeed
   displayName: Publish to feed
   type: boolean
@@ -101,6 +105,7 @@ variables:
       /p:TeamName=$(_TeamName)
       /p:DotNetPublishUsingPipelines=true
       /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
+      /p:StabilizePackageVersion=$(StabilizePackageVersion)
   - name: PostBuildSign
     value: true
 resources:

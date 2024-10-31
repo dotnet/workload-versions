@@ -15,19 +15,18 @@
     <VersionPrefix>$(VersionMajor).$(VersionSDKMinor)$(VersionFeature).$(VersionPatch)</VersionPrefix>
     <!-- Set the workloads version to include in the readme, use four part if non-zero patch -->
     <WorkloadsVersion>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</WorkloadsVersion>
-    <WorkloadsVersion Condition="'$(VersionPatch)' != '0'">$(WorkloadsVersion).$(VersionPatch)</WorkloadsVersion>
     <MajorMinorVersion>$(VersionMajor).$(VersionMinor)</MajorMinorVersion>
     <CliProductBandVersion>$(MajorMinorVersion).$(VersionSDKMinor)</CliProductBandVersion>
     <SdkFeatureBand>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)00</SdkFeatureBand>
     <!-- Enable to remove prerelease label. -->
-    <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">true</StabilizePackageVersion>
+    <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">false</StabilizePackageVersion>
     <DotNetFinalVersionKind Condition="'$(StabilizePackageVersion)' == 'true'">release</DotNetFinalVersionKind>
     <!-- Calculate prerelease label -->
-    <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' != 'true'">preview</PreReleaseVersionLabel>
-    <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' == 'true' and '$(VersionFeature)' == '00'">rtm</PreReleaseVersionLabel>
-    <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' == 'true' and '$(VersionFeature)' != '00'">servicing</PreReleaseVersionLabel>
-    <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'">0</PreReleaseVersionIteration>
-    <SDKFeatureBand Condition="'$(StabilizePackageVersion)' != 'true'">$(SDKFeatureBand)-$(PreReleaseVersionLabel).$(PreReleaseVersionIteration)</SDKFeatureBand>
+    <PreReleaseVersionLabel Condition="'$(StabilizePackageVersion)' != 'true'">servicing</PreReleaseVersionLabel>
+    <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'"></PreReleaseVersionIteration>
+    <SDKFeatureBand Condition="'$(StabilizePackageVersion)' != 'true' and $(PreReleaseVersionLabel) != 'servicing'">$(SDKFeatureBand)-$(PreReleaseVersionLabel).$(PreReleaseVersionIteration)</SDKFeatureBand>
+    <!-- Use four part version if it's not a preview and not the .0 release-->
+    <WorkloadsVersion Condition="'$(StabilizePackageVersion)' == 'true' and '$(VersionPatch)' != '0'">$(WorkloadsVersion).$(VersionPatch)</WorkloadsVersion>
   </PropertyGroup>
   <!-- Restore feeds -->
   <PropertyGroup Label="Restore feeds">
