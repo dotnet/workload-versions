@@ -16,8 +16,8 @@ parameters:
   displayName: Create VS insertion
   type: boolean
   default: false
-- name: workloadsForVSInsertion
-  displayName: Workloads for VS insertion
+- name: workloadsForVSDrops
+  displayName: Workloads for VS drops
   type: object
   default:
   - emsdk
@@ -214,7 +214,7 @@ extends:
                   allowPackageConflicts: false
                   publishPackageMetadata: true
             - ${{ if eq(parameters.createVSInsertion, true) }}:
-              - ${{ each workloadShortName in parameters.workloadsForVSInsertion }}:
+              - ${{ each workloadShortName in parameters.workloadsForVSDrops }}:
                 - ${{ each workloadType in parameters.workloadTypesForVSDrops }}:
                   # - pwsh: "Write-Host 'Workload: $(${{ workload }}_test)'"
                   #   displayName: Display ${{ workload }}
@@ -237,23 +237,54 @@ extends:
                     # Only create the drop if the workload drop directory exists.
                     condition: eq(variables['WorkloadDropExists'], 'True')
 
-              - ${{ each insertionBranch in parameters.vsInsertionBranches }}:
+              - ${{ each primaryInsertionBranch in parameters.primaryVsInsertionBranches }}:
                 # Creates VS insertion PRs using the VS drops containing the workloads and vsman files.
-                # One PR is created per branch defined at the top of this file in the vsInsertionBranches parameter.
+                # One PR is created per branch defined at the top of this file in the primaryVsInsertionBranches parameter.
                 # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/635/Overview?anchor=**build-pipeline**
                 # YAML reference: https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/task.json
                 - task: MicroBuildInsertVsPayload@4
-                  displayName: 'Create VS insertion: ${{ insertionBranch }}'
+                  displayName: 'Create VS insertion: ${{ primaryInsertionBranch }}'
                   inputs:
                     InsertionAccessToken: $(dn-bot-devdiv-drop-rw-code-rw)
-                    TargetBranch: ${{ insertionBranch }}
+                    TargetBranch: ${{ primaryInsertionBranch }}
                     # Cannot use '.NET' at the start. The branch name (one used for VS insertion) is created via this value. It produces an error, for example:
                     # fatal: 'team/.NET-Project-System/DotNet-Project-System-20220818.3-1' is not a valid branch name
                     TeamName: DotNet SDK
                     TeamEmail: dotnetdevexcli@microsoft.com
                     InsertionPayloadName: 'DotNet-SDK-Workloads ($(Build.SourceBranchName):$(Build.BuildNumber))'
-                    # ComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
-                    ComponentJsonValues: $(ComponentJsonValues)
+                    # PrimaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
+                    ComponentJsonValues: $(PrimaryVSComponentJsonValues)
+                    AllowTopicBranchUpdate: true
+                    # This is the name of our DevDiv alias.
+                    InsertionReviewers: Dotnet Core SDK and CLI
+                    InsertionBuildPolicy: Request Perf DDRITs
+                    # This action only works on AzDO repos. This warning occurs if enabled:
+                    # ##[warning]WARNING: Cannot extract commit details from vstfs:///Build/Build/6574299: ArgumentException : 'https://github.com/dotnet/project-system' does not look like an Azure DevOps url
+                    # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/631/Copy-Commit-Details-to-PR
+                    AddCommitsToPR: false
+                    # This action only works on AzDO repos. This warning occurs if enabled:
+                    # ##[warning]WARNING: Cannot copy work items from vstfs:///Build/Build/6574299: ArgumentException : 'https://github.com/dotnet/project-system' does not look like an Azure DevOps url
+                    # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/634/Link-Work-Items-to-PR
+                    LinkWorkItemsToPR: false
+                    # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/638/Set-AutoComplete-on-an-Insertion
+                    InsertAutoComplete: true
+              - ${{ each secondaryInsertionBranch in parameters.secondaryVsInsertionBranches }}:
+                # Creates VS insertion PRs using the VS drops containing the workloads and vsman files.
+                # One PR is created per branch defined at the top of this file in the secondaryVsInsertionBranches parameter.
+                # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/635/Overview?anchor=**build-pipeline**
+                # YAML reference: https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/task.json
+                - task: MicroBuildInsertVsPayload@4
+                  displayName: 'Create VS insertion: ${{ secondaryInsertionBranch }}'
+                  inputs:
+                    InsertionAccessToken: $(dn-bot-devdiv-drop-rw-code-rw)
+                    TargetBranch: ${{ secondaryInsertionBranch }}
+                    # Cannot use '.NET' at the start. The branch name (one used for VS insertion) is created via this value. It produces an error, for example:
+                    # fatal: 'team/.NET-Project-System/DotNet-Project-System-20220818.3-1' is not a valid branch name
+                    TeamName: DotNet SDK
+                    TeamEmail: dotnetdevexcli@microsoft.com
+                    InsertionPayloadName: 'DotNet-SDK-Workloads ($(Build.SourceBranchName):$(Build.BuildNumber))'
+                    # SecondaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
+                    ComponentJsonValues: $(SecondaryVSComponentJsonValues)
                     AllowTopicBranchUpdate: true
                     # This is the name of our DevDiv alias.
                     InsertionReviewers: Dotnet Core SDK and CLI
