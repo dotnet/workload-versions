@@ -11,7 +11,7 @@
     <!-- Use the feature version for each monthly servicng release -->
     <!-- Use the patch version for intra-monthly releases and hotfixes -->
     <VersionFeature>04</VersionFeature>
-    <VersionPatch>4</VersionPatch>
+    <VersionPatch>0</VersionPatch>
     <VersionPrefix>$(VersionMajor).$(VersionSDKMinor)$(VersionFeature).$(VersionPatch)</VersionPrefix>
     <!-- Set the workloads version to include in the readme, use four part if non-zero patch -->
     <WorkloadsVersion>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</WorkloadsVersion>
@@ -22,7 +22,7 @@
     <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">false</StabilizePackageVersion>
     <DotNetFinalVersionKind Condition="'$(StabilizePackageVersion)' == 'true'">release</DotNetFinalVersionKind>
     <!-- Calculate prerelease label -->
-    <PreReleaseVersionLabel >servicing</PreReleaseVersionLabel>
+    <PreReleaseVersionLabel>servicing</PreReleaseVersionLabel>
     <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'"></PreReleaseVersionIteration>
     <SDKFeatureBand Condition="'$(StabilizePackageVersion)' != 'true'">$(SDKFeatureBand)-$(PreReleaseVersionLabel).$(PreReleaseVersionIteration)</SDKFeatureBand>
     <!-- Use four part version if it's not a preview and not the .0 release-->
