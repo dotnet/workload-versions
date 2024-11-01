@@ -10,10 +10,6 @@
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
       <Sha>0456c7e91c34003f26acf8606ba9d20e29f518bd</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Aspire.Manifest-8.0.100" Version="8.2.2">
-      <Uri>https://github.com/dotnet/aspire</Uri>
-      <Sha>5fa9337a84a52e9bd185d04d156eccbdcf592f74</Sha>
-    </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-9.0.100" Version="35.0.7">
       <Uri>https://github.com/dotnet/android</Uri>
       <Sha>278e101698269c9bc8840aa94d72e7f24066a96d</Sha>
