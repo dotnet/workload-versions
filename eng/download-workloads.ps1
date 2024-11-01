@@ -1,4 +1,4 @@
-param ([Parameter(Mandatory=$true)] [string] $workloadPath, [SecureString] $gitHubPat, [SecureString] $azDOPat)
+param ([Parameter(Mandatory=$true)] [string] $workloadPath, [SecureString] $gitHubPat, [SecureString] $azDOPat, [bool] $usePreComponents = $false)
 
 # Local Build
 # Local build requires the installation of DARC. See: https://github.com/dotnet/arcade/blob/main/Documentation/Darc.md#setting-up-your-darc-client
@@ -29,9 +29,14 @@ $versionDetailsPath = (Get-Item "$PSScriptRoot\Version.Details.xml").FullName
 $versionDetailsXml = [Xml.XmlDocument](Get-Content $versionDetailsPath)
 $versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Uri, Sha -Unique
 
-# TODO: Skipping pre.components for now.
 # $assetFilter = 'Workload\.VSDrop.*'
+# Exclude pre.components.zip.
 $assetFilter = 'Workload\.VSDrop.*(?<!pre\.components\.zip)$'
+if ($usePreComponents) {
+  # Exclude .components.zip but include pre.components.zip.
+  $assetFilter = 'Workload\.VSDrop.*((?<!\.components\.zip)|(?<=pre\.components\.zip))$'
+}
+
 # Runs DARC against each workload to download the drop.
 $versionDetails | ForEach-Object {
   $darcArguments = @(
