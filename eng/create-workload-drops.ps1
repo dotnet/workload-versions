@@ -8,8 +8,8 @@ $null = $workloads | ForEach-Object { Expand-Archive -Path $_.FullName -Destinat
 # Extracts the workload drop metadata from the drop name and builds the .vsmanproj project.
 # - full: The full drop name, excluding the 'Workload.VSDrop.' prefix.
 # - short: The short name of the drop. Only contains the first word after 'Workload.VSDrop.'.
-# - type: Either 'pre.components', 'components', or 'packs'.
-$dropInfoRegex = '^Workload\.VSDrop\.(?<full>(?<short>\w*)\..*?(?<type>(pre\.)?components$|packs$))'
+# - type: Either 'pre.components', 'components', 'packs', or 'multitarget'.
+$dropInfoRegex = '^Workload\.VSDrop\.(?<full>(?<short>\w*)\..*?(?<type>(pre\.)?components$|packs$|multitarget$))'
 $componentJsonValues = ''
 Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
   $null = $_.Name -match $dropInfoRegex
