@@ -10,7 +10,8 @@ $null = $workloads | ForEach-Object { Expand-Archive -Path $_.FullName -Destinat
 # - short: The short name of the drop. Only contains the first word after 'Workload.VSDrop.'.
 # - type: Either 'pre.components', 'components', 'packs', or 'multitarget'.
 $dropInfoRegex = '^Workload\.VSDrop\.(?<full>(?<short>\w*)\..*?(?<type>(pre\.)?components$|packs$|multitarget$))'
-$componentJsonValues = ''
+$primaryVSComponentJsonValues = ''
+$secondaryVSComponentJsonValues = ''
 Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
   $null = $_.Name -match $dropInfoRegex
 
@@ -33,7 +34,14 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
     # Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_full]$assemblyName"
 
     # Each vsman file is comma-separated. First .vsman is destination and the second is source.
-    $componentJsonValues += "$assemblyName.vsman=https://vsdrop.corp.microsoft.com/file/v1/$vsDropName;$assemblyName.vsman,"
+    $vsComponentValue = "$assemblyName.vsman=https://vsdrop.corp.microsoft.com/file/v1/$vsDropName;$assemblyName.vsman,"
+    # All VS components are added to the primary VS component JSON string.
+    $primaryVSComponentJsonValues += $vsComponentValue
+
+    # Secondary VS components do not include (pre)components drop types.
+    if ($dropType -ne 'components' -and $dropType -ne 'precomponents') {
+      $secondaryVSComponentJsonValues += $vsComponentValue
+    }
   }
 
   Write-Host 'After upload, your workload drop will be available at:'
@@ -43,9 +51,14 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
 # Clean up intermediate build files in the workload drop folders.
 $null = Get-ChildItem -Path $workloadDropPath -Include *.json, *.vsmand, files.txt -Recurse | Remove-Item
 
-# Write the component string for all the vsman files to a variable for the pipeline to use for the VS insertion step.
-if ($componentJsonValues) {
+# Write the primary and secondary component strings for the vsman files to a variable for the pipeline to use for the VS insertion step.
+if ($primaryVSComponentJsonValues) {
   # Remove the trailing comma.
-  $componentJsonValues = $componentJsonValues -replace '.$'
-  Write-Host "##vso[task.setvariable variable=ComponentJsonValues]$componentJsonValues"
+  $primaryVSComponentJsonValues = $primaryVSComponentJsonValues -replace '.$'
+  Write-Host "##vso[task.setvariable variable=PrimaryVSComponentJsonValues]$primaryVSComponentJsonValues"
+}
+if ($secondaryVSComponentJsonValues) {
+  # Remove the trailing comma.
+  $secondaryVSComponentJsonValues = $secondaryVSComponentJsonValues -replace '.$'
+  Write-Host "##vso[task.setvariable variable=SecondaryVSComponentJsonValues]$secondaryVSComponentJsonValues"
 }
