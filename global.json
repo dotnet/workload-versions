@@ -1,13 +1,12 @@
 {
   "tools": {
     "dotnet": "9.0.100",
-
     "xcopy-msbuild": "17.10.0-pre.4.0"
   },
   "msbuild-sdks": {
     "Microsoft.Build.NoTargets": "3.7.0",
     "Microsoft.DotNet.Arcade.Sdk": "9.0.0-beta.25058.5",
-    "Microsoft.DotNet.Helix.Sdk": "9.0.0-beta.23552.3",
-    "Microsoft.VisualStudio.Internal.MicroBuild.Vsman": "2.0.167"
+    "Microsoft.DotNet.Helix.Sdk": "9.0.0-beta.24572.2",
+    "Microsoft.VisualStudio.Internal.MicroBuild.Vsman": "2.0.174"
   }
 }
