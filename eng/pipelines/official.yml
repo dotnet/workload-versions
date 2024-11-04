@@ -16,16 +16,16 @@ parameters:
   displayName: Create VS insertion
   type: boolean
   default: false
+- name: usePreComponentsForVSInsertion
+  displayName: Use Preview Components for VS insertion
+  type: boolean
+  default: false
 - name: workloadsForVSDrops
   displayName: Workloads for VS drops
   type: object
   default:
   - emsdk
   - mono
-- name: usePreComponentsForVSInsertion
-  displayName: Use Preview Components for VS insertion
-  type: boolean
-  default: false
 # These types match the types handled in create-workload-drops.ps1. There is a RegEx in that script that parses the workload type out of the workload path.
 # If this list needs to be updated, the RegEx in the script also needs to be updated.
 # The hardcoded list here is necessary as these types need to be available during compilation of the pipeline.
