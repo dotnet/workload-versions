@@ -16,9 +16,13 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
   $null = $_.Name -match $dropInfoRegex
 
   $assemblyName = "$($Matches.full)"
-  $vsDropName = "Products/dotnet/workloads/$($assemblyName)/$(Get-Date -Format 'yyyyMMdd.hhmmss.fff')"
+  # TODO: Use file hash instead of current date time.
+  $currentDateTime = Get-Date -Format 'yyyyMMdd.hhmmss.fff'
+  $vsDropName = "Products/dotnet/workloads/$assemblyName/$currentDateTime"
   $dropDir = "$($_.FullName)\"
 
+  # This requires building via MSBuild.exe as there are .NET Framework dependencies necessary for building the .vsmanproj.
+  # Additionally, even using the MSBuild task won't work as '/restore' must be used for it to restore properly when building the .vsmanproj.
   & "$msBuildToolsPath\MSBuild.exe" Microsoft.NET.Workloads.Vsman.vsmanproj /restore /t:Build `
     /p:AssemblyName=$assemblyName `
     /p:VstsDropNames=$vsDropName `
