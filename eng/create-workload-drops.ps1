@@ -12,15 +12,19 @@ $null = $workloads | ForEach-Object { Expand-Archive -Path $_.FullName -Destinat
 $dropInfoRegex = '^Workload\.VSDrop\.(?<full>(?<short>\w*)\..*?(?<type>(pre\.)?components$|packs$|multitarget$))'
 $primaryVSComponentJsonValues = ''
 $secondaryVSComponentJsonValues = ''
+$hashAlgorithm = [System.Security.Cryptography.SHA256]::Create()
 Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
   $null = $_.Name -match $dropInfoRegex
-
   $assemblyName = "$($Matches.full)"
-  # TODO: Use file hash instead of current date time.
-  $currentDateTime = Get-Date -Format 'yyyyMMdd.hhmmss.fff'
-  $vsDropName = "Products/dotnet/workloads/$assemblyName/$currentDateTime"
   $dropDir = "$($_.FullName)\"
 
+  # Hash the files within the drop folder to create a unique identifier that represents this workload drop.
+  $fileHashes = [byte[]]@()
+  $dropFiles = Get-ChildItem -Path $dropDir | Sort-Object
+  $null = $dropFiles | Get-Content -Encoding Byte -Raw | ForEach-Object { $fileHashes += $hashAlgorithm.ComputeHash($_) }
+  $dropHash = [System.BitConverter]::ToString($hashAlgorithm.ComputeHash([byte[]]$fileHashes)).Replace('-','')
+
+  $vsDropName = "Products/dotnet/workloads/$assemblyName/$dropHash"
   # This requires building via MSBuild.exe as there are .NET Framework dependencies necessary for building the .vsmanproj.
   # Additionally, even using the MSBuild task won't work as '/restore' must be used for it to restore properly when building the .vsmanproj.
   & "$msBuildToolsPath\MSBuild.exe" Microsoft.NET.Workloads.Vsman.vsmanproj /restore /t:Build `
