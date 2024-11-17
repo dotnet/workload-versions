@@ -3,12 +3,12 @@
   <ProductDependencies>
     <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-9.0.100" Version="9.0.0" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>cd2146c90fc68d5ff2db715337e696229c74651e</Sha>
+      <Sha>763d10a1a251be35337ee736832bfde3f9200672</Sha>
       <SourceBuild RepoName="emsdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0">
-      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
-      <Sha>0456c7e91c34003f26acf8606ba9d20e29f518bd</Sha>
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.1">
+      <Uri>https://github.com/dotnet/runtime</Uri>
+      <Sha>940e395337ef32782723b789e530aa4abd72b054</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-9.0.100" Version="35.0.7">
       <Uri>https://github.com/dotnet/android</Uri>
