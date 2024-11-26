@@ -7,7 +7,7 @@
   <PropertyGroup>
     <VersionMajor>9</VersionMajor>
     <VersionMinor>0</VersionMinor>
-    <VersionSDKMinor>1</VersionSDKMinor>
+    <VersionSDKMinor>2</VersionSDKMinor>
     <!-- Use the feature version for each monthly servicng release -->
     <!-- Use the patch version for intra-monthly releases and hotfixes -->
     <VersionFeature>00</VersionFeature>
@@ -17,7 +17,7 @@
     <WorkloadsVersion>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</WorkloadsVersion>
     <SdkFeatureBand>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)00</SdkFeatureBand>
     <!-- Enable to remove prerelease label. -->
-    <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">false</StabilizePackageVersion>
+    <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">true</StabilizePackageVersion>
     <DotNetFinalVersionKind Condition="'$(StabilizePackageVersion)' == 'true'">release</DotNetFinalVersionKind>
     <!-- Calculate prerelease label
     Use preview and prerelease version 0 for SDK feature band previews
