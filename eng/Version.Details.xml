@@ -34,8 +34,8 @@
       <Sha>a33a875ef023fdab35aefb57c5f70addd965f3e4</Sha>
     </Dependency>
     <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.404-servicing.24521.39">
-      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>5dd80ae4b107027f86bda68ce91542cad72b2868</Sha>
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-installer</Uri>
+      <Sha>7b190310f25ae8d6e735d9b31fb2dbb599e75803</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
