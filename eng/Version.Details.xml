@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-9.0.100" Version="9.0.0" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-9.0.100" Version="9.0.0" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/emsdk</Uri>
       <Sha>cd2146c90fc68d5ff2db715337e696229c74651e</Sha>
       <SourceBuild RepoName="emsdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.0" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
       <Sha>0456c7e91c34003f26acf8606ba9d20e29f518bd</Sha>
     </Dependency>
@@ -33,6 +33,10 @@
     <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-9.0.100" Version="9.0.0">
       <Uri>https://github.com/dotnet/maui</Uri>
       <Sha>d18a510ef0b3e445ab735f6d80a903902e939c0b</Sha>
+    </Dependency>
+    <Dependency Name="Microsoft.NET.Sdk" Version="9.0.101-servicing.24572.9">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
+      <Sha>eedb237549e0f02ec827b0905cf9231f5b4519a9</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
