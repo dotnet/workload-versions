@@ -305,3 +305,11 @@ extends:
                     LinkWorkItemsToPR: false
                     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/638/Set-AutoComplete-on-an-Insertion
                     InsertAutoComplete: true
+            - task: 1ES.PublishBuildArtifacts@1
+              displayName: Publish Logs
+              inputs:
+                PathtoPublish: $(Build.SourcesDirectory)/artifacts/log/Release
+                ArtifactName: BinLogs
+                publishLocation: Container
+              continueOnError: true
+              condition: always()
