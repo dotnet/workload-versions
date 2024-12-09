@@ -306,10 +306,10 @@ extends:
                     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/638/Set-AutoComplete-on-an-Insertion
                     InsertAutoComplete: true
             - task: 1ES.PublishBuildArtifacts@1
-              displayName: Publish Logs
+              displayName: Publish Artifacts
               inputs:
-                PathtoPublish: $(Build.SourcesDirectory)/artifacts/log/Release
-                ArtifactName: BinLogs
+                PathtoPublish: $(Build.SourcesDirectory)/artifacts
+                ArtifactName: Artifacts
                 publishLocation: Container
               continueOnError: true
               condition: always()
