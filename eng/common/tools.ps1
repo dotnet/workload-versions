@@ -613,7 +613,9 @@ function InitializeBuildTool() {
       ExitWithExitCode 1
     }
 
-    $buildTool = @{ Path = $msbuildPath; Command = ""; Tool = "vs"; Framework = "netframework"; ExcludePrereleaseVS = $excludePrereleaseVS }
+    # TODO: Workaround for broken path.
+    # https://github.com/dotnet/arcade/commit/e0270d6e8cf548a62aa70ae7d6b0fab8d3c1dc42#diff-72b8f8e899b94872c6ead31fd06ec109da15bcb9ad2af6e78103d6763a31c637L623
+    $buildTool = @{ Path = $msbuildPath; Command = ""; Tool = "vs"; Framework = "net472"; ExcludePrereleaseVS = $excludePrereleaseVS }
   } else {
     Write-PipelineTelemetryError -Category 'InitializeToolset' -Message "Unexpected value of -msbuildEngine: '$msbuildEngine'."
     ExitWithExitCode 1
@@ -790,7 +792,7 @@ function MSBuild() {
       Write-PipelineTelemetryError -Category 'Build' -Message 'Unable to find arcade sdk logger assembly.'
       ExitWithExitCode 1
     }
-    $args += "/logger:$selectedPath"
+    # $args += "/logger:$selectedPath"
   }
 
   MSBuild-Core @args
@@ -817,6 +819,7 @@ function MSBuild-Core() {
   Enable-Nuget-EnhancedRetry
 
   $buildTool = InitializeBuildTool
+  Write-Host "Here"
 
   $cmdArgs = "$($buildTool.Command) /m /nologo /clp:Summary /v:$verbosity /nr:$nodeReuse /p:ContinuousIntegrationBuild=$ci"
 
@@ -839,7 +842,9 @@ function MSBuild-Core() {
   # Be sure quote the path in case there are spaces in the dotnet installation location.
   $env:ARCADE_BUILD_TOOL_COMMAND = "`"$($buildTool.Path)`" $cmdArgs"
 
+  Write-Host "Command: $($buildTool.Path) $cmdArgs"
   $exitCode = Exec-Process $buildTool.Path $cmdArgs
+  Write-Host "Here2"
 
   if ($exitCode -ne 0) {
     # We should not Write-PipelineTaskError here because that message shows up in the build summary
