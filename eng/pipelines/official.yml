@@ -148,7 +148,7 @@ extends:
             timeoutInMinutes: 120
             pool:
               name: $(DncEngInternalBuildPool)
-              image: windows.vs2022.amd64
+              image: 1es-windows-2022
               os: windows
             steps:
             # - pwsh: >-
