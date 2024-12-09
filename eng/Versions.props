@@ -11,7 +11,7 @@
     <!-- Use the feature version for each monthly servicng release -->
     <!-- Use the patch version for intra-monthly releases and hotfixes -->
     <VersionFeature>01</VersionFeature>
-    <VersionPatch>0</VersionPatch>
+    <VersionPatch>1</VersionPatch>
     <VersionPrefix>$(VersionMajor).$(VersionSDKMinor)$(VersionFeature).$(VersionPatch)</VersionPrefix>
     <!-- Use three part version for the workloads version and include in the readme if it's the .0 release or a preview -->
     <WorkloadsVersion>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</WorkloadsVersion>
@@ -52,7 +52,7 @@
   </PropertyGroup>
   <PropertyGroup Label="MauiWorkloads">
     <MauiFeatureBand>9.0.100</MauiFeatureBand>
-    <MicrosoftNETSdkAndroidManifest90100PackageVersion>35.0.7</MicrosoftNETSdkAndroidManifest90100PackageVersion>
+    <MicrosoftNETSdkAndroidManifest90100PackageVersion>35.0.24</MicrosoftNETSdkAndroidManifest90100PackageVersion>
     <MicrosoftNETSdkiOSManifest90100PackageVersion>18.1.9163</MicrosoftNETSdkiOSManifest90100PackageVersion>
     <MicrosoftNETSdktvOSManifest90100PackageVersion>18.1.9163</MicrosoftNETSdktvOSManifest90100PackageVersion>
     <MicrosoftNETSdkMacCatalystManifest90100PackageVersion>18.1.9163</MicrosoftNETSdkMacCatalystManifest90100PackageVersion>
