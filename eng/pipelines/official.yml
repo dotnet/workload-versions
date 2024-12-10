@@ -174,7 +174,7 @@ extends:
             - script: eng\common\CIBuild.cmd
                 -configuration $(_BuildConfig)
                 -prepareMachine
-                -p:FeatureBand=9.0.200
+                /p:FeatureBand=9.0.200
                 $(_AdditionalBuildArgs)
                 $(_InternalBuildArgs)
               displayName: $(_BuildJobDisplayName) 9.0.200
