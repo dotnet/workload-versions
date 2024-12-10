@@ -12,19 +12,29 @@
     <!-- Use the patch version for intra-monthly releases and hotfixes -->
     <VersionFeature>01</VersionFeature>
     <VersionPatch>1</VersionPatch>
+    <!-- Enable to remove prerelease label. -->
+    <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">false</StabilizePackageVersion>
+    <PreReleaseVersionLabel>servicing</PreReleaseVersionLabel>
+    <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'">
+    </PreReleaseVersionIteration>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(FeatureBand)' == '9.0.200'">
+    <VersionSDKMinor>2</VersionSDKMinor>
+    <VersionFeature>00</VersionFeature>
+    <VersionPatch>0</VersionPatch>
+    <StabilizePackageVersion>false</StabilizePackageVersion>
+    <!-- Calculate prerelease label
+    Use preview and prerelease version 0 for SDK feature band previews
+    Use preview and the matching SDK preview version for Major version previews -->
+    <PreReleaseVersionLabel>preview</PreReleaseVersionLabel>
+    <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'">0</PreReleaseVersionIteration>
+  </PropertyGroup>
+  <PropertyGroup>
     <VersionPrefix>$(VersionMajor).$(VersionSDKMinor)$(VersionFeature).$(VersionPatch)</VersionPrefix>
     <!-- Use three part version for the workloads version and include in the readme if it's the .0 release or a preview -->
     <WorkloadsVersion>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)$(VersionFeature)</WorkloadsVersion>
     <SdkFeatureBand>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)00</SdkFeatureBand>
-    <!-- Enable to remove prerelease label. -->
-    <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">false</StabilizePackageVersion>
     <DotNetFinalVersionKind Condition="'$(StabilizePackageVersion)' == 'true'">release</DotNetFinalVersionKind>
-    <!-- Calculate prerelease label
-    Use preview and prerelease version 0 for SDK feature band previews
-    Use preview and the matching SDK preview version for Major version previews -->
-    <PreReleaseVersionLabel>servicing</PreReleaseVersionLabel>
-    <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'">
-    </PreReleaseVersionIteration>
     <SDKFeatureBand Condition="'$(StabilizePackageVersion)' != 'true' and $(PreReleaseVersionLabel) != 'servicing'">$(SDKFeatureBand)-$(PreReleaseVersionLabel).$(PreReleaseVersionIteration)</SDKFeatureBand>
     <!-- Use four part version if it's not a preview and not the .0 release-->
     <WorkloadsVersion Condition="'$(StabilizePackageVersion)' == 'true' and '$(VersionPatch)' != '0'">$(WorkloadsVersion).$(VersionPatch)</WorkloadsVersion>
