@@ -48,13 +48,12 @@ parameters:
   displayName: Primary VS insertion branches
   type: object
   default:
-  - rel/d17.11
+  - rel/d17.12
 # These insert packs/multitarget only into VS [no (pre)components].
 - name: secondaryVsInsertionBranches
   displayName: Secondary VS insertion branches (packs only)
   type: object
   default:
-  - rel/d17.12
   - rel/d17.13
 
 variables:
@@ -305,11 +304,11 @@ extends:
                     LinkWorkItemsToPR: false
                     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/638/Set-AutoComplete-on-an-Insertion
                     InsertAutoComplete: true
-            # - task: 1ES.PublishBuildArtifacts@1
-            #   displayName: Publish Artifacts
-            #   inputs:
-            #     PathtoPublish: $(Build.SourcesDirectory)/artifacts
-            #     ArtifactName: Artifacts
-            #     publishLocation: Container
-            #   continueOnError: true
-            #   condition: always()
+            - task: 1ES.PublishBuildArtifacts@1
+              displayName: Publish Workload Drops to Pipeline
+              inputs:
+                PathtoPublish: $(Build.SourcesDirectory)/artifacts/workloads/drops
+                ArtifactName: WorkloadDrops
+                publishLocation: Container
+              continueOnError: true
+              condition: always()
