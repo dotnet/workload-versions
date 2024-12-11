@@ -228,12 +228,27 @@ extends:
                   - pwsh: Write-Host "##vso[task.setvariable variable=WorkloadDropExists]$(Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')"
                     displayName: Check if ${{ workloadShortName }}_${{ workloadType }} drop exists
 
-                  # The '$?' is an automatic variable that says if the previous command succeeded or not. If the URL exists, this will True, otherwise False.
+                  # - pwsh: |
+                  #     $accessToken = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$(dn-bot-devdiv-drop-rw-code-rw)"))
+                  #     $authHeader = @{ 'Authorization' = "Basic $accessToken" }
+                  #     $workloadUrl = '$(${{ workloadShortName }}_${{ workloadType }}_url)'
+                  #     try {
+                  #       Invoke-RestMethod -Uri $workloadUrl -Method Get -ContentType 'application/json' -Headers $authHeader
+                  #       Write-Host "##vso[task.setvariable variable=WorkloadUrlExists]True"
+                  #     } catch {
+                  #       Write-Host "##vso[task.setvariable variable=WorkloadUrlExists]False"
+                  #     }
+                  #   displayName: Check if ${{ workloadShortName }}_${{ workloadType }} URL exists
+
                   - pwsh: |
-                      $accessToken = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$(dn-bot-devdiv-drop-rw-code-rw)"))
-                      $authHeader = @{ 'Authorization' = "Basic $accessToken" }
-                      Invoke-RestMethod -Uri '$(${{ workloadShortName }}_${{ workloadType }}_url)' -Method Get -ContentType 'application/json' -Headers $authHeader
-                      Write-Host "##vso[task.setvariable variable=WorkloadUrlExists]$?"
+                      $accessToken = ConvertTo-SecureString -String '$(dn-bot-devdiv-drop-rw-code-rw)' -AsPlainText -Force
+                      $workloadUrl = '$(${{ workloadShortName }}_${{ workloadType }}_url)'
+                      try {
+                        $response = Invoke-WebRequest -Uri $workloadUrl -Authentication Bearer -Token $accessToken
+                        Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]$($response.StatusCode -eq 200)"
+                      } catch {
+                        Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]False"
+                      }
                     displayName: Check if ${{ workloadShortName }}_${{ workloadType }} URL exists
 
                   # Docs: https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/1es-pipeline-templates/features/outputs/microbuild-vsts-drop
@@ -248,7 +263,7 @@ extends:
                       # dropRetentionDays: 90
                       accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
                     # Only create the drop if the workload drop directory exists.
-                    condition: and(eq(variables['WorkloadDropExists'], 'True'), eq(variables['WorkloadUrlExists'], 'False'))
+                    condition: and(eq(variables['WorkloadDropExists'], 'True'), eq(variables['UploadWorkloadDrop'], 'True'))
 
               - ${{ each primaryInsertionBranch in parameters.primaryVsInsertionBranches }}:
                 # Creates VS insertion PRs using the VS drops containing the workloads and vsman files.
