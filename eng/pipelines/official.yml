@@ -224,9 +224,9 @@ extends:
                   # - pwsh: "Write-Host 'Workload: $(${{ workload }}_test)'"
                   #   displayName: Display ${{ workload }}
 
-                  # https://stackoverflow.com/a/60630739/294804
-                  - pwsh: Write-Host "##vso[task.setvariable variable=WorkloadDropExists]$(Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')"
-                    displayName: Check if ${{ workloadShortName }}_${{ workloadType }} drop exists
+                  # # https://stackoverflow.com/a/60630739/294804
+                  # - pwsh: Write-Host "##vso[task.setvariable variable=WorkloadDropExists]$(Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')"
+                  #   displayName: Check if ${{ workloadShortName }}_${{ workloadType }} drop exists
 
                   # - pwsh: |
                   #     $accessToken = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$(dn-bot-devdiv-drop-rw-code-rw)"))
@@ -251,6 +251,31 @@ extends:
                       }
                     displayName: Check if ${{ workloadShortName }}_${{ workloadType }} URL exists
 
+                  # https://stackoverflow.com/a/60630739/294804
+                  # https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/azure-artifacts/drop-service/azure-artifacts-drop#dropexe-get-the-client-using-powershell-only-when-needed
+                  - pwsh: |
+                      # If the drop folder doesn't exist (not acquired), the drop cannot be uploaded.
+                      if (-not (Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')) {
+                        Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]False"
+                        Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" was not acquired. Skipping upload.'
+                        return
+                      }
+                      $accessToken = ConvertTo-SecureString -String '$(dn-bot-devdiv-drop-rw-code-rw)' -AsPlainText -Force
+                      $workloadUrl = '$(${{ workloadShortName }}_${{ workloadType }}_url)'
+                      $response = Invoke-WebRequest -Uri $workloadUrl -Authentication Bearer -Token $accessToken
+                      if ($response.StatusCode -eq 401) {
+                        Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]False"
+                        Write-Host 'Workload drop check is unauthorized. Please fix.'
+                        return 1
+                      }
+                      if ($response.StatusCode -ne 200) {
+                        Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]False"
+                        Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" has already been uploaded. Skipping upload.'
+                        return
+                      }
+                      Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]True"
+                    displayName: Check if ${{ workloadShortName }}_${{ workloadType }} exists
+
                   # Docs: https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/1es-pipeline-templates/features/outputs/microbuild-vsts-drop
                   # YAML reference (original task): https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
                   - task: 1ES.MicroBuildVstsDrop@1
@@ -263,7 +288,7 @@ extends:
                       # dropRetentionDays: 90
                       accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
                     # Only create the drop if the workload drop directory exists.
-                    condition: and(eq(variables['WorkloadDropExists'], 'True'), eq(variables['UploadWorkloadDrop'], 'True'))
+                    condition: eq(variables['UploadWorkloadDrop'], 'True')
 
               - ${{ each primaryInsertionBranch in parameters.primaryVsInsertionBranches }}:
                 # Creates VS insertion PRs using the VS drops containing the workloads and vsman files.
