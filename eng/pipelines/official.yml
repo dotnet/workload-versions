@@ -15,7 +15,7 @@ parameters:
 - name: feedForPublishing
   displayName: Feed for publishing
   type: string
-  default: public/dotnet8-workloads
+  default: public/dotnet9-workloads
 - name: createVSInsertion
   displayName: Create VS insertion
   type: boolean
@@ -104,6 +104,8 @@ variables:
   - group: Release-Pipeline
   # DotNet-DevDiv-Insertion-Workflow-Variables provides: dn-bot-devdiv-drop-rw-code-rw
   - group: DotNet-DevDiv-Insertion-Workflow-Variables
+  # DotNet-VSTS-Infra-Access provides: dn-bot-devdiv-build-rw-code-rw-release-rw
+  - group: DotNet-VSTS-Infra-Access
 
 resources:
   repositories:
@@ -260,7 +262,7 @@ extends:
                         Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" was not acquired. Skipping upload.'
                         return
                       }
-                      $accessToken = ConvertTo-SecureString -String '$(dn-bot-all-drop-rw-code-rw-release-all)' -AsPlainText -Force
+                      $accessToken = ConvertTo-SecureString -String '$(dn-bot-devdiv-build-rw-code-rw-release-rw)' -AsPlainText -Force
                       $workloadUrl = '$(${{ workloadShortName }}_${{ workloadType }}_url)'
                       $response = Invoke-WebRequest -Uri $workloadUrl -Authentication Bearer -Token $accessToken
                       if ($response.StatusCode -eq 401) {
@@ -300,7 +302,8 @@ extends:
                   displayName: 'Create VS insertion: ${{ primaryInsertionBranch }}'
                   inputs:
                     # InsertionAccessToken: $(dn-bot-all-drop-rw-code-rw-release-all)
-                    ConnectedServiceName: DotNetRelease-PME
+                    # ConnectedServiceName: DotNetRelease-PME
+                    InsertionAccessToken: $(dn-bot-devdiv-build-rw-code-rw-release-rw)
                     TargetBranch: ${{ primaryInsertionBranch }}
                     # Cannot use '.NET' at the start. The branch name (one used for VS insertion) is created via this value. It produces an error, for example:
                     # fatal: 'team/.NET-Project-System/DotNet-Project-System-20220818.3-1' is not a valid branch name
@@ -328,7 +331,7 @@ extends:
                 # One PR is created per branch defined at the top of this file in the secondaryVsInsertionBranches parameter.
                 # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/635/Overview?anchor=**build-pipeline**
                 # YAML reference: https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/task.json
-                - task: MicroBuildInsertVsPayload@4
+                - task: MicroBuildInsertVsPayload@5
                   displayName: 'Create VS insertion: ${{ secondaryInsertionBranch }}'
                   inputs:
                     InsertionAccessToken: $(dn-bot-devdiv-drop-rw-code-rw)
@@ -343,7 +346,7 @@ extends:
                     AllowTopicBranchUpdate: true
                     # This is the name of our DevDiv alias.
                     InsertionReviewers: Dotnet Core SDK and CLI
-                    InsertionBuildPolicy: Request Perf DDRITs
+                    InsertionBuildPolicies: Request Perf DDRITs
                     # This action only works on AzDO repos. This warning occurs if enabled:
                     # ##[warning]WARNING: Cannot extract commit details from vstfs:///Build/Build/6574299: ArgumentException : 'https://github.com/dotnet/project-system' does not look like an Azure DevOps url
                     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/631/Copy-Commit-Details-to-PR
