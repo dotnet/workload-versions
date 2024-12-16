@@ -299,7 +299,8 @@ extends:
                 - task: MicroBuildInsertVsPayload@4
                   displayName: 'Create VS insertion: ${{ primaryInsertionBranch }}'
                   inputs:
-                    InsertionAccessToken: $(dn-bot-all-drop-rw-code-rw-release-all)
+                    # InsertionAccessToken: $(dn-bot-all-drop-rw-code-rw-release-all)
+                    ConnectedServiceName: DotNetRelease-PME
                     TargetBranch: ${{ primaryInsertionBranch }}
                     # Cannot use '.NET' at the start. The branch name (one used for VS insertion) is created via this value. It produces an error, for example:
                     # fatal: 'team/.NET-Project-System/DotNet-Project-System-20220818.3-1' is not a valid branch name
