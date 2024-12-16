@@ -37,7 +37,7 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
     $shortName = "$($Matches.short)"
     # Remove the '.' from 'pre.components'
     $dropType = $Matches.type.Replace('.', '')
-    $dropUrl = "https://vsdrop.microsoft.com/file/v1/$vsDropName;$assemblyName.vsman"
+    $dropUrl = "https://vsdrop.corp.microsoft.com/file/v1/$vsDropName;$assemblyName.vsman"
 
     Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_name]$vsDropName"
     Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_dir]$dropDir"
