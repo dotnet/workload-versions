@@ -296,7 +296,7 @@ extends:
                 # One PR is created per branch defined at the top of this file in the primaryVsInsertionBranches parameter.
                 # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/635/Overview?anchor=**build-pipeline**
                 # YAML reference: https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/task.json
-                - task: MicroBuildInsertVsPayload@4
+                - task: MicroBuildInsertVsPayload@5
                   displayName: 'Create VS insertion: ${{ primaryInsertionBranch }}'
                   inputs:
                     # InsertionAccessToken: $(dn-bot-all-drop-rw-code-rw-release-all)
@@ -312,7 +312,7 @@ extends:
                     AllowTopicBranchUpdate: true
                     # This is the name of our DevDiv alias.
                     InsertionReviewers: Dotnet Core SDK and CLI
-                    InsertionBuildPolicy: Request Perf DDRITs
+                    InsertionBuildPolicies: Request Perf DDRITs
                     # This action only works on AzDO repos. This warning occurs if enabled:
                     # ##[warning]WARNING: Cannot extract commit details from vstfs:///Build/Build/6574299: ArgumentException : 'https://github.com/dotnet/project-system' does not look like an Azure DevOps url
                     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/631/Copy-Commit-Details-to-PR
