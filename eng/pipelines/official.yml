@@ -109,13 +109,18 @@ variables:
 
 resources:
   repositories:
-  - repository: 1esPipelines
+  # - repository: 1esPipelines
+  #   type: git
+  #   name: 1ESPipelineTemplates/1ESPipelineTemplates
+  #   ref: refs/tags/release
+  - repository: MicroBuildTemplate
     type: git
-    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    name: 1ESPipelineTemplates/MicroBuildTemplate
     ref: refs/tags/release
 
 extends:
-  template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
+  # template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
+  template: azure-pipelines/MicroBuild.1ES.Official.yml@MicroBuildTemplate
   parameters:
     sdl:
       sourceAnalysisPool:
@@ -262,7 +267,7 @@ extends:
                         Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" was not acquired. Skipping upload.'
                         return
                       }
-                      $accessToken = ConvertTo-SecureString -String '$(dn-bot-devdiv-build-rw-code-rw-release-rw)' -AsPlainText -Force
+                      $accessToken = ConvertTo-SecureString -String '$(System.AccessToken)' -AsPlainText -Force
                       $workloadUrl = '$(${{ workloadShortName }}_${{ workloadType }}_url)'
                       $response = Invoke-WebRequest -Uri $workloadUrl -Authentication Bearer -Token $accessToken
                       if ($response.StatusCode -eq 401) {
@@ -289,7 +294,8 @@ extends:
                       # See: https://dev.azure.com/devdiv/DevDiv/_wiki/wikis/DevDiv.wiki/35351/Retain-Drops
                       dropRetentionDays: 183
                       # dropRetentionDays: 90
-                      accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
+                      # accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
+                      accessToken: $(System.AccessToken)
                     # Only create the drop if the workload drop directory exists.
                     condition: eq(variables['UploadWorkloadDrop'], 'True')
 
@@ -303,7 +309,7 @@ extends:
                   inputs:
                     # InsertionAccessToken: $(dn-bot-all-drop-rw-code-rw-release-all)
                     # ConnectedServiceName: DotNetRelease-PME
-                    InsertionAccessToken: $(dn-bot-devdiv-build-rw-code-rw-release-rw)
+                    # InsertionAccessToken: $(dn-bot-devdiv-build-rw-code-rw-release-rw)
                     TargetBranch: ${{ primaryInsertionBranch }}
                     # Cannot use '.NET' at the start. The branch name (one used for VS insertion) is created via this value. It produces an error, for example:
                     # fatal: 'team/.NET-Project-System/DotNet-Project-System-20220818.3-1' is not a valid branch name
@@ -334,7 +340,7 @@ extends:
                 - task: MicroBuildInsertVsPayload@5
                   displayName: 'Create VS insertion: ${{ secondaryInsertionBranch }}'
                   inputs:
-                    InsertionAccessToken: $(dn-bot-devdiv-drop-rw-code-rw)
+                    # InsertionAccessToken: $(dn-bot-devdiv-drop-rw-code-rw)
                     TargetBranch: ${{ secondaryInsertionBranch }}
                     # Cannot use '.NET' at the start. The branch name (one used for VS insertion) is created via this value. It produces an error, for example:
                     # fatal: 'team/.NET-Project-System/DotNet-Project-System-20220818.3-1' is not a valid branch name
