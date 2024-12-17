@@ -46,13 +46,13 @@ parameters:
   - components
   - packs
   - precomponents
-# These insert (pre)components & packs/multitarget into VS.
+# These insert (pre)components & packs into VS.
 - name: primaryVsInsertionBranches
   displayName: Primary VS insertion branches
   type: object
   default:
   - rel/d17.12
-# These insert packs/multitarget only into VS [no (pre)components].
+# These insert packs only into VS [no (pre)components].
 - name: secondaryVsInsertionBranches
   displayName: 'Secondary VS insertion branches [packs only]'
   type: object
@@ -136,7 +136,7 @@ extends:
         enabled: true
     stages:
     - stage: Build
-      displayName: 🟣 Build
+      displayName: Build
       jobs:
       - template: /eng/common/templates-official/jobs/jobs.yml@self
         parameters:
@@ -153,7 +153,7 @@ extends:
           enableSbom: true
           jobs:
           - job: buildRepo
-            displayName: 🟣 Build Repo
+            displayName: Build Repo
             timeoutInMinutes: 120
             pool:
               name: $(DncEngInternalBuildPool)
@@ -366,7 +366,7 @@ extends:
                     TargetBranch: ${{ primaryInsertionBranch }}
                     # temp/DotNet-SDK/dotnet-workload-versions-official-ci-20241216.6-1
                     # https://learn.microsoft.com/azure/devops/pipelines/process/expressions?view=azure-devops#format
-                    InsertionTopicBranch: temp/DotNet-Workloads/${{ primaryInsertionBranch }}/$(VsTopicBranchId)
+                    InsertionTopicBranch: temp/DotNet-SDK-Workloads/${{ primaryInsertionBranch }}/$(VsTopicBranchId)
                     # Cannot use '.NET' at the start. The branch name (one used for VS insertion) is created via this value. It produces an error, for example:
                     # fatal: 'team/.NET-Project-System/DotNet-Project-System-20220818.3-1' is not a valid branch name
                     TeamName: DotNet SDK
@@ -400,7 +400,7 @@ extends:
                     TargetBranch: ${{ secondaryInsertionBranch }}
                     # temp/DotNet-SDK/dotnet-workload-versions-official-ci-20241216.6-1
                     # https://learn.microsoft.com/azure/devops/pipelines/process/expressions?view=azure-devops#format
-                    InsertionTopicBranch: temp/DotNet-Workloads/${{ secondaryInsertionBranch }}/$(VsTopicBranchId)
+                    InsertionTopicBranch: temp/DotNet-SDK-Workloads/${{ secondaryInsertionBranch }}/$(VsTopicBranchId)
                     # Cannot use '.NET' at the start. The branch name (one used for VS insertion) is created via this value. It produces an error, for example:
                     # fatal: 'team/.NET-Project-System/DotNet-Project-System-20220818.3-1' is not a valid branch name
                     TeamName: DotNet SDK
