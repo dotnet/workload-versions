@@ -167,7 +167,12 @@ extends:
             #   displayName: Set PAT variables
 
             - pwsh: >-
-                $dropExeDir = (Get-ChildItem '$(Agent.RootDirectory)' -Recurse -Filter 'drop.exe')[0].Directory.FullName
+                $rootFolder = '$(Agent.RootDirectory)'
+                $rootFolder
+                $dropFolders = Get-ChildItem $rootFolder -Recurse -Filter 'drop.exe'
+                $dropFolders
+                $dropExeDir = $dropFolders[0].Directory.FullName
+                $dropExeDir
                 Write-Host "##vso[task.setvariable variable=DropExeDir]$dropExeDir"
               displayName: 🟣 Set DropExeDir variable
 
