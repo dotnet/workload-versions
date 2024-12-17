@@ -207,12 +207,12 @@ extends:
                     -azDOPat (ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force)
                     -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }}
               - pwsh: >-
-                $vsTopicBranchId = '${{ parameters.vsTopicBranchId }}'
-                if (-not $vsTopicBranchId) {
-                  $vsTopicBranchId = (Get-Date).ToString('yyyy-MM')
-                }
-                Write-Host "##vso[task.setvariable variable=VsTopicBranchId]$vsTopicBranchId"
-              displayName: 🟣 Set VsTopicBranchId variable
+                  $vsTopicBranchId = '${{ parameters.vsTopicBranchId }}'
+                  if (-not $vsTopicBranchId) {
+                    $vsTopicBranchId = (Get-Date).ToString('yyyy-MM')
+                  }
+                  Write-Host "##vso[task.setvariable variable=VsTopicBranchId]$vsTopicBranchId"
+                displayName: 🟣 Set VsTopicBranchId variable
 
             # - task: AzureCLI@2
             #   displayName: Gather Workloads
