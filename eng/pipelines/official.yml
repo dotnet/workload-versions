@@ -163,7 +163,7 @@ extends:
             preSteps:
             - powershell: 'Get-ChildItem env:'
               displayName: 🟣 Show environment variables
-            - pwsh: >-
+            - pwsh: |
                 $rootFolder = '$(Agent.RootDirectory)'
                 "RootFolder: $rootFolder"
                 "Task Folders:"
@@ -188,14 +188,14 @@ extends:
             - powershell: 'Get-ChildItem env:'
               displayName: 🟣 Show environment variables
 
-            # - pwsh: >-
+            # - pwsh: |
             #     $workloadGitHubPat = ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force
             #     $workloadAzDOPat
             #     Write-Host "##vso[task.setvariable variable=WorkloadGitHubPat]$workloadGitHubPat"
             #     Write-Host "##vso[task.setvariable variable=WorkloadAzDOPat]$vsDropName"
             #   displayName: Set PAT variables
 
-            - pwsh: >-
+            - pwsh: |
                 $rootFolder = '$(Agent.RootDirectory)'
                 "RootFolder: $rootFolder"
                 "Task Folders:"
@@ -231,7 +231,7 @@ extends:
                     -gitHubPat (ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force)
                     -azDOPat (ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force)
                     -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }}
-              - pwsh: >-
+              - pwsh: |
                   $vsTopicBranchId = '${{ parameters.vsTopicBranchId }}'
                   if (-not $vsTopicBranchId) {
                     $vsTopicBranchId = (Get-Date).ToString('yyyy-MM')
