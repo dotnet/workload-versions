@@ -156,7 +156,8 @@ extends:
             displayName: Build Repo
             timeoutInMinutes: 120
             pool:
-              name: $(DncEngInternalBuildPool)
+              # name: $(DncEngInternalBuildPool)
+              name: NetCore1ESPool-Svc-Internal
               image: 1es-windows-2022
               os: windows
             steps:
