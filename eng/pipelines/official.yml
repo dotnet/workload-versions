@@ -168,7 +168,11 @@ extends:
                 "RootFolder: $rootFolder"
                 "Task Folders:"
                 Get-ChildItem "$rootFolder\_tasks"
-                $dropFolders = Get-ChildItem $rootFolder -Recurse -Filter 'drop.exe'
+                $vstsDropFolder = (Get-ChildItem "$rootFolder\_tasks" -Recurse -Include 'MicroBuildUploadVstsDropFolder*')[0].FullName
+                "VstsDropFolder: $vstsDropFolder"
+                "Vsts Folders:"
+                Get-ChildItem $vstsDropFolder
+                $dropFolders = Get-ChildItem $rootFolder -Recurse -Include 'drop.exe'
                 "Drop Folders:"
                 $dropFolders
                 $dropExeDir = $dropFolders[0].Directory.FullName
