@@ -172,7 +172,7 @@ extends:
                 "VstsDropFolder: $vstsDropFolder"
                 "Vsts Folders:"
                 Get-ChildItem $vstsDropFolder
-                $dropFolders = Get-ChildItem $rootFolder -Recurse -Include 'drop.exe'
+                $dropFolders = Get-ChildItem $rootFolder -Recurse -Include 'drop.exe' -Force
                 "Drop Folders:"
                 $dropFolders
                 $dropExeDir = $dropFolders[0].Directory.FullName
