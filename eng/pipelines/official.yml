@@ -24,6 +24,10 @@ parameters:
   displayName: Use Preview Components for VS insertion
   type: boolean
   default: false
+- name: vsTopicBranchId
+  displayName: 'VS Topic Branch Identifier [default: yyyy-MM]'
+  type: string
+  default: null
 - name: workloadsForVSDrops
   displayName: Workloads for VS drops
   type: object
@@ -50,7 +54,7 @@ parameters:
   - rel/d17.12
 # These insert packs/multitarget only into VS [no (pre)components].
 - name: secondaryVsInsertionBranches
-  displayName: Secondary VS insertion branches (packs only)
+  displayName: 'Secondary VS insertion branches [packs only]'
   type: object
   default:
   - rel/d17.13
@@ -168,11 +172,14 @@ extends:
 
             - pwsh: >-
                 $rootFolder = '$(Agent.RootDirectory)'
-                $rootFolder
+                "RootFolder: $rootFolder"
+                "Task Folders:"
+                Get-ChildItem "$rootFolder\_tasks"
                 $dropFolders = Get-ChildItem $rootFolder -Recurse -Filter 'drop.exe'
+                "Drop Folders:"
                 $dropFolders
                 $dropExeDir = $dropFolders[0].Directory.FullName
-                $dropExeDir
+                "DropExeDir: $dropExeDir"
                 Write-Host "##vso[task.setvariable variable=DropExeDir]$dropExeDir"
               displayName: 🟣 Set DropExeDir variable
 
@@ -199,6 +206,13 @@ extends:
                     -gitHubPat (ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force)
                     -azDOPat (ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force)
                     -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }}
+              - pwsh: >-
+                $vsTopicBranchId = '${{ parameters.vsTopicBranchId }}'
+                if (-not $vsTopicBranchId) {
+                  $vsTopicBranchId = (Get-Date).ToString('yyyy-MM')
+                }
+                Write-Host "##vso[task.setvariable variable=VsTopicBranchId]$vsTopicBranchId"
+              displayName: 🟣 Set VsTopicBranchId variable
 
             # - task: AzureCLI@2
             #   displayName: Gather Workloads
@@ -352,7 +366,7 @@ extends:
                     TargetBranch: ${{ primaryInsertionBranch }}
                     # temp/DotNet-SDK/dotnet-workload-versions-official-ci-20241216.6-1
                     # https://learn.microsoft.com/azure/devops/pipelines/process/expressions?view=azure-devops#format
-                    InsertionTopicBranch: temp/DotNet-Workloads/${{ primaryInsertionBranch }}/$[ format('{0:yyyy-MM}', pipeline.startTime) ]
+                    InsertionTopicBranch: temp/DotNet-Workloads/${{ primaryInsertionBranch }}/$(VsTopicBranchId)
                     # Cannot use '.NET' at the start. The branch name (one used for VS insertion) is created via this value. It produces an error, for example:
                     # fatal: 'team/.NET-Project-System/DotNet-Project-System-20220818.3-1' is not a valid branch name
                     TeamName: DotNet SDK
@@ -386,7 +400,7 @@ extends:
                     TargetBranch: ${{ secondaryInsertionBranch }}
                     # temp/DotNet-SDK/dotnet-workload-versions-official-ci-20241216.6-1
                     # https://learn.microsoft.com/azure/devops/pipelines/process/expressions?view=azure-devops#format
-                    InsertionTopicBranch: temp/DotNet-Workloads/${{ secondaryInsertionBranch }}/$[ format('{0:yyyy-MM}', pipeline.startTime) ]
+                    InsertionTopicBranch: temp/DotNet-Workloads/${{ secondaryInsertionBranch }}/$(VsTopicBranchId)
                     # Cannot use '.NET' at the start. The branch name (one used for VS insertion) is created via this value. It produces an error, for example:
                     # fatal: 'team/.NET-Project-System/DotNet-Project-System-20220818.3-1' is not a valid branch name
                     TeamName: DotNet SDK
