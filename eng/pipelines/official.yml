@@ -156,6 +156,9 @@ extends:
               image: 1es-windows-2022
               os: windows
             steps:
+            - powershell: 'Get-ChildItem env:'
+              displayName: 🟣 Show environment variables
+
             # - pwsh: >-
             #     $workloadGitHubPat = ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force
             #     $workloadAzDOPat
