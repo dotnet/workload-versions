@@ -381,7 +381,7 @@ extends:
                     TargetBranch: ${{ secondaryInsertionBranch }}
                     # temp/DotNet-SDK/dotnet-workload-versions-official-ci-20241216.6-1
                     # https://learn.microsoft.com/azure/devops/pipelines/process/expressions?view=azure-devops#format
-                    InsertionTopicBranch: temp/DotNet-Workloads/${{ secondaryInsertionBranch }}/${{ format('{0:yyyy-MM}', pipeline.startTime) }}
+                    InsertionTopicBranch: temp/DotNet-Workloads/${{ secondaryInsertionBranch }}/$[ format('{0:yyyy-MM}', pipeline.startTime) ]
                     # Cannot use '.NET' at the start. The branch name (one used for VS insertion) is created via this value. It produces an error, for example:
                     # fatal: 'team/.NET-Project-System/DotNet-Project-System-20220818.3-1' is not a valid branch name
                     TeamName: DotNet SDK
