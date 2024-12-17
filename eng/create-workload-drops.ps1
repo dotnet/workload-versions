@@ -8,8 +8,8 @@ $null = $workloads | ForEach-Object { Expand-Archive -Path $_.FullName -Destinat
 # Extracts the workload drop metadata from the drop name and builds the .vsmanproj project.
 # - full: The full drop name, excluding the 'Workload.VSDrop.' prefix.
 # - short: The short name of the drop. Only contains the first word after 'Workload.VSDrop.'.
-# - type: Either 'pre.components', 'components', 'packs', or 'multitarget'.
-$dropInfoRegex = '^Workload\.VSDrop\.(?<full>(?<short>\w*)\..*?(?<type>(pre\.)?components$|packs$|multitarget$))'
+# - type: Either 'pre.components', 'components', or 'packs'.
+$dropInfoRegex = '^Workload\.VSDrop\.(?<full>(?<short>\w*)\..*?(?<type>(pre\.)?components$|packs$))'
 $primaryVSComponentJsonValues = ''
 $secondaryVSComponentJsonValues = ''
 $hashAlgorithm = [System.Security.Cryptography.SHA256]::Create()
@@ -25,19 +25,22 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
   $dropHash = [System.BitConverter]::ToString($hashAlgorithm.ComputeHash([byte[]]$fileHashes)).Replace('-','')
 
   $vsDropName = "Products/dotnet/workloads/$assemblyName/$dropHash"
+  # Reads the first line out of the .metadata file in the workload's output folder and sets it to the workload version.
+  $workloadVersion = Get-Content "$dropDir.metadata" -First 1
   # This requires building via MSBuild.exe as there are .NET Framework dependencies necessary for building the .vsmanproj.
   # Additionally, even using the MSBuild task won't work as '/restore' must be used for it to restore properly when building the .vsmanproj.
   & "$msBuildToolsPath\MSBuild.exe" Microsoft.NET.Workloads.Vsman.vsmanproj /restore /t:Build `
     /p:AssemblyName=$assemblyName `
     /p:VstsDropNames=$vsDropName `
-    /p:VsixOutputPath=$dropDir
+    /p:VsixOutputPath=$dropDir `
+    /p:WorkloadVersion=$workloadVersion
 
   # While in CI, set the variables necessary for uploading the VS drop.
   if ($env:TF_BUILD) {
     $shortName = "$($Matches.short)"
     # Remove the '.' from 'pre.components'
     $dropType = $Matches.type.Replace('.', '')
-    $dropUrl = "https://vsdrop.corp.microsoft.com/file/v1/$vsDropName;$assemblyName.vsman"
+    $dropUrl = "https://vsdrop.microsoft.com/file/v1/$vsDropName;$assemblyName.vsman"
 
     Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_name]$vsDropName"
     Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_dir]$dropDir"
@@ -45,7 +48,7 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
     Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_url]$dropUrl"
 
     # Each vsman file is comma-separated. First .vsman is destination and the second is source.
-    $vsComponentValue = "$assemblyName.vsman=$dropUrl,"
+    $vsComponentValue = "$assemblyName.vsman{$workloadVersion}=$dropUrl,"
     # All VS components are added to the primary VS component JSON string.
     $primaryVSComponentJsonValues += $vsComponentValue
 
