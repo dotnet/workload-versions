@@ -132,7 +132,7 @@ extends:
         enabled: true
     stages:
     - stage: Build
-      displayName: Build
+      displayName: 🟣 Build
       jobs:
       - template: /eng/common/templates-official/jobs/jobs.yml@self
         parameters:
@@ -149,15 +149,12 @@ extends:
           enableSbom: true
           jobs:
           - job: buildRepo
-            displayName: Build Repo
+            displayName: 🟣 Build Repo
             timeoutInMinutes: 120
             pool:
               name: $(DncEngInternalBuildPool)
               image: 1es-windows-2022
               os: windows
-            templateContext:
-              # WORKAROUND: Trying to cause 1ES to not do all the SDL stuff as it makes it difficult to test the pipeline.
-              outputParentDirectory: $(Build.SourcesDirectory)
             steps:
             # - pwsh: >-
             #     $workloadGitHubPat = ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force
@@ -168,7 +165,7 @@ extends:
 
             - ${{ if eq(parameters.createVSInsertion, true) }}:
               - task: AzureCLI@2
-                displayName: Download workloads for VS insertion
+                displayName: 🟣 Download workloads for VS insertion
                 inputs:
                   # TODO: Need our own subscription
                   azureSubscription: DotNetStaging
@@ -208,7 +205,7 @@ extends:
                 $(Build.SourcesDirectory)/build.cmd -ci -configuration Release
                 /p:CreateVSInsertion=${{ parameters.createVSInsertion }}
                 /p:WorkloadDirectory=$(Build.SourcesDirectory)/artifacts/workloads
-              displayName: Build solution
+              displayName: 🟣 Build solution
 
             # - script: eng\common\CIBuild.cmd
             #     -configuration $(_BuildConfig)
@@ -218,7 +215,7 @@ extends:
             #   displayName: $(_BuildJobDisplayName)
             - ${{ if eq(parameters.publishToFeed, true) }}:
               - task: 1ES.PublishNuget@1
-                displayName: Publish NuGet package
+                displayName: 🟣 Publish NuGet package
                 inputs:
                   useDotNetTask: true
                   packagesToPush: $(Build.SourcesDirectory)/artifacts/packages/**/*.nupkg
@@ -296,12 +293,12 @@ extends:
                         return
                       }
                       Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]True"
-                    displayName: Check if ${{ workloadShortName }}_${{ workloadType }} exists
+                    displayName: 🟣 Check if ${{ workloadShortName }}_${{ workloadType }} exists
 
                   # Docs: https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/1es-pipeline-templates/features/outputs/microbuild-vsts-drop
                   # YAML reference (original task): https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
                   - task: 1ES.MicroBuildVstsDrop@1
-                    displayName: 'Publish insertion drop: ${{ workloadShortName }}_${{ workloadType }}'
+                    displayName: '🟣 Publish insertion drop: ${{ workloadShortName }}_${{ workloadType }}'
                     inputs:
                       dropFolder: $(${{ workloadShortName }}_${{ workloadType }}_dir)
                       dropName: $(${{ workloadShortName }}_${{ workloadType }}_name)
@@ -323,7 +320,7 @@ extends:
                 # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/635/Overview?anchor=**build-pipeline**
                 # YAML reference: https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/task.json
                 - task: MicroBuildInsertVsPayload@5
-                  displayName: 'Create VS insertion: ${{ primaryInsertionBranch }}'
+                  displayName: '🟣 Create VS insertion: ${{ primaryInsertionBranch }}'
                   inputs:
                     InsertionAccessToken: $(dn-bot-devdiv-drop-rw-code-rw)
                     # InsertionAccessToken: $(dn-bot-all-drop-rw-code-rw-release-all)
@@ -357,7 +354,7 @@ extends:
                 # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/635/Overview?anchor=**build-pipeline**
                 # YAML reference: https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/task.json
                 - task: MicroBuildInsertVsPayload@5
-                  displayName: 'Create VS insertion: ${{ secondaryInsertionBranch }}'
+                  displayName: '🟣 Create VS insertion: ${{ secondaryInsertionBranch }}'
                   inputs:
                     InsertionAccessToken: $(dn-bot-devdiv-drop-rw-code-rw)
                     TargetBranch: ${{ secondaryInsertionBranch }}
@@ -383,7 +380,7 @@ extends:
                     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/638/Set-AutoComplete-on-an-Insertion
                     InsertAutoComplete: true
             - task: 1ES.PublishBuildArtifacts@1
-              displayName: Publish Workload Drops to Pipeline
+              displayName: 🟣 Publish Workload Drops to Pipeline
               inputs:
                 PathtoPublish: $(Build.SourcesDirectory)/artifacts/workloads/drops
                 ArtifactName: WorkloadDrops
