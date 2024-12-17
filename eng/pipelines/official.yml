@@ -166,6 +166,21 @@ extends:
             #     Write-Host "##vso[task.setvariable variable=WorkloadAzDOPat]$vsDropName"
             #   displayName: Set PAT variables
 
+            - pwsh: >-
+                $dropExeDir = (Get-ChildItem '$(Agent.RootDirectory)' -Recurse -Filter 'drop.exe')[0].Directory.FullName
+                Write-Host "##vso[task.setvariable variable=DropExeDir]$dropExeDir"
+              displayName: 🟣 Set DropExeDir variable
+
+            - task: 1ES.PublishBuildArtifacts@1
+              displayName: 🟣 Publish DropExe to Pipeline
+              inputs:
+                # D:\a\_work\_tasks\MicroBuildUploadVstsDropFolder_4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8\2.2.16\VstsDrop\lib\net45\drop.exe
+                PathtoPublish: $(DropExeDir)
+                ArtifactName: DropExe
+                publishLocation: Container
+              continueOnError: true
+              condition: always()
+
             - ${{ if eq(parameters.createVSInsertion, true) }}:
               - task: AzureCLI@2
                 displayName: 🟣 Download workloads for VS insertion
@@ -330,6 +345,9 @@ extends:
                     # ConnectedServiceName: DotNetRelease-PME
                     # InsertionAccessToken: $(dn-bot-devdiv-build-rw-code-rw-release-rw)
                     TargetBranch: ${{ primaryInsertionBranch }}
+                    # temp/DotNet-SDK/dotnet-workload-versions-official-ci-20241216.6-1
+                    # https://learn.microsoft.com/azure/devops/pipelines/process/expressions?view=azure-devops#format
+                    InsertionTopicBranch: temp/DotNet-Workloads/${{ primaryInsertionBranch }}/${{ format('{0:yyyy-MM}', pipeline.startTime) }}
                     # Cannot use '.NET' at the start. The branch name (one used for VS insertion) is created via this value. It produces an error, for example:
                     # fatal: 'team/.NET-Project-System/DotNet-Project-System-20220818.3-1' is not a valid branch name
                     TeamName: DotNet SDK
@@ -361,6 +379,9 @@ extends:
                   inputs:
                     InsertionAccessToken: $(dn-bot-devdiv-drop-rw-code-rw)
                     TargetBranch: ${{ secondaryInsertionBranch }}
+                    # temp/DotNet-SDK/dotnet-workload-versions-official-ci-20241216.6-1
+                    # https://learn.microsoft.com/azure/devops/pipelines/process/expressions?view=azure-devops#format
+                    InsertionTopicBranch: temp/DotNet-Workloads/${{ secondaryInsertionBranch }}/${{ format('{0:yyyy-MM}', pipeline.startTime) }}
                     # Cannot use '.NET' at the start. The branch name (one used for VS insertion) is created via this value. It produces an error, for example:
                     # fatal: 'team/.NET-Project-System/DotNet-Project-System-20220818.3-1' is not a valid branch name
                     TeamName: DotNet SDK
