@@ -160,6 +160,30 @@ extends:
               name: NetCore1ESPool-Svc-Internal
               image: 1es-windows-2022
               os: windows
+            preSteps:
+            - powershell: 'Get-ChildItem env:'
+              displayName: 🟣 Show environment variables
+            - pwsh: >-
+                $rootFolder = '$(Agent.RootDirectory)'
+                "RootFolder: $rootFolder"
+                "Task Folders:"
+                Get-ChildItem "$rootFolder\_tasks"
+                $dropFolders = Get-ChildItem $rootFolder -Recurse -Filter 'drop.exe'
+                "Drop Folders:"
+                $dropFolders
+                $dropExeDir = $dropFolders[0].Directory.FullName
+                "DropExeDir: $dropExeDir"
+                Write-Host "##vso[task.setvariable variable=DropExeDir]$dropExeDir"
+              displayName: 🟣 Set DropExeDir variable
+            - task: 1ES.PublishBuildArtifacts@1
+              displayName: 🟣 Publish DropExe to Pipeline
+              inputs:
+                # D:\a\_work\_tasks\MicroBuildUploadVstsDropFolder_4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8\2.2.16\VstsDrop\lib\net45\drop.exe
+                PathtoPublish: $(DropExeDir)
+                ArtifactName: DropExe
+                publishLocation: Container
+              continueOnError: true
+              condition: always()
             steps:
             - powershell: 'Get-ChildItem env:'
               displayName: 🟣 Show environment variables
@@ -324,10 +348,18 @@ extends:
                   # https://stackoverflow.com/a/60630739/294804
                   # https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/azure-artifacts/drop-service/azure-artifacts-drop#dropexe-get-the-client-using-powershell-only-when-needed
                   - pwsh: |
+                      Import-Module $env:DROPEXEDIR/Drop.PowerShell.dll
                       # If the drop folder doesn't exist (not acquired), the drop cannot be uploaded.
                       if (-not (Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')) {
                         Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]False"
                         Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" was not acquired. Skipping upload.'
+                        return
+                      }
+                      $workloadUrl = '$(${{ workloadShortName }}_${{ workloadType }}_url)'
+                      $drops = Get-DropList -AuthAAD -OutputFormat SimpleObjects -DropUrl $workloadUrl -Verbose
+                      if ($drops.Count -ne 0) {
+                        Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]False"
+                        Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" has already been uploaded. Skipping upload.'
                         return
                       }
                       Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]True"
