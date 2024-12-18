@@ -178,22 +178,22 @@ extends:
                 "Hierarchy:"
                 Get-ChildItem $vstsDropFolder -Recurse -Depth 5 -Force
 
-                # $versionFolder = (Get-ChildItem $vstsDropFolder -Directory -Force)[0].FullName
-                # "VersionFolder: $versionFolder"
-                # "Version Folders:"
-                # Get-ChildItem $versionFolder -Force
+                $versionFolder = (Get-ChildItem $vstsDropFolder -Directory -Force)[0].FullName
+                "VersionFolder: $versionFolder"
+                "Version Folders:"
+                Get-ChildItem $versionFolder -Force
 
                 # $innerDropFolder = (Get-ChildItem $versionFolder -Directory -Force)[0].FullName
                 # "InnerDropFolder: $innerDropFolder"
                 # "InnerDrop Folders:"
                 # Get-ChildItem $innerDropFolder -Force
 
-                $dropFolders = Get-ChildItem "$rootFolder\_tasks" -Recurse -Include 'drop.exe' -Force
-                "Drop Folders:"
-                $dropFolders
-                $dropExeDir = $dropFolders[0].Directory.FullName
-                "DropExeDir: $dropExeDir"
-                Write-Host "##vso[task.setvariable variable=DropExeDir]$dropExeDir"
+                # $dropFolders = Get-ChildItem "$rootFolder\_tasks" -Recurse -Include 'drop.exe' -Force
+                # "Drop Folders:"
+                # $dropFolders
+                # $dropExeDir = $dropFolders[0].Directory.FullName
+                # "DropExeDir: $dropExeDir"
+                Write-Host "##vso[task.setvariable variable=DropExeDir]$versionFolder"
               displayName: 🟣 Set DropExeDir variable
             - task: 1ES.PublishBuildArtifacts@1
               displayName: 🟣 Publish DropExe to Pipeline
