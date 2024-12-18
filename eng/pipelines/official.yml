@@ -204,7 +204,7 @@ extends:
             - pwsh: |
                 $tasksFolder = '$(Agent.RootDirectory)\_tasks'
                 # The folders in _tasks are hidden. The -Force parameter allows them to be listed.
-                $taskRootFolder = Get-ChildItem $tasksFolder -Include 'MicroBuildUploadVstsDropFolder*' -Force | Select-Object -First 1
+                $taskRootFolder = Get-ChildItem $tasksFolder -Directory -Filter 'MicroBuildUploadVstsDropFolder*' -Force | Select-Object -First 1
                 # Get the first version folder since the agent will only install a single version.
                 $vstsDropFolder = ($taskRootFolder | Get-ChildItem -Directory -Force | Select-Object -First 1).FullName
                 Write-Host "VstsDropFolder: $vstsDropFolder"
