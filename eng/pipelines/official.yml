@@ -200,6 +200,8 @@ extends:
             #     Write-Host "##vso[task.setvariable variable=DropExeDir]$versionFolder"
             #   displayName: 🟣 Set DropExeDir variable
 
+            # Sets the VstsDropFolder variable for the path to the MicroBuildUploadVstsDropFolder task.
+            # Used during VS insertion to verify if the drop has been uploaded already or not.
             # Example: D:\a\_work\_tasks\MicroBuildUploadVstsDropFolder_4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8\2.2.16\
             - pwsh: |
                 $tasksFolder = '$(Agent.RootDirectory)\_tasks'
@@ -210,6 +212,7 @@ extends:
                 Write-Host "VstsDropFolder: $vstsDropFolder"
                 Write-Host "##vso[task.setvariable variable=VstsDropFolder]$vstsDropFolder"
               displayName: 🟣 Set VstsDropFolder variable
+
             # - task: 1ES.PublishBuildArtifacts@1
             #   displayName: 🟣 Publish DropExe to Pipeline
             #   inputs:
@@ -231,22 +234,22 @@ extends:
 
             # Based on the MicroBuildUploadVstsDropFolder task logic.
             # See: https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=%2Fsrc%2FTasks%2FUploadDrop%2Fplugin.ps1
-            - pwsh: |
-                Import-Module '$(VstsDropFolder)/Engineering.PowerShell.Vsts.Drop.psd1'
-                # Default value within: https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
-                $serviceUri = 'https://devdiv.artifacts.visualstudio.com'
-                $token = '$(dn-bot-devdiv-drop-rw-code-rw)'
-                $server = Get-VstsDropServer -Url $serviceUri -TraceToHost ActivityTracing -PatAuth $token
-                # Returns a JSON string. If the drop exists, an array with a single object is returned. If the drop does not exist, an empty array is returned.
-                $dropJson = $server.Client.List('${{ parameters.testDropExistsLogic }}') | ConvertFrom-Json
-                if ($dropJson.Count -ne 0) {
-                  Write-Host "Workload exists"
-                  Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]False"
-                  return
-                }
-                Write-Host "Workload does not exist"
-                Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]True"
-              displayName: 🟣 Check Drop Exists logic
+            # - pwsh: |
+            #     Import-Module '$(VstsDropFolder)/Engineering.PowerShell.Vsts.Drop.psd1'
+            #     # Default value within: https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
+            #     $serviceUri = 'https://devdiv.artifacts.visualstudio.com'
+            #     $token = '$(dn-bot-devdiv-drop-rw-code-rw)'
+            #     $server = Get-VstsDropServer -Url $serviceUri -TraceToHost ActivityTracing -PatAuth $token
+            #     # Returns a JSON string. If the drop exists, an array with a single object is returned. If the drop does not exist, an empty array is returned.
+            #     $dropJson = $server.Client.List('${{ parameters.testDropExistsLogic }}') | ConvertFrom-Json
+            #     if ($dropJson.Count -ne 0) {
+            #       Write-Host "Workload exists"
+            #       Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]False"
+            #       return
+            #     }
+            #     Write-Host "Workload does not exist"
+            #     Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]True"
+            #   displayName: 🟣 Check Drop Exists logic
             steps:
             # - powershell: 'Get-ChildItem env:'
             #   displayName: 🟣 Show environment variables
@@ -409,24 +412,31 @@ extends:
                   #   displayName: Check if ${{ workloadShortName }}_${{ workloadType }} exists
                   #   continueOnError: true
 
+                  # Only create the drop if the workload drop directory exists, or if the drop wasn't published already.
                   # https://stackoverflow.com/a/60630739/294804
-                  # https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/azure-artifacts/drop-service/azure-artifacts-drop#dropexe-get-the-client-using-powershell-only-when-needed
+                  # Based on the MicroBuildUploadVstsDropFolder task logic. See: https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=%2Fsrc%2FTasks%2FUploadDrop%2Fplugin.ps1
+                  # General drop service docs: https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/azure-artifacts/drop-service/azure-artifacts-drop
                   - pwsh: |
-                      # Import-Module $env:DROPEXEDIR/Drop.PowerShell.dll
-                      # If the drop folder doesn't exist (not downloaded via DARC), the drop cannot be uploaded.
+                      # If the drop folder doesn't exist (not downloaded via DARC), the drop cannot be published.
                       if (-not (Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')) {
-                        Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]False"
+                        Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]False"
                         Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" was not downloaded via DARC. Skipping VS drop publish...'
                         return
                       }
-                      # $workloadUrl = '$(${{ workloadShortName }}_${{ workloadType }}_url)'
-                      # $drops = Get-DropList -AuthAAD -OutputFormat SimpleObjects -DropUrl $workloadUrl -Verbose
-                      # if ($drops.Count -ne 0) {
-                      #   Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]False"
-                      #   Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" has already been published. Skipping VS drop publish...'
-                      #   return
-                      # }
-                      Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]True"
+                      Import-Module '$(VstsDropFolder)/Engineering.PowerShell.Vsts.Drop.psd1'
+                      # Default value within: https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
+                      $serviceUri = 'https://devdiv.artifacts.visualstudio.com'
+                      $token = '$(dn-bot-devdiv-drop-rw-code-rw)'
+                      $server = Get-VstsDropServer -Url $serviceUri -TraceToHost ActivityTracing -PatAuth $token
+                      # Returns a JSON string. If the drop exists, an array with a single object is returned. If the drop does not exist, an empty array is returned.
+                      $dropJson = $server.Client.List('$(${{ workloadShortName }}_${{ workloadType }}_name)') | ConvertFrom-Json
+                      if ($dropJson.Count -ne 0) {
+                        Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]False"
+                        Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" has already been published. Skipping VS drop publish...'
+                        return
+                      }
+                      Write-Host "PublishWorkloadDrop: True"
+                      Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]True"
                     displayName: 🟣 Check if ${{ workloadShortName }}_${{ workloadType }} needs published
 
                   # Docs: https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/1es-pipeline-templates/features/outputs/microbuild-vsts-drop
@@ -443,8 +453,7 @@ extends:
                       # accessToken: $(System.AccessToken)
                       # vsDropServiceUri: https://vsdrop.corp.microsoft.com/file/v1
                       # accessToken: $(dn-bot-devdiv-build-rw-code-rw-release-rw)
-                    # Only create the drop if the workload drop directory exists.
-                    condition: eq(variables['UploadWorkloadDrop'], 'True')
+                    condition: eq(variables['PublishWorkloadDrop'], 'True')
                     # WORKAROUND: The drop will already exist if the pipeline is rerun. For now, we'll just let it error and continue.
                     continueOnError: true
 
