@@ -4,7 +4,7 @@ trigger: none
 pr: none
 
 parameters:
-- name: StabilizePackageVersion
+- name: stabilizePackageVersion
   displayName: Stabilize Package Version
   type: boolean
   default: false
@@ -58,6 +58,10 @@ parameters:
   type: object
   default:
   - rel/d17.13
+- name: testDropExistsLogic
+  displayName: Test Drop Exists logic
+  type: string
+  default: Products/dotnet/workloads/emsdk.9.0-9.0.100.components/5E91A4F3E34928FB6F88FBAE0FF9CABC7E174C887C0460611933A368C367BDB4
 
 variables:
 - template: /eng/common/templates-official/variables/pool-providers.yml@self
@@ -100,7 +104,7 @@ variables:
       /p:TeamName=$(_TeamName)
       /p:DotNetPublishUsingPipelines=true
       /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
-      /p:StabilizePackageVersion=${{ parameters.StabilizePackageVersion }}
+      /p:StabilizePackageVersion=${{ parameters.stabilizePackageVersion }}
   - name: PostBuildSign
     value: true
   # Release-Pipeline provides: MaestroAccessToken, BotAccount-dotnet-bot-repo-PAT, dn-bot-all-drop-rw-code-rw-release-all
@@ -161,61 +165,92 @@ extends:
               image: 1es-windows-2022
               os: windows
             preSteps:
-            - powershell: 'Get-ChildItem env:'
-              displayName: 🟣 Show environment variables
+            # - powershell: 'Get-ChildItem env:'
+            #   displayName: 🟣 Show environment variables
             # D:\a\_work\_tasks\MicroBuildUploadVstsDropFolder_4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8\2.2.16\VstsDrop\lib\net45\drop.exe
+            # - pwsh: |
+            #     $rootFolder = '$(Agent.RootDirectory)'
+            #     "RootFolder: $rootFolder"
+            #     "Task Folders:"
+            #     Get-ChildItem "$rootFolder\_tasks" -Force
+
+            #     $vstsDropFolder = (Get-ChildItem "$rootFolder\_tasks" -Recurse -Include 'MicroBuildUploadVstsDropFolder*' -Force)[0].FullName
+            #     "VstsDropFolder: $vstsDropFolder"
+            #     "Vsts Folders:"
+            #     Get-ChildItem $vstsDropFolder -Force
+
+            #     "Hierarchy:"
+            #     Get-ChildItem $vstsDropFolder -Recurse -Depth 5 -Force
+
+            #     $versionFolder = (Get-ChildItem $vstsDropFolder -Directory -Force)[0].FullName
+            #     "VersionFolder: $versionFolder"
+            #     "Version Folders:"
+            #     Get-ChildItem $versionFolder -Force
+
+            #     # $innerDropFolder = (Get-ChildItem $versionFolder -Directory -Force)[0].FullName
+            #     # "InnerDropFolder: $innerDropFolder"
+            #     # "InnerDrop Folders:"
+            #     # Get-ChildItem $innerDropFolder -Force
+
+            #     # $dropFolders = Get-ChildItem "$rootFolder\_tasks" -Recurse -Include 'drop.exe' -Force
+            #     # "Drop Folders:"
+            #     # $dropFolders
+            #     # $dropExeDir = $dropFolders[0].Directory.FullName
+            #     # "DropExeDir: $dropExeDir"
+            #     Write-Host "##vso[task.setvariable variable=DropExeDir]$versionFolder"
+            #   displayName: 🟣 Set DropExeDir variable
+
+            # Example: D:\a\_work\_tasks\MicroBuildUploadVstsDropFolder_4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8\2.2.16\
             - pwsh: |
-                $rootFolder = '$(Agent.RootDirectory)'
-                "RootFolder: $rootFolder"
-                "Task Folders:"
-                Get-ChildItem "$rootFolder\_tasks" -Force
+                $tasksFolder = '$(Agent.RootDirectory)\_tasks'
+                # The folders in _tasks are hidden. The -Force parameter allows them to be listed.
+                $taskRootFolder = Get-ChildItem $tasksFolder -Include 'MicroBuildUploadVstsDropFolder*' -Force | Select-Object -First 1
+                # Get the first version folder since the agent will only install a single version.
+                $vstsDropFolder = ($taskRootFolder | Get-ChildItem -Directory -Force | Select-Object -First 1).FullName
+                Write-Host "VstsDropFolder: $vstsDropFolder"
+                Write-Host "##vso[task.setvariable variable=VstsDropFolder]$vstsDropFolder"
+              displayName: 🟣 Set VstsDropFolder variable
+            # - task: 1ES.PublishBuildArtifacts@1
+            #   displayName: 🟣 Publish DropExe to Pipeline
+            #   inputs:
+            #     # D:\a\_work\_tasks\MicroBuildUploadVstsDropFolder_4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8\2.2.16\VstsDrop\lib\net45\drop.exe
+            #     PathtoPublish: $(DropExeDir)
+            #     ArtifactName: DropExe
+            #     publishLocation: Container
+            #   continueOnError: true
+            #   condition: always()
+            # - pwsh: |
+            #     $dropExeDir = '$(DropExeDir)'
+            #     Import-Module "$dropExeDir/Engineering.PowerShell.Vsts.Drop.psd1"
+            #     $serviceUri = 'https://devdiv.artifacts.visualstudio.com'
+            #     $token = '$(dn-bot-devdiv-drop-rw-code-rw)'
+            #     $server = Get-VstsDropServer -Url $serviceUri -TraceToHost ActivityTracing -PatAuth $token
+            #     # $server.Client.List('Products/dotnet/workloads/emsdk.9.0-9.0.100.components/5E91A4F3E34928FB6F88FBAE0FF9CABC7E174C887C0460611933A368C367BDB4')
+            #     $server.Client.List('Products/dotnet/workloads/emsdk.9.0-9.0.100.components/hj34k2125hl34jk2l5h4jk23h5jk432hljk54h23jk5hljk423l')
+            #   displayName: 🟣 Check Drop Exists logic
 
-                $vstsDropFolder = (Get-ChildItem "$rootFolder\_tasks" -Recurse -Include 'MicroBuildUploadVstsDropFolder*' -Force)[0].FullName
-                "VstsDropFolder: $vstsDropFolder"
-                "Vsts Folders:"
-                Get-ChildItem $vstsDropFolder -Force
-
-                "Hierarchy:"
-                Get-ChildItem $vstsDropFolder -Recurse -Depth 5 -Force
-
-                $versionFolder = (Get-ChildItem $vstsDropFolder -Directory -Force)[0].FullName
-                "VersionFolder: $versionFolder"
-                "Version Folders:"
-                Get-ChildItem $versionFolder -Force
-
-                # $innerDropFolder = (Get-ChildItem $versionFolder -Directory -Force)[0].FullName
-                # "InnerDropFolder: $innerDropFolder"
-                # "InnerDrop Folders:"
-                # Get-ChildItem $innerDropFolder -Force
-
-                # $dropFolders = Get-ChildItem "$rootFolder\_tasks" -Recurse -Include 'drop.exe' -Force
-                # "Drop Folders:"
-                # $dropFolders
-                # $dropExeDir = $dropFolders[0].Directory.FullName
-                # "DropExeDir: $dropExeDir"
-                Write-Host "##vso[task.setvariable variable=DropExeDir]$versionFolder"
-              displayName: 🟣 Set DropExeDir variable
-            - task: 1ES.PublishBuildArtifacts@1
-              displayName: 🟣 Publish DropExe to Pipeline
-              inputs:
-                # D:\a\_work\_tasks\MicroBuildUploadVstsDropFolder_4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8\2.2.16\VstsDrop\lib\net45\drop.exe
-                PathtoPublish: $(DropExeDir)
-                ArtifactName: DropExe
-                publishLocation: Container
-              continueOnError: true
-              condition: always()
+            # Based on the MicroBuildUploadVstsDropFolder task logic.
+            # See: https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=%2Fsrc%2FTasks%2FUploadDrop%2Fplugin.ps1
             - pwsh: |
-                $dropExeDir = '$(DropExeDir)'
-                Import-Module "$dropExeDir/Engineering.PowerShell.Vsts.Drop.psd1"
+                Import-Module '$(VstsDropFolder)/Engineering.PowerShell.Vsts.Drop.psd1'
+                # Default value within: https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
                 $serviceUri = 'https://devdiv.artifacts.visualstudio.com'
                 $token = '$(dn-bot-devdiv-drop-rw-code-rw)'
                 $server = Get-VstsDropServer -Url $serviceUri -TraceToHost ActivityTracing -PatAuth $token
-                # $server.Client.List('Products/dotnet/workloads/emsdk.9.0-9.0.100.components/5E91A4F3E34928FB6F88FBAE0FF9CABC7E174C887C0460611933A368C367BDB4')
-                $server.Client.List('Products/dotnet/workloads/emsdk.9.0-9.0.100.components/hj34k2125hl34jk2l5h4jk23h5jk432hljk54h23jk5hljk423l')
+                # Returns a JSON string. If the drop exists, an array with a single object is returned. If the drop does not exist, an empty array is returned.
+                $dropJson = $server.Client.List('${{ parameters.testDropExistsLogic }}') | ConvertFrom-Json
+                if ($dropJson.Count -ne 0) {
+                  Write-Host "Workload exists"
+                  Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]False"
+                  # Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" has already been uploaded. Skipping upload.'
+                  return
+                }
+                Write-Host "Workload does not exist"
+                Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]True"
               displayName: 🟣 Check Drop Exists logic
             steps:
-            - powershell: 'Get-ChildItem env:'
-              displayName: 🟣 Show environment variables
+            # - powershell: 'Get-ChildItem env:'
+            #   displayName: 🟣 Show environment variables
 
             # - pwsh: |
             #     $workloadGitHubPat = ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force
@@ -224,28 +259,28 @@ extends:
             #     Write-Host "##vso[task.setvariable variable=WorkloadAzDOPat]$vsDropName"
             #   displayName: Set PAT variables
 
-            - pwsh: |
-                $rootFolder = '$(Agent.RootDirectory)'
-                "RootFolder: $rootFolder"
-                "Task Folders:"
-                Get-ChildItem "$rootFolder\_tasks"
-                $dropFolders = Get-ChildItem $rootFolder -Recurse -Filter 'drop.exe'
-                "Drop Folders:"
-                $dropFolders
-                $dropExeDir = $dropFolders[0].Directory.FullName
-                "DropExeDir: $dropExeDir"
-                Write-Host "##vso[task.setvariable variable=DropExeDir]$dropExeDir"
-              displayName: 🟣 Set DropExeDir variable
+            # - pwsh: |
+            #     $rootFolder = '$(Agent.RootDirectory)'
+            #     "RootFolder: $rootFolder"
+            #     "Task Folders:"
+            #     Get-ChildItem "$rootFolder\_tasks"
+            #     $dropFolders = Get-ChildItem $rootFolder -Recurse -Filter 'drop.exe'
+            #     "Drop Folders:"
+            #     $dropFolders
+            #     $dropExeDir = $dropFolders[0].Directory.FullName
+            #     "DropExeDir: $dropExeDir"
+            #     Write-Host "##vso[task.setvariable variable=DropExeDir]$dropExeDir"
+            #   displayName: 🟣 Set DropExeDir variable
 
-            - task: 1ES.PublishBuildArtifacts@1
-              displayName: 🟣 Publish DropExe to Pipeline
-              inputs:
-                # D:\a\_work\_tasks\MicroBuildUploadVstsDropFolder_4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8\2.2.16\VstsDrop\lib\net45\drop.exe
-                PathtoPublish: $(DropExeDir)
-                ArtifactName: DropExe
-                publishLocation: Container
-              continueOnError: true
-              condition: always()
+            # - task: 1ES.PublishBuildArtifacts@1
+            #   displayName: 🟣 Publish DropExe to Pipeline
+            #   inputs:
+            #     # D:\a\_work\_tasks\MicroBuildUploadVstsDropFolder_4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8\2.2.16\VstsDrop\lib\net45\drop.exe
+            #     PathtoPublish: $(DropExeDir)
+            #     ArtifactName: DropExe
+            #     publishLocation: Container
+            #   continueOnError: true
+            #   condition: always()
 
             - ${{ if eq(parameters.createVSInsertion, true) }}:
               - task: AzureCLI@2
@@ -265,6 +300,7 @@ extends:
                   if (-not $vsTopicBranchId) {
                     $vsTopicBranchId = (Get-Date).ToString('yyyy-MM')
                   }
+                  Write-Host "VsTopicBranchId: $vsTopicBranchId"
                   Write-Host "##vso[task.setvariable variable=VsTopicBranchId]$vsTopicBranchId"
                 displayName: 🟣 Set VsTopicBranchId variable
 
@@ -377,27 +413,27 @@ extends:
                   # https://stackoverflow.com/a/60630739/294804
                   # https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/azure-artifacts/drop-service/azure-artifacts-drop#dropexe-get-the-client-using-powershell-only-when-needed
                   - pwsh: |
-                      Import-Module $env:DROPEXEDIR/Drop.PowerShell.dll
-                      # If the drop folder doesn't exist (not acquired), the drop cannot be uploaded.
+                      # Import-Module $env:DROPEXEDIR/Drop.PowerShell.dll
+                      # If the drop folder doesn't exist (not downloaded via DARC), the drop cannot be uploaded.
                       if (-not (Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')) {
                         Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]False"
-                        Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" was not acquired. Skipping upload.'
+                        Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" was not downloaded via DARC. Skipping VS drop publish...'
                         return
                       }
-                      $workloadUrl = '$(${{ workloadShortName }}_${{ workloadType }}_url)'
-                      $drops = Get-DropList -AuthAAD -OutputFormat SimpleObjects -DropUrl $workloadUrl -Verbose
-                      if ($drops.Count -ne 0) {
-                        Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]False"
-                        Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" has already been uploaded. Skipping upload.'
-                        return
-                      }
+                      # $workloadUrl = '$(${{ workloadShortName }}_${{ workloadType }}_url)'
+                      # $drops = Get-DropList -AuthAAD -OutputFormat SimpleObjects -DropUrl $workloadUrl -Verbose
+                      # if ($drops.Count -ne 0) {
+                      #   Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]False"
+                      #   Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" has already been published. Skipping VS drop publish...'
+                      #   return
+                      # }
                       Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]True"
-                    displayName: 🟣 Check if ${{ workloadShortName }}_${{ workloadType }} exists
+                    displayName: 🟣 Check if ${{ workloadShortName }}_${{ workloadType }} needs published
 
                   # Docs: https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/1es-pipeline-templates/features/outputs/microbuild-vsts-drop
                   # YAML reference (original task): https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
                   - task: 1ES.MicroBuildVstsDrop@1
-                    displayName: '🟣 Publish insertion drop: ${{ workloadShortName }}_${{ workloadType }}'
+                    displayName: '🟣 Publish VS insertion drop: ${{ workloadShortName }}_${{ workloadType }}'
                     inputs:
                       dropFolder: $(${{ workloadShortName }}_${{ workloadType }}_dir)
                       dropName: $(${{ workloadShortName }}_${{ workloadType }}_name)
