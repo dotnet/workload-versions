@@ -204,6 +204,14 @@ extends:
                 publishLocation: Container
               continueOnError: true
               condition: always()
+            - pwsh: |
+                $dropExeDir = '$(DropExeDir)'
+                Import-Module "$dropExeDir/Engineering.PowerShell.Vsts.Drop.psd1"
+                $serviceUri = 'https://devdiv.artifacts.visualstudio.com'
+                $token = '$(dn-bot-devdiv-drop-rw-code-rw)'
+                $server = Get-VstsDropServer -Url $serviceUri -TraceToHost ActivityTracing -PatAuth $token
+                $server.Client.List('Products/dotnet/workloads/emsdk.9.0-9.0.100.components/5E91A4F3E34928FB6F88FBAE0FF9CABC7E174C887C0460611933A368C367BDB4')
+              displayName: 🟣 Check Drop Exists logic
             steps:
             - powershell: 'Get-ChildItem env:'
               displayName: 🟣 Show environment variables
