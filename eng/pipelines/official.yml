@@ -168,25 +168,25 @@ extends:
                 $rootFolder = '$(Agent.RootDirectory)'
                 "RootFolder: $rootFolder"
                 "Task Folders:"
-                Get-ChildItem "$rootFolder\_tasks"
+                Get-ChildItem "$rootFolder\_tasks" -Force
 
-                $vstsDropFolder = (Get-ChildItem "$rootFolder\_tasks" -Recurse -Include 'MicroBuildUploadVstsDropFolder*')[0].FullName
+                $vstsDropFolder = (Get-ChildItem "$rootFolder\_tasks" -Recurse -Include 'MicroBuildUploadVstsDropFolder*' -Force)[0].FullName
                 "VstsDropFolder: $vstsDropFolder"
                 "Vsts Folders:"
-                Get-ChildItem $vstsDropFolder
+                Get-ChildItem $vstsDropFolder -Force
 
                 "Hierarchy:"
-                Get-ChildItem $vstsDropFolder -Recurse -Depth 5
+                Get-ChildItem $vstsDropFolder -Recurse -Depth 5 -Force
 
-                # $versionFolder = (Get-ChildItem $vstsDropFolder -Directory)[0].FullName
+                # $versionFolder = (Get-ChildItem $vstsDropFolder -Directory -Force)[0].FullName
                 # "VersionFolder: $versionFolder"
                 # "Version Folders:"
-                # Get-ChildItem $versionFolder
+                # Get-ChildItem $versionFolder -Force
 
-                # $innerDropFolder = (Get-ChildItem $versionFolder -Directory)[0].FullName
+                # $innerDropFolder = (Get-ChildItem $versionFolder -Directory -Force)[0].FullName
                 # "InnerDropFolder: $innerDropFolder"
                 # "InnerDrop Folders:"
-                # Get-ChildItem $innerDropFolder
+                # Get-ChildItem $innerDropFolder -Force
 
                 $dropFolders = Get-ChildItem "$rootFolder\_tasks" -Recurse -Include 'drop.exe' -Force
                 "Drop Folders:"
