@@ -156,8 +156,8 @@ extends:
             displayName: Build Repo
             timeoutInMinutes: 120
             pool:
-              # name: $(DncEngInternalBuildPool)
-              name: NetCore1ESPool-Svc-Internal
+              name: $(DncEngInternalBuildPool)
+              # name: NetCore1ESPool-Svc-Internal
               image: 1es-windows-2022
               os: windows
             preSteps:
@@ -172,7 +172,7 @@ extends:
                 "VstsDropFolder: $vstsDropFolder"
                 "Vsts Folders:"
                 Get-ChildItem $vstsDropFolder
-                $dropFolders = Get-ChildItem $rootFolder -Recurse -Include 'drop.exe' -Force
+                $dropFolders = Get-ChildItem "$rootFolder\_tasks" -Recurse -Include 'drop.exe' -Force
                 "Drop Folders:"
                 $dropFolders
                 $dropExeDir = $dropFolders[0].Directory.FullName
