@@ -242,7 +242,6 @@ extends:
                 if ($dropJson.Count -ne 0) {
                   Write-Host "Workload exists"
                   Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]False"
-                  # Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" has already been uploaded. Skipping upload.'
                   return
                 }
                 Write-Host "Workload does not exist"
