@@ -163,15 +163,31 @@ extends:
             preSteps:
             - powershell: 'Get-ChildItem env:'
               displayName: 🟣 Show environment variables
+            # D:\a\_work\_tasks\MicroBuildUploadVstsDropFolder_4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8\2.2.16\VstsDrop\lib\net45\drop.exe
             - pwsh: |
                 $rootFolder = '$(Agent.RootDirectory)'
                 "RootFolder: $rootFolder"
                 "Task Folders:"
                 Get-ChildItem "$rootFolder\_tasks"
+
                 $vstsDropFolder = (Get-ChildItem "$rootFolder\_tasks" -Recurse -Include 'MicroBuildUploadVstsDropFolder*')[0].FullName
                 "VstsDropFolder: $vstsDropFolder"
                 "Vsts Folders:"
                 Get-ChildItem $vstsDropFolder
+
+                "Hierarchy:"
+                Get-ChildItem $vstsDropFolder -Recurse -Depth 5
+
+                # $versionFolder = (Get-ChildItem $vstsDropFolder -Directory)[0].FullName
+                # "VersionFolder: $versionFolder"
+                # "Version Folders:"
+                # Get-ChildItem $versionFolder
+
+                # $innerDropFolder = (Get-ChildItem $versionFolder -Directory)[0].FullName
+                # "InnerDropFolder: $innerDropFolder"
+                # "InnerDrop Folders:"
+                # Get-ChildItem $innerDropFolder
+
                 $dropFolders = Get-ChildItem "$rootFolder\_tasks" -Recurse -Include 'drop.exe' -Force
                 "Drop Folders:"
                 $dropFolders
