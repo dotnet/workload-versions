@@ -27,7 +27,7 @@ parameters:
 - name: vsTopicBranchId
   displayName: 'VS Topic Branch Identifier [default: yyyy-MM]'
   type: string
-  default: null
+  default: ''
 - name: workloadsForVSDrops
   displayName: Workloads for VS drops
   type: object
