@@ -27,7 +27,7 @@ parameters:
 - name: vsTopicBranchId
   displayName: 'VS Topic Branch Identifier [default: yyyy-MM]'
   type: string
-  default: ''
+  default: '|default|'
 - name: workloadsForVSDrops
   displayName: Workloads for VS drops
   type: object
@@ -299,7 +299,7 @@ extends:
                     -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }}
               - pwsh: |
                   $vsTopicBranchId = '${{ parameters.vsTopicBranchId }}'
-                  if (-not $vsTopicBranchId) {
+                  if ($vsTopicBranchId -eq '|default|') {
                     $vsTopicBranchId = (Get-Date).ToString('yyyy-MM')
                   }
                   Write-Host "VsTopicBranchId: $vsTopicBranchId"
