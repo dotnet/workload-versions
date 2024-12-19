@@ -58,10 +58,10 @@ parameters:
   type: object
   default:
   - rel/d17.13
-- name: testDropExistsLogic
-  displayName: Test Drop Exists logic
-  type: string
-  default: Products/dotnet/workloads/emsdk.9.0-9.0.100.components/5E91A4F3E34928FB6F88FBAE0FF9CABC7E174C887C0460611933A368C367BDB4
+# - name: testDropExistsLogic
+#   displayName: Test Drop Exists logic
+#   type: string
+#   default: Products/dotnet/workloads/emsdk.9.0-9.0.100.components/5E91A4F3E34928FB6F88FBAE0FF9CABC7E174C887C0460611933A368C367BDB4
 
 variables:
 - template: /eng/common/templates-official/variables/pool-providers.yml@self
