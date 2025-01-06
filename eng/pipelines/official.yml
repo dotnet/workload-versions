@@ -144,11 +144,11 @@ extends:
       jobs:
       - template: /eng/common/templates-official/jobs/jobs.yml@self
         parameters:
-          # artifacts:
-          #   publish:
-          #     artifacts: true
-          #     logs: false
-          #     manifests: true
+          artifacts:
+            publish:
+              artifacts: true
+              logs: false
+              manifests: true
           enableMicrobuild: true
           enablePublishBuildAssets: true
           enableTelemetry: true
@@ -483,7 +483,11 @@ extends:
                     AllowTopicBranchUpdate: true
                     # This is the name of our DevDiv alias.
                     InsertionReviewers: Dotnet Core SDK and CLI
-                    InsertionBuildPolicies: Request Perf DDRITs
+                    # Queuing 'Request Perf DDRITs' build policies on Request #599598
+                    # Waiting for Request #599598 to complete its merge
+                    # Cannot find 'Request Perf DDRITs' build policy in Request #599598
+                    # WARNING: Exception updating pull request: VssUnauthorizedException : VS30063: You are not authorized to access https://spsprodwus21.vssps.visualstudio.com.
+                    # InsertionBuildPolicies: Request Perf DDRITs
                     # This action only works on AzDO repos. This warning occurs if enabled:
                     # ##[warning]WARNING: Cannot extract commit details from vstfs:///Build/Build/6574299: ArgumentException : 'https://github.com/dotnet/project-system' does not look like an Azure DevOps url
                     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/631/Copy-Commit-Details-to-PR
@@ -517,7 +521,11 @@ extends:
                     AllowTopicBranchUpdate: true
                     # This is the name of our DevDiv alias.
                     InsertionReviewers: Dotnet Core SDK and CLI
-                    InsertionBuildPolicies: Request Perf DDRITs
+                    # Queuing 'Request Perf DDRITs' build policies on Request #599598
+                    # Waiting for Request #599598 to complete its merge
+                    # Cannot find 'Request Perf DDRITs' build policy in Request #599598
+                    # WARNING: Exception updating pull request: VssUnauthorizedException : VS30063: You are not authorized to access https://spsprodwus21.vssps.visualstudio.com.
+                    # InsertionBuildPolicies: Request Perf DDRITs
                     # This action only works on AzDO repos. This warning occurs if enabled:
                     # ##[warning]WARNING: Cannot extract commit details from vstfs:///Build/Build/6574299: ArgumentException : 'https://github.com/dotnet/project-system' does not look like an Azure DevOps url
                     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/631/Copy-Commit-Details-to-PR
