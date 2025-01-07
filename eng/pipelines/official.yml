@@ -86,7 +86,8 @@ variables:
 - name: _InternalBuildArgs
   value: ''
 # https://github.com/dotnet/arcade/blob/ccae251ef033746eb0213329953f5e3c1687693b/Documentation/ArcadeSdk.md#common-steps-in-azure-devops-pipeline
-- name: BuildConfiguration
+# - name: BuildConfiguration
+- name: _BuildConfig
   value: Release
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - name: _RunAsPublic
@@ -335,7 +336,7 @@ extends:
             # /p:WorkloadAzDOPat=(ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force)
 
             - script: >-
-                $(Build.SourcesDirectory)/build.cmd -ci -configuration $(BuildConfiguration)
+                $(Build.SourcesDirectory)/build.cmd -ci -configuration $(_BuildConfig)
                 /p:CreateVSInsertion=${{ parameters.createVSInsertion }}
                 /p:WorkloadDirectory=$(Build.SourcesDirectory)/artifacts/workloads
                 $(_InternalBuildArgs)
@@ -541,11 +542,11 @@ extends:
                     LinkWorkItemsToPR: false
                     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/638/Set-AutoComplete-on-an-Insertion
                     InsertAutoComplete: true
-            - task: 1ES.PublishBuildArtifacts@1
-              displayName: 🟣 Publish Workload Drops to Pipeline
-              inputs:
-                PathtoPublish: $(Build.SourcesDirectory)/artifacts/workloads/drops
-                ArtifactName: WorkloadDrops
-                publishLocation: Container
-              continueOnError: true
-              condition: always()
+            # - task: 1ES.PublishBuildArtifacts@1
+            #   displayName: 🟣 Publish Workload Drops to Pipeline
+            #   inputs:
+            #     PathtoPublish: $(Build.SourcesDirectory)/artifacts/workloads/drops
+            #     ArtifactName: WorkloadDrops
+            #     publishLocation: Container
+            #   continueOnError: true
+            #   condition: always()
