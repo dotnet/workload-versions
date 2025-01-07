@@ -85,6 +85,9 @@ variables:
   value: False
 - name: _InternalBuildArgs
   value: ''
+# https://github.com/dotnet/arcade/blob/ccae251ef033746eb0213329953f5e3c1687693b/Documentation/ArcadeSdk.md#common-steps-in-azure-devops-pipeline
+- name: BuildConfiguration
+  value: Release
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - name: _RunAsPublic
     value: False
@@ -331,7 +334,7 @@ extends:
             # /p:WorkloadAzDOPat=(ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force)
 
             - script: >-
-                $(Build.SourcesDirectory)/build.cmd -ci -configuration Release
+                $(Build.SourcesDirectory)/build.cmd -ci -configuration $(BuildConfiguration)
                 /p:CreateVSInsertion=${{ parameters.createVSInsertion }}
                 /p:WorkloadDirectory=$(Build.SourcesDirectory)/artifacts/workloads
               displayName: 🟣 Build solution
