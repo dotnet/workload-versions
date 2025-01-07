@@ -218,6 +218,24 @@ extends:
                 Write-Host "##vso[task.setvariable variable=VstsDropFolder]$vstsDropFolder"
               displayName: 🟣 Set VstsDropFolder variable
 
+            - pwsh: |
+                $tasksFolder = '$(Agent.RootDirectory)\_tasks'
+                # The folders in _tasks are hidden. The -Force parameter allows them to be listed.
+                $taskRootFolder = Get-ChildItem $tasksFolder -Directory -Filter 'MicroBuildInsertVsPayload*' -Force | Select-Object -First 1
+                # Get the first version folder since the agent will only install a single version.
+                $insertVsPayload = ($taskRootFolder | Get-ChildItem -Directory -Force | Select-Object -First 1).FullName
+                Write-Host "InsertVsPayload: $insertVsPayload"
+                Write-Host "##vso[task.setvariable variable=InsertVsPayload]$insertVsPayload"
+              displayName: 🟣 Set InsertVsPayload variable
+
+            - pwsh: |
+                $localPluginPath = '$(Build.SourcesDirectory)/eng/InsertVsPayload/plugin.ps1'
+                Write-Host "LocalPluginPath: $localPluginPath"
+                $taskPluginPath = '$(InsertVsPayload)/plugin.ps1'
+                Write-Host "TaskPluginPath: $taskPluginPath"
+                Copy-Item -Path $localPluginPath -Destination $taskPluginPath -Force
+              displayName: 🟣 Replace InsertVsPayload plugin.ps1
+
             # - task: 1ES.PublishBuildArtifacts@1
             #   displayName: 🟣 Publish DropExe to Pipeline
             #   inputs:
