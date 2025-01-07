@@ -102,6 +102,7 @@ variables:
   - group: Publish-Build-Assets
   - group: DotNet-HelixApi-Access
   - group: SDL_Settings
+  # https://github.com/dotnet/arcade/blob/ccae251ef033746eb0213329953f5e3c1687693b/Documentation/CorePackages/Publishing.md#basic-onboarding-scenario-for-new-repositories-to-the-current-publishing-version-v3
   - name: _InternalBuildArgs
     value: /p:DotNetSignType=$(_SignType)
       /p:TeamName=$(_TeamName)
@@ -337,6 +338,7 @@ extends:
                 $(Build.SourcesDirectory)/build.cmd -ci -configuration $(BuildConfiguration)
                 /p:CreateVSInsertion=${{ parameters.createVSInsertion }}
                 /p:WorkloadDirectory=$(Build.SourcesDirectory)/artifacts/workloads
+                $(_InternalBuildArgs)
               displayName: 🟣 Build solution
 
             # - script: eng\common\CIBuild.cmd
