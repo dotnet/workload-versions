@@ -461,7 +461,7 @@ function Update-ComponentsJson {
                         if (-not $wcAccessToken) {
                             $wcAccessToken = $VstsEndpoint.Auth.Parameters.AccessToken
                         }
-                        $wcAccessToken = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$wcAccessToken"))
+                        $wcAccessToken = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(":$wcAccessToken"))
                         $wc.Headers.Add("Authorization", "Basic $wcAccessToken")
                         $wc.DownloadFile($url, $downloadedFilePath)
                         $manifestJson = Get-Content -Raw $downloadedFilePath | ConvertFrom-Json
