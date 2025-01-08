@@ -326,11 +326,9 @@ extends:
                     $vsTopicBranchId = (Get-Date).ToString('yyyy-MM')
                   }
                   # https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/plugin.ps1&version=GBmain&line=278&lineEnd=287&lineStartColumn=1&lineEndColumn=1&lineStyle=plain&_a=contents
+                  # temp/DotNet-SDK/dotnet-workload-versions-official-ci-20241216.6-1
                   if ($vsTopicBranchId -eq '|temp|') {
-                    $definition = Get-VstsTaskVariable -Name 'Build.DefinitionName' -Require
-                    $jobNumber = Get-VstsTaskVariable -Name 'Release.ReleaseName' -Default (Get-VstsTaskVariable -Name 'Build.BuildNumber' -Require)
-                    $tryNumber = Get-VstsTaskVariable -Name 'Release.AttemptNumber' -Default '1'
-                    return "temp/$(_TeamName)/$definition-$jobNumber-$tryNumber" -replace '[\s\\]+', '-'
+                    $vsTopicBranchId = "temp/$(_TeamName)/$(Build.DefinitionName)-$(Build.BuildNumber)-$(System.JobAttempt)" -replace '[\s\\]+', '-'
                   }
                   Write-Host "VsTopicBranchId: $vsTopicBranchId"
                   Write-Host "##vso[task.setvariable variable=VsTopicBranchId]$vsTopicBranchId"
