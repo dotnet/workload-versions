@@ -361,7 +361,7 @@ extends:
             # /p:WorkloadAzDOPat=(ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force)
 
             - script: >-
-                $(Build.SourcesDirectory)/build.cmd -ci -configuration $(_BuildConfig)
+                $(Build.SourcesDirectory)/build.cmd -test -sign -pack -publish -ci -configuration $(_BuildConfig)
                 /p:CreateVSInsertion=${{ parameters.createVSInsertion }}
                 /p:WorkloadDirectory=$(Build.SourcesDirectory)/artifacts/workloads
                 $(_InternalBuildArgs)
