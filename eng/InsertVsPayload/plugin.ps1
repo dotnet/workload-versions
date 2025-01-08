@@ -468,7 +468,7 @@ function Update-ComponentsJson {
 
                         $wcAccessToken = ConvertTo-SecureString -String $AccessToken -AsPlainText -Force
                         # $wc.Credentials = New-Object System.Net.NetworkCredential($null, $wcAccessToken)
-                        $wc.Credentials = New-Object System.Management.Automation.PSCredential("", $wcAccessToken)
+                        $wc.Credentials = New-Object System.Management.Automation.PSCredential("PAT", $wcAccessToken)
 
                         $wc.DownloadFile($url, $downloadedFilePath)
                         $manifestJson = Get-Content -Raw $downloadedFilePath | ConvertFrom-Json
