@@ -457,12 +457,13 @@ function Update-ComponentsJson {
                         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
                         $downloadedFilePath = [IO.Path]::GetTempFileName()
                         $wc = New-Object System.Net.WebClient
-                        $wcAccessToken = $AccessToken
-                        if (-not $wcAccessToken) {
-                            $wcAccessToken = $VstsEndpoint.Auth.Parameters.AccessToken
-                        }
-                        $wcAccessToken = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(":$wcAccessToken"))
-                        $wc.Headers.Add("Authorization", "Bearer $wcAccessToken")
+                        $wc.UseDefaultCredentials = $true
+                        # $wcAccessToken = $AccessToken
+                        # if (-not $wcAccessToken) {
+                        #     $wcAccessToken = $VstsEndpoint.Auth.Parameters.AccessToken
+                        # }
+                        # $wcAccessToken = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(":$wcAccessToken"))
+                        # $wc.Headers.Add("Authorization", "Bearer $wcAccessToken")
                         $wc.DownloadFile($url, $downloadedFilePath)
                         $manifestJson = Get-Content -Raw $downloadedFilePath | ConvertFrom-Json
                         if ((Get-Member -InputObject $manifestJson -Name "info" -MemberType NoteProperty) -And (Get-Member -InputObject $manifestJson.info -Name "buildVersion" -MemberType NoteProperty)) {
