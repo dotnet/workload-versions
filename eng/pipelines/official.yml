@@ -148,6 +148,7 @@ extends:
                     -workloadPath $(Build.SourcesDirectory)/artifacts/workloads
                     -gitHubPat (ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force)
                     -azDOPat (ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force)
+                    -workloadListJson ${{ convertToJson(parameters.workloadsForVSDrops) }}
                     -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }}
               - pwsh: |
                   $vsTopicBranchId = '${{ parameters.vsTopicBranchId }}'
