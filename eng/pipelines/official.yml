@@ -205,7 +205,7 @@ extends:
 
             - powershell: >-
                 eng/common/build.ps1
-                -restore -build -sign -pack -publish -ci
+                -restore -build -sign -pack -publish -ci -msbuildEngine vs
                 -configuration $(BuildConfiguration)
                 /p:CreateVSInsertion=${{ parameters.createVSInsertion }}
                 /p:WorkloadDirectory=$(Build.SourcesDirectory)/artifacts/workloads
