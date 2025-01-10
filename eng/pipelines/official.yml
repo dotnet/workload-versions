@@ -380,3 +380,11 @@ extends:
             #     publishLocation: Container
             #   continueOnError: true
             #   condition: always()
+            - task: 1ES.PublishBuildArtifacts@1
+              displayName: 🟣 Publish Logs to Pipeline
+              inputs:
+                PathtoPublish: $(Build.SourcesDirectory)/artifacts/log
+                ArtifactName: Log
+                publishLocation: Container
+              continueOnError: true
+              condition: always()
