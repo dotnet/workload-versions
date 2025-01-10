@@ -33,7 +33,6 @@ $versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency
 $workloadFilter = ''
 if ($workloadListJson) {
   $workloadList = ConvertFrom-Json -InputObject $workloadListJson
-  Write-Host "workloadList: $workloadList"
   if ($workloadList.Count -ne 0) {
     $workloadFilter = "($($workloadList | Join-String -Separator '|'))"
   }

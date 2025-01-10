@@ -65,14 +65,16 @@ variables:
 # Both this (used in Arcade for the MicroBuildSigningPlugin) and DotNetSignType (used in Arcade in Sign.proj) are necessary to set the sign type.
 - name: _SignType
   value: real
+- name: PostBuildSign
+  value: false
 - name: _TeamName
   value: DotNet-Cli
 # https://github.com/dotnet/arcade/blob/ccae251ef033746eb0213329953f5e3c1687693b/Documentation/ArcadeSdk.md#common-steps-in-azure-devops-pipeline
 - name: BuildConfiguration
 # - name: _BuildConfig
   value: Release
-# Variables for setting TSA information.
-- group: SDL_Settings
+# Provides TSA variables for automatic bug reporting.
+- group: DotNet-CLI-SDLValidation-Params
 # https://github.com/dotnet/arcade/blob/ccae251ef033746eb0213329953f5e3c1687693b/Documentation/CorePackages/Publishing.md#basic-onboarding-scenario-for-new-repositories-to-the-current-publishing-version-v3
 - name: _InternalBuildArgs
   value: /p:DotNetSignType=$(_SignType)
@@ -144,10 +146,11 @@ extends:
                   azureSubscription: DotNetStaging
                   scriptType: pscore
                   scriptPath: $(Build.SourcesDirectory)/eng/download-workloads.ps1
+                  # Note: The second $ for usePreComponents allows the value to resolve as `$true` or `$false`.
                   arguments: >-
                     -workloadPath '$(Build.SourcesDirectory)/artifacts/workloads'
-                    -gitHubPat (ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force)
-                    -azDOPat (ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force)
+                    -gitHubPat (ConvertTo-SecureString -String '$(BotAccount-dotnet-bot-repo-PAT)' -AsPlainText -Force)
+                    -azDOPat (ConvertTo-SecureString -String '$(dn-bot-all-drop-rw-code-rw-release-all)' -AsPlainText -Force)
                     -workloadListJson '${{ convertToJson(parameters.workloadsForVSDrops) }}'
                     -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }}
               - pwsh: |
