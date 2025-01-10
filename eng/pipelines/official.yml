@@ -1,6 +1,12 @@
 # Pipeline: https://dev.azure.com/dnceng/internal/_build?definitionId=1298
 
-trigger: none
+trigger:
+  batch: true
+  branches:
+    include:
+    - main
+    - release/*
+
 pr: none
 
 parameters:
@@ -109,7 +115,7 @@ extends:
         os: windows
       policheck:
         enabled: true
-      # Variables for TSA set within the SDL_Settings variable group.
+      # Variables for TSA set within the DotNet-CLI-SDLValidation-Params variable group.
       tsa:
         enabled: true
     stages:
@@ -152,6 +158,9 @@ extends:
                   -azDOPat (ConvertTo-SecureString -String '$(dn-bot-all-drop-rw-code-rw-release-all)' -AsPlainText -Force)
                   -workloadListJson '${{ convertToJson(parameters.workloadsForVSDrops) }}'
                   -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }}
+            # This allows setting the VsTopicBranchId variable dynamically.
+            # |default| represents normal operation, set to: yyyy-MM
+            # |temp| is only for pipeline testing, set to: BuildNumber-JobAttempt
             - pwsh: |
                 $vsTopicBranchId = '${{ parameters.vsTopicBranchId }}'
                 if ($vsTopicBranchId -eq '|default|') {
@@ -275,13 +284,7 @@ extends:
                     dropName: $(${{ workloadShortName }}_${{ workloadType }}_name)
                     # See: https://dev.azure.com/devdiv/DevDiv/_wiki/wikis/DevDiv.wiki/35351/Retain-Drops
                     dropRetentionDays: 183
-                    # dropRetentionDays: 90
                     accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
-                    # TODO: This token DOES NOT WORK for drop access to DevDiv.
-                    # accessToken: $(dn-bot-all-drop-rw-code-rw-release-all)
-                    # accessToken: $(System.AccessToken)
-                    # vsDropServiceUri: https://vsdrop.corp.microsoft.com/file/v1
-                    # accessToken: $(dn-bot-devdiv-build-rw-code-rw-release-rw)
                   condition: eq(variables['PublishWorkloadDrop'], 'True')
 
             - ${{ each primaryInsertionBranch in parameters.primaryVsInsertionBranches }}:
