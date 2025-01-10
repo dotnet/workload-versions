@@ -82,7 +82,7 @@ variables:
     /p:StabilizePackageVersion=${{ parameters.stabilizePackageVersion }}
 - name: PostBuildSign
   value: true
-# Release-Pipeline provides: MaestroAccessToken, BotAccount-dotnet-bot-repo-PAT, dn-bot-all-drop-rw-code-rw-release-all
+# Release-Pipeline provides: BotAccount-dotnet-bot-repo-PAT, dn-bot-all-drop-rw-code-rw-release-all
 # https://dnceng.visualstudio.com/internal/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=87&path=Release-Pipeline
 - group: Release-Pipeline
 # DotNet-DevDiv-Insertion-Workflow-Variables provides: dn-bot-devdiv-drop-rw-code-rw
@@ -289,9 +289,9 @@ extends:
                   displayName: '🟣 Create VS insertion: ${{ primaryInsertionBranch }}'
                   inputs:
                     # InsertionAccessToken: $(dn-bot-devdiv-drop-rw-code-rw)
-                    # InsertionAccessToken: $(dn-bot-all-drop-rw-code-rw-release-all)
+                    InsertionAccessToken: $(dn-bot-all-drop-rw-code-rw-release-all)
                     # ConnectedServiceName: DotNetRelease-PME
-                    InsertionAccessToken: $(dn-bot-devdiv-build-rw-code-rw-release-rw)
+                    # InsertionAccessToken: $(dn-bot-devdiv-build-rw-code-rw-release-rw)
                     TargetBranch: ${{ primaryInsertionBranch }}
                     # temp/DotNet-SDK/dotnet-workload-versions-official-ci-20241216.6-1
                     # https://learn.microsoft.com/azure/devops/pipelines/process/expressions?view=azure-devops#format
@@ -332,9 +332,9 @@ extends:
                   displayName: '🟣 Create VS insertion: ${{ secondaryInsertionBranch }}'
                   inputs:
                     # InsertionAccessToken: $(dn-bot-devdiv-drop-rw-code-rw)
-                    # InsertionAccessToken: $(dn-bot-all-drop-rw-code-rw-release-all)
+                    InsertionAccessToken: $(dn-bot-all-drop-rw-code-rw-release-all)
                     # ConnectedServiceName: DotNetRelease-PME
-                    InsertionAccessToken: $(dn-bot-devdiv-build-rw-code-rw-release-rw)
+                    # InsertionAccessToken: $(dn-bot-devdiv-build-rw-code-rw-release-rw)
                     TargetBranch: ${{ secondaryInsertionBranch }}
                     # temp/DotNet-SDK/dotnet-workload-versions-official-ci-20241216.6-1
                     # https://learn.microsoft.com/azure/devops/pipelines/process/expressions?view=azure-devops#format
