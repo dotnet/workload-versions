@@ -61,36 +61,34 @@ parameters:
 
 variables:
 - template: /eng/common/templates-official/variables/pool-providers.yml@self
-- name: _BuildJobDisplayName
-  value: 'Build, Sign and Publish'
+############### ARCADE ###############
+# Both this (used in Arcade for the MicroBuildSigningPlugin) and DotNetSignType (used in Arcade in Sign.proj) are necessary to set the sign type.
+- name: _SignType
+  value: real
 - name: _TeamName
   value: DotNet-Cli
 # https://github.com/dotnet/arcade/blob/ccae251ef033746eb0213329953f5e3c1687693b/Documentation/ArcadeSdk.md#common-steps-in-azure-devops-pipeline
 - name: BuildConfiguration
 # - name: _BuildConfig
   value: Release
-- name: _SignType
-  value: real
-# TODO: What is this for?
+# Variables for setting TSA information.
 - group: SDL_Settings
 # https://github.com/dotnet/arcade/blob/ccae251ef033746eb0213329953f5e3c1687693b/Documentation/CorePackages/Publishing.md#basic-onboarding-scenario-for-new-repositories-to-the-current-publishing-version-v3
 - name: _InternalBuildArgs
   value: /p:DotNetSignType=$(_SignType)
     /p:TeamName=$(_TeamName)
     /p:DotNetPublishUsingPipelines=true
-    /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
+    /p:OfficialBuildId=$(Build.BuildNumber)
     /p:StabilizePackageVersion=${{ parameters.stabilizePackageVersion }}
-- name: PostBuildSign
-  value: true
 # Release-Pipeline provides: BotAccount-dotnet-bot-repo-PAT, dn-bot-all-drop-rw-code-rw-release-all
 # https://dnceng.visualstudio.com/internal/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=87&path=Release-Pipeline
 - group: Release-Pipeline
 # DotNet-DevDiv-Insertion-Workflow-Variables provides: dn-bot-devdiv-drop-rw-code-rw
 # https://dnceng.visualstudio.com/internal/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=33&path=DotNet-DevDiv-Insertion-Workflow-Variables
-- group: DotNet-DevDiv-Insertion-Workflow-Variables
+# - group: DotNet-DevDiv-Insertion-Workflow-Variables
 # DotNet-VSTS-Infra-Access provides: dn-bot-devdiv-build-rw-code-rw-release-rw
 # https://dnceng.visualstudio.com/internal/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=4&path=DotNet-VSTS-Infra-Access
-- group: DotNet-VSTS-Infra-Access
+# - group: DotNet-VSTS-Infra-Access
 
 resources:
   repositories:
@@ -109,6 +107,7 @@ extends:
         os: windows
       policheck:
         enabled: true
+      # Variables for TSA set within the SDL_Settings variable group.
       tsa:
         enabled: true
     stages:
@@ -274,7 +273,8 @@ extends:
                       # See: https://dev.azure.com/devdiv/DevDiv/_wiki/wikis/DevDiv.wiki/35351/Retain-Drops
                       dropRetentionDays: 183
                       # dropRetentionDays: 90
-                      accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
+                      # accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
+                      accessToken: $(dn-bot-all-drop-rw-code-rw-release-all)
                       # accessToken: $(System.AccessToken)
                       # vsDropServiceUri: https://vsdrop.corp.microsoft.com/file/v1
                       # accessToken: $(dn-bot-devdiv-build-rw-code-rw-release-rw)
