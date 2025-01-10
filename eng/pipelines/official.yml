@@ -58,69 +58,39 @@ parameters:
   type: object
   default:
   - rel/d17.13
-# - name: testDropExistsLogic
-#   displayName: Test Drop Exists logic
-#   type: string
-#   default: Products/dotnet/workloads/emsdk.9.0-9.0.100.components/5E91A4F3E34928FB6F88FBAE0FF9CABC7E174C887C0460611933A368C367BDB4
 
 variables:
 - template: /eng/common/templates-official/variables/pool-providers.yml@self
-- ${{ if eq(variables['_RunAsPublic'], 'true') }}:
-  - name: _AdditionalBuildArgs
-    value: ''
-  - name: _BuildJobDisplayName
-    value: 'Build and Test'
-- ${{ else }}:
-  - name: _AdditionalBuildArgs
-    value: '/p:Test=false'
-  - name: _BuildJobDisplayName
-    value: 'Build, Sign and Publish'
+- name: _BuildJobDisplayName
+  value: 'Build, Sign and Publish'
 - name: _TeamName
   value: DotNet-Cli
-- name: HelixApiAccessToken
-  value: ''
-- name: _RunAsPublic
-  value: True
-- name: _RunAsInternal
-  value: False
-- name: _InternalBuildArgs
-  value: ''
 # https://github.com/dotnet/arcade/blob/ccae251ef033746eb0213329953f5e3c1687693b/Documentation/ArcadeSdk.md#common-steps-in-azure-devops-pipeline
 # - name: BuildConfiguration
 - name: _BuildConfig
   value: Release
-- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-  - name: _RunAsPublic
-    value: False
-  - name: _RunAsInternal
-    value: True
-  - name: _SignType
-    value: real
-  # DotNet-Blob-Feed provides: dotnetfeed-storage-access-key-1
-  # Publish-Build-Assets provides: MaestroAccessToken, BotAccount-dotnet-maestro-bot-PAT
-  # DotNet-HelixApi-Access provides: HelixApiAccessToken
-  - group: DotNet-Blob-Feed
-  - group: Publish-Build-Assets
-  - group: DotNet-HelixApi-Access
-  - group: SDL_Settings
-  # https://github.com/dotnet/arcade/blob/ccae251ef033746eb0213329953f5e3c1687693b/Documentation/CorePackages/Publishing.md#basic-onboarding-scenario-for-new-repositories-to-the-current-publishing-version-v3
-  - name: _InternalBuildArgs
-    value: /p:DotNetSignType=$(_SignType)
-      /p:TeamName=$(_TeamName)
-      /p:DotNetPublishUsingPipelines=true
-      /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
-      /p:StabilizePackageVersion=${{ parameters.stabilizePackageVersion }}
-  - name: PostBuildSign
-    value: true
-  # Release-Pipeline provides: MaestroAccessToken, BotAccount-dotnet-bot-repo-PAT, dn-bot-all-drop-rw-code-rw-release-all
-  # https://dnceng.visualstudio.com/internal/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=87&path=Release-Pipeline
-  - group: Release-Pipeline
-  # DotNet-DevDiv-Insertion-Workflow-Variables provides: dn-bot-devdiv-drop-rw-code-rw
-  # https://dnceng.visualstudio.com/internal/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=33&path=DotNet-DevDiv-Insertion-Workflow-Variables
-  - group: DotNet-DevDiv-Insertion-Workflow-Variables
-  # DotNet-VSTS-Infra-Access provides: dn-bot-devdiv-build-rw-code-rw-release-rw
-  # https://dnceng.visualstudio.com/internal/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=4&path=DotNet-VSTS-Infra-Access
-  - group: DotNet-VSTS-Infra-Access
+- name: _SignType
+  value: real
+# TODO: What is this for?
+- group: SDL_Settings
+# https://github.com/dotnet/arcade/blob/ccae251ef033746eb0213329953f5e3c1687693b/Documentation/CorePackages/Publishing.md#basic-onboarding-scenario-for-new-repositories-to-the-current-publishing-version-v3
+- name: _InternalBuildArgs
+  value: /p:DotNetSignType=$(_SignType)
+    /p:TeamName=$(_TeamName)
+    /p:DotNetPublishUsingPipelines=true
+    /p:OfficialBuildId=$(BUILD.BUILDNUMBER)
+    /p:StabilizePackageVersion=${{ parameters.stabilizePackageVersion }}
+- name: PostBuildSign
+  value: true
+# Release-Pipeline provides: MaestroAccessToken, BotAccount-dotnet-bot-repo-PAT, dn-bot-all-drop-rw-code-rw-release-all
+# https://dnceng.visualstudio.com/internal/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=87&path=Release-Pipeline
+- group: Release-Pipeline
+# DotNet-DevDiv-Insertion-Workflow-Variables provides: dn-bot-devdiv-drop-rw-code-rw
+# https://dnceng.visualstudio.com/internal/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=33&path=DotNet-DevDiv-Insertion-Workflow-Variables
+- group: DotNet-DevDiv-Insertion-Workflow-Variables
+# DotNet-VSTS-Infra-Access provides: dn-bot-devdiv-build-rw-code-rw-release-rw
+# https://dnceng.visualstudio.com/internal/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=4&path=DotNet-VSTS-Infra-Access
+- group: DotNet-VSTS-Infra-Access
 
 resources:
   repositories:
@@ -128,14 +98,9 @@ resources:
     type: git
     name: 1ESPipelineTemplates/1ESPipelineTemplates
     ref: refs/tags/release
-  # - repository: MicroBuildTemplate
-  #   type: git
-  #   name: 1ESPipelineTemplates/MicroBuildTemplate
-  #   ref: refs/tags/release
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
-  # template: azure-pipelines/MicroBuild.1ES.Official.yml@MicroBuildTemplate
   parameters:
     sdl:
       sourceAnalysisPool:
@@ -169,147 +134,9 @@ extends:
             timeoutInMinutes: 120
             pool:
               name: $(DncEngInternalBuildPool)
-              # name: NetCore1ESPool-Svc-Internal
               image: 1es-windows-2022
               os: windows
-            preSteps:
-            # - powershell: 'Get-ChildItem env:'
-            #   displayName: 🟣 Show environment variables
-            # D:\a\_work\_tasks\MicroBuildUploadVstsDropFolder_4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8\2.2.16\VstsDrop\lib\net45\drop.exe
-            # - pwsh: |
-            #     $rootFolder = '$(Agent.RootDirectory)'
-            #     "RootFolder: $rootFolder"
-            #     "Task Folders:"
-            #     Get-ChildItem "$rootFolder\_tasks" -Force
-
-            #     $vstsDropFolder = (Get-ChildItem "$rootFolder\_tasks" -Recurse -Include 'MicroBuildUploadVstsDropFolder*' -Force)[0].FullName
-            #     "VstsDropFolder: $vstsDropFolder"
-            #     "Vsts Folders:"
-            #     Get-ChildItem $vstsDropFolder -Force
-
-            #     "Hierarchy:"
-            #     Get-ChildItem $vstsDropFolder -Recurse -Depth 5 -Force
-
-            #     $versionFolder = (Get-ChildItem $vstsDropFolder -Directory -Force)[0].FullName
-            #     "VersionFolder: $versionFolder"
-            #     "Version Folders:"
-            #     Get-ChildItem $versionFolder -Force
-
-            #     # $innerDropFolder = (Get-ChildItem $versionFolder -Directory -Force)[0].FullName
-            #     # "InnerDropFolder: $innerDropFolder"
-            #     # "InnerDrop Folders:"
-            #     # Get-ChildItem $innerDropFolder -Force
-
-            #     # $dropFolders = Get-ChildItem "$rootFolder\_tasks" -Recurse -Include 'drop.exe' -Force
-            #     # "Drop Folders:"
-            #     # $dropFolders
-            #     # $dropExeDir = $dropFolders[0].Directory.FullName
-            #     # "DropExeDir: $dropExeDir"
-            #     Write-Host "##vso[task.setvariable variable=DropExeDir]$versionFolder"
-            #   displayName: 🟣 Set DropExeDir variable
-
-            # Sets the VstsDropFolder variable for the path to the MicroBuildUploadVstsDropFolder task.
-            # Used during VS insertion to verify if the drop has been uploaded already or not.
-            # Example: D:\a\_work\_tasks\MicroBuildUploadVstsDropFolder_4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8\2.2.16\
-            - pwsh: |
-                $tasksFolder = '$(Agent.RootDirectory)\_tasks'
-                # The folders in _tasks are hidden. The -Force parameter allows them to be listed.
-                $taskRootFolder = Get-ChildItem $tasksFolder -Directory -Filter 'MicroBuildUploadVstsDropFolder*' -Force | Select-Object -First 1
-                # Get the first version folder since the agent will only install a single version.
-                $vstsDropFolder = ($taskRootFolder | Get-ChildItem -Directory -Force | Select-Object -First 1).FullName
-                Write-Host "VstsDropFolder: $vstsDropFolder"
-                Write-Host "##vso[task.setvariable variable=VstsDropFolder]$vstsDropFolder"
-              displayName: 🟣 Set VstsDropFolder variable
-
-            - pwsh: |
-                $tasksFolder = '$(Agent.RootDirectory)\_tasks'
-                # The folders in _tasks are hidden. The -Force parameter allows them to be listed.
-                $taskRootFolder = Get-ChildItem $tasksFolder -Directory -Filter 'MicroBuildInsertVsPayload*' -Force | Select-Object -First 1
-                # Get the first version folder since the agent will only install a single version.
-                $insertVsPayload = ($taskRootFolder | Get-ChildItem -Directory -Force | Select-Object -First 1).FullName
-                Write-Host "InsertVsPayload: $insertVsPayload"
-                Write-Host "##vso[task.setvariable variable=InsertVsPayload]$insertVsPayload"
-              displayName: 🟣 Set InsertVsPayload variable
-
-            - pwsh: |
-                $localPluginPath = '$(Build.SourcesDirectory)/eng/InsertVsPayload/plugin.ps1'
-                Write-Host "LocalPluginPath: $localPluginPath"
-                $taskPluginPath = '$(InsertVsPayload)/plugin.ps1'
-                Write-Host "TaskPluginPath: $taskPluginPath"
-                Copy-Item -Path $localPluginPath -Destination $taskPluginPath -Force
-              displayName: 🟣 Replace InsertVsPayload plugin.ps1
-
-            # - task: 1ES.PublishBuildArtifacts@1
-            #   displayName: 🟣 Publish DropExe to Pipeline
-            #   inputs:
-            #     # D:\a\_work\_tasks\MicroBuildUploadVstsDropFolder_4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8\2.2.16\VstsDrop\lib\net45\drop.exe
-            #     PathtoPublish: $(DropExeDir)
-            #     ArtifactName: DropExe
-            #     publishLocation: Container
-            #   continueOnError: true
-            #   condition: always()
-            # - pwsh: |
-            #     $dropExeDir = '$(DropExeDir)'
-            #     Import-Module "$dropExeDir/Engineering.PowerShell.Vsts.Drop.psd1"
-            #     $serviceUri = 'https://devdiv.artifacts.visualstudio.com'
-            #     $token = '$(dn-bot-devdiv-drop-rw-code-rw)'
-            #     $server = Get-VstsDropServer -Url $serviceUri -TraceToHost ActivityTracing -PatAuth $token
-            #     # $server.Client.List('Products/dotnet/workloads/emsdk.9.0-9.0.100.components/5E91A4F3E34928FB6F88FBAE0FF9CABC7E174C887C0460611933A368C367BDB4')
-            #     $server.Client.List('Products/dotnet/workloads/emsdk.9.0-9.0.100.components/hj34k2125hl34jk2l5h4jk23h5jk432hljk54h23jk5hljk423l')
-            #   displayName: 🟣 Check Drop Exists logic
-
-            # Based on the MicroBuildUploadVstsDropFolder task logic.
-            # See: https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=%2Fsrc%2FTasks%2FUploadDrop%2Fplugin.ps1
-            # - pwsh: |
-            #     Import-Module '$(VstsDropFolder)/Engineering.PowerShell.Vsts.Drop.psd1'
-            #     # Default value within: https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
-            #     $serviceUri = 'https://devdiv.artifacts.visualstudio.com'
-            #     $token = '$(dn-bot-devdiv-drop-rw-code-rw)'
-            #     $server = Get-VstsDropServer -Url $serviceUri -TraceToHost ActivityTracing -PatAuth $token
-            #     # Returns a JSON string. If the drop exists, an array with a single object is returned. If the drop does not exist, an empty array is returned.
-            #     $dropJson = $server.Client.List('${{ parameters.testDropExistsLogic }}') | ConvertFrom-Json
-            #     if ($dropJson.Count -ne 0) {
-            #       Write-Host "Workload exists"
-            #       Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]False"
-            #       return
-            #     }
-            #     Write-Host "Workload does not exist"
-            #     Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]True"
-            #   displayName: 🟣 Check Drop Exists logic
             steps:
-            # - powershell: 'Get-ChildItem env:'
-            #   displayName: 🟣 Show environment variables
-
-            # - pwsh: |
-            #     $workloadGitHubPat = ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force
-            #     $workloadAzDOPat
-            #     Write-Host "##vso[task.setvariable variable=WorkloadGitHubPat]$workloadGitHubPat"
-            #     Write-Host "##vso[task.setvariable variable=WorkloadAzDOPat]$vsDropName"
-            #   displayName: Set PAT variables
-
-            # - pwsh: |
-            #     $rootFolder = '$(Agent.RootDirectory)'
-            #     "RootFolder: $rootFolder"
-            #     "Task Folders:"
-            #     Get-ChildItem "$rootFolder\_tasks"
-            #     $dropFolders = Get-ChildItem $rootFolder -Recurse -Filter 'drop.exe'
-            #     "Drop Folders:"
-            #     $dropFolders
-            #     $dropExeDir = $dropFolders[0].Directory.FullName
-            #     "DropExeDir: $dropExeDir"
-            #     Write-Host "##vso[task.setvariable variable=DropExeDir]$dropExeDir"
-            #   displayName: 🟣 Set DropExeDir variable
-
-            # - task: 1ES.PublishBuildArtifacts@1
-            #   displayName: 🟣 Publish DropExe to Pipeline
-            #   inputs:
-            #     # D:\a\_work\_tasks\MicroBuildUploadVstsDropFolder_4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8\2.2.16\VstsDrop\lib\net45\drop.exe
-            #     PathtoPublish: $(DropExeDir)
-            #     ArtifactName: DropExe
-            #     publishLocation: Container
-            #   continueOnError: true
-            #   condition: always()
-
             - ${{ if eq(parameters.createVSInsertion, true) }}:
               - task: AzureCLI@2
                 displayName: 🟣 Download workloads for VS insertion
@@ -337,29 +164,36 @@ extends:
                   Write-Host "##vso[task.setvariable variable=VsTopicBranchId]$vsTopicBranchId"
                 displayName: 🟣 Set VsTopicBranchId variable
 
-            # - task: AzureCLI@2
-            #   displayName: Gather Workloads
-            #   inputs:
-            #     # TODO: Need our own subscription
-            #     azureSubscription: DotNetStaging
-            #     scriptType: pscore
-            #     scriptPath: $(Build.SourcesDirectory)/eng/publish-workloads.ps1
-            #     arguments: '-gitHubPat (ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force) -azDevPat (ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force) -password (ConvertTo-SecureString -String "$(MaestroAccessToken)" -AsPlainText -Force)'
-            
-            # - task: AzureCLI@2
-            #   displayName: Build Solution
-            #   inputs:
-            #     # TODO: Need our own subscription
-            #     azureSubscription: DotNetStaging
-            #     scriptType: pscore
-            #     scriptPath: $(Build.SourcesDirectory)/eng/common/build.ps1
-            #     arguments: -restore -build -ci -msbuildEngine vs -configuration Release /p:CreateVSInsertion=${{ parameters.createVSInsertion }}
+              # Sets the VstsDropFolder variable for the path to the MicroBuildUploadVstsDropFolder task.
+              # Used during VS insertion to verify if the drop has been uploaded already or not.
+              # Example: D:\a\_work\_tasks\MicroBuildUploadVstsDropFolder_4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8\2.2.16\
+              - pwsh: |
+                  $tasksFolder = '$(Agent.RootDirectory)\_tasks'
+                  # The folders in _tasks are hidden. The -Force parameter allows them to be listed.
+                  $taskRootFolder = Get-ChildItem $tasksFolder -Directory -Filter 'MicroBuildUploadVstsDropFolder*' -Force | Select-Object -First 1
+                  # Get the first version folder since the agent will only install a single version.
+                  $vstsDropFolder = ($taskRootFolder | Get-ChildItem -Directory -Force | Select-Object -First 1).FullName
+                  Write-Host "VstsDropFolder: $vstsDropFolder"
+                  Write-Host "##vso[task.setvariable variable=VstsDropFolder]$vstsDropFolder"
+                displayName: 🟣 Set VstsDropFolder variable
 
-            # /p:WorkloadGitHubPat=$(BotAccount-dotnet-bot-repo-PAT)
-            # /p:WorkloadAzDOPat=$(dn-bot-all-drop-rw-code-rw-release-all)
+              - pwsh: |
+                  $tasksFolder = '$(Agent.RootDirectory)\_tasks'
+                  # The folders in _tasks are hidden. The -Force parameter allows them to be listed.
+                  $taskRootFolder = Get-ChildItem $tasksFolder -Directory -Filter 'MicroBuildInsertVsPayload*' -Force | Select-Object -First 1
+                  # Get the first version folder since the agent will only install a single version.
+                  $insertVsPayload = ($taskRootFolder | Get-ChildItem -Directory -Force | Select-Object -First 1).FullName
+                  Write-Host "InsertVsPayload: $insertVsPayload"
+                  Write-Host "##vso[task.setvariable variable=InsertVsPayload]$insertVsPayload"
+                displayName: 🟣 Set InsertVsPayload variable
 
-            # /p:WorkloadGitHubPat=(ConvertTo-SecureString -String "$(BotAccount-dotnet-bot-repo-PAT)" -AsPlainText -Force)
-            # /p:WorkloadAzDOPat=(ConvertTo-SecureString -String "$(dn-bot-all-drop-rw-code-rw-release-all)" -AsPlainText -Force)
+              - pwsh: |
+                  $localPluginPath = '$(Build.SourcesDirectory)/eng/InsertVsPayload/plugin.ps1'
+                  Write-Host "LocalPluginPath: $localPluginPath"
+                  $taskPluginPath = '$(InsertVsPayload)/plugin.ps1'
+                  Write-Host "TaskPluginPath: $taskPluginPath"
+                  Copy-Item -Path $localPluginPath -Destination $taskPluginPath -Force
+                displayName: 🟣 Replace InsertVsPayload plugin.ps1
 
             - script: >-
                 $(Build.SourcesDirectory)/build.cmd -test -sign -pack -publish -ci -configuration $(_BuildConfig)
@@ -368,12 +202,6 @@ extends:
                 $(_InternalBuildArgs)
               displayName: 🟣 Build solution
 
-            # - script: eng\common\CIBuild.cmd
-            #     -configuration $(_BuildConfig)
-            #     -prepareMachine
-            #     $(_AdditionalBuildArgs)
-            #     $(_InternalBuildArgs)
-            #   displayName: $(_BuildJobDisplayName)
             - ${{ if eq(parameters.publishToFeed, true) }}:
               - task: 1ES.PublishNuget@1
                 displayName: 🟣 Publish NuGet package
@@ -385,65 +213,10 @@ extends:
                   nuGetFeedType: internal
                   allowPackageConflicts: false
                   publishPackageMetadata: true
+
             - ${{ if eq(parameters.createVSInsertion, true) }}:
               - ${{ each workloadShortName in parameters.workloadsForVSDrops }}:
                 - ${{ each workloadType in parameters.workloadTypesForVSDrops }}:
-                  # - pwsh: "Write-Host 'Workload: $(${{ workload }}_test)'"
-                  #   displayName: Display ${{ workload }}
-
-                  # # https://stackoverflow.com/a/60630739/294804
-                  # - pwsh: Write-Host "##vso[task.setvariable variable=WorkloadDropExists]$(Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')"
-                  #   displayName: Check if ${{ workloadShortName }}_${{ workloadType }} drop exists
-
-                  # - pwsh: |
-                  #     $accessToken = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$(dn-bot-devdiv-drop-rw-code-rw)"))
-                  #     $authHeader = @{ 'Authorization' = "Basic $accessToken" }
-                  #     $workloadUrl = '$(${{ workloadShortName }}_${{ workloadType }}_url)'
-                  #     try {
-                  #       Invoke-RestMethod -Uri $workloadUrl -Method Get -ContentType 'application/json' -Headers $authHeader
-                  #       Write-Host "##vso[task.setvariable variable=WorkloadUrlExists]True"
-                  #     } catch {
-                  #       Write-Host "##vso[task.setvariable variable=WorkloadUrlExists]False"
-                  #     }
-                  #   displayName: Check if ${{ workloadShortName }}_${{ workloadType }} URL exists
-
-                  # - pwsh: |
-                  #     $accessToken = ConvertTo-SecureString -String '$(dn-bot-devdiv-drop-rw-code-rw)' -AsPlainText -Force
-                  #     $workloadUrl = '$(${{ workloadShortName }}_${{ workloadType }}_url)'
-                  #     try {
-                  #       $response = Invoke-WebRequest -Uri $workloadUrl -Authentication Bearer -Token $accessToken
-                  #       Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]$($response.StatusCode -eq 200)"
-                  #     } catch {
-                  #       Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]False"
-                  #     }
-                  #   displayName: Check if ${{ workloadShortName }}_${{ workloadType }} URL exists
-
-                  # # https://stackoverflow.com/a/60630739/294804
-                  # # https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/azure-artifacts/drop-service/azure-artifacts-drop#dropexe-get-the-client-using-powershell-only-when-needed
-                  # - pwsh: |
-                  #     # If the drop folder doesn't exist (not acquired), the drop cannot be uploaded.
-                  #     if (-not (Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')) {
-                  #       Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]False"
-                  #       Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" was not acquired. Skipping upload.'
-                  #       return
-                  #     }
-                  #     $accessToken = ConvertTo-SecureString -String '$(dn-bot-devdiv-drop-rw-code-rw)' -AsPlainText -Force
-                  #     $workloadUrl = '$(${{ workloadShortName }}_${{ workloadType }}_url)'
-                  #     $response = Invoke-WebRequest -Uri $workloadUrl -Authentication Bearer -Token $accessToken
-                  #     if ($response.StatusCode -eq 401) {
-                  #       Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]False"
-                  #       Write-Host 'Workload drop check is unauthorized. Please fix.'
-                  #       return 1
-                  #     }
-                  #     if ($response.StatusCode -ne 200) {
-                  #       Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]False"
-                  #       Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" has already been uploaded. Skipping upload.'
-                  #       return
-                  #     }
-                  #     Write-Host "##vso[task.setvariable variable=UploadWorkloadDrop]True"
-                  #   displayName: Check if ${{ workloadShortName }}_${{ workloadType }} exists
-                  #   continueOnError: true
-
                   # Only create the drop if the workload drop directory exists, or if the drop wasn't published already.
                   # https://stackoverflow.com/a/60630739/294804
                   # Based on the MicroBuildUploadVstsDropFolder task logic. See: https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=%2Fsrc%2FTasks%2FUploadDrop%2Fplugin.ps1
@@ -486,8 +259,6 @@ extends:
                       # vsDropServiceUri: https://vsdrop.corp.microsoft.com/file/v1
                       # accessToken: $(dn-bot-devdiv-build-rw-code-rw-release-rw)
                     condition: eq(variables['PublishWorkloadDrop'], 'True')
-                    # WORKAROUND: The drop will already exist if the pipeline is rerun. For now, we'll just let it error and continue.
-                    continueOnError: true
 
               - ${{ each primaryInsertionBranch in parameters.primaryVsInsertionBranches }}:
                 # Creates VS insertion PRs using the VS drops containing the workloads and vsman files.
@@ -519,7 +290,7 @@ extends:
                     # Waiting for Request #599598 to complete its merge
                     # Cannot find 'Request Perf DDRITs' build policy in Request #599598
                     # WARNING: Exception updating pull request: VssUnauthorizedException : VS30063: You are not authorized to access https://spsprodwus21.vssps.visualstudio.com.
-                    # InsertionBuildPolicies: Request Perf DDRITs
+                    InsertionBuildPolicies: Request Perf DDRITs
                     # This action only works on AzDO repos. This warning occurs if enabled:
                     # ##[warning]WARNING: Cannot extract commit details from vstfs:///Build/Build/6574299: ArgumentException : 'https://github.com/dotnet/project-system' does not look like an Azure DevOps url
                     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/631/Copy-Commit-Details-to-PR
@@ -562,7 +333,7 @@ extends:
                     # Waiting for Request #599598 to complete its merge
                     # Cannot find 'Request Perf DDRITs' build policy in Request #599598
                     # WARNING: Exception updating pull request: VssUnauthorizedException : VS30063: You are not authorized to access https://spsprodwus21.vssps.visualstudio.com.
-                    # InsertionBuildPolicies: Request Perf DDRITs
+                    InsertionBuildPolicies: Request Perf DDRITs
                     # This action only works on AzDO repos. This warning occurs if enabled:
                     # ##[warning]WARNING: Cannot extract commit details from vstfs:///Build/Build/6574299: ArgumentException : 'https://github.com/dotnet/project-system' does not look like an Azure DevOps url
                     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/631/Copy-Commit-Details-to-PR
