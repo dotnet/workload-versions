@@ -178,6 +178,14 @@ extends:
                 displayName: 🟣 Set VstsDropFolder variable
 
               - pwsh: |
+                  $localPluginPath = '$(Build.SourcesDirectory)/eng/VstsDropFolder/plugin.ps1'
+                  Write-Host "LocalPluginPath: $localPluginPath"
+                  $taskPluginPath = '$(VstsDropFolder)/plugin.ps1'
+                  Write-Host "TaskPluginPath: $taskPluginPath"
+                  Copy-Item -Path $localPluginPath -Destination $taskPluginPath -Force
+                displayName: 🟣 Replace VstsDropFolder plugin.ps1
+
+              - pwsh: |
                   $tasksFolder = '$(Agent.RootDirectory)\_tasks'
                   # The folders in _tasks are hidden. The -Force parameter allows them to be listed.
                   $taskRootFolder = Get-ChildItem $tasksFolder -Directory -Filter 'MicroBuildInsertVsPayload*' -Force | Select-Object -First 1
@@ -221,23 +229,33 @@ extends:
                   # https://stackoverflow.com/a/60630739/294804
                   # Based on the MicroBuildUploadVstsDropFolder task logic. See: https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=%2Fsrc%2FTasks%2FUploadDrop%2Fplugin.ps1
                   # General drop service docs: https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/azure-artifacts/drop-service/azure-artifacts-drop
+                  # - pwsh: |
+                  #     # If the drop folder doesn't exist (not downloaded via DARC), the drop cannot be published.
+                  #     if (-not (Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')) {
+                  #       Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]False"
+                  #       Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" was not downloaded via DARC. Skipping VS drop publish...'
+                  #       return
+                  #     }
+                  #     Import-Module '$(VstsDropFolder)/Engineering.PowerShell.Vsts.Drop.psd1'
+                  #     # Default value within: https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
+                  #     $serviceUri = 'https://devdiv.artifacts.visualstudio.com'
+                  #     $token = '$(dn-bot-devdiv-drop-rw-code-rw)'
+                  #     $server = Get-VstsDropServer -Url $serviceUri -TraceToHost ActivityTracing -PatAuth $token
+                  #     # Returns a JSON string. If the drop exists, an array with a single object is returned. If the drop does not exist, an empty array is returned.
+                  #     $dropJson = $server.Client.List('$(${{ workloadShortName }}_${{ workloadType }}_name)') | ConvertFrom-Json
+                  #     if ($dropJson.Count -ne 0) {
+                  #       Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]False"
+                  #       Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" has already been published. Skipping VS drop publish...'
+                  #       return
+                  #     }
+                  #     Write-Host "PublishWorkloadDrop: True"
+                  #     Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]True"
+                  #   displayName: 🟣 Check if ${{ workloadShortName }}_${{ workloadType }} needs published
                   - pwsh: |
                       # If the drop folder doesn't exist (not downloaded via DARC), the drop cannot be published.
                       if (-not (Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')) {
                         Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]False"
                         Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" was not downloaded via DARC. Skipping VS drop publish...'
-                        return
-                      }
-                      Import-Module '$(VstsDropFolder)/Engineering.PowerShell.Vsts.Drop.psd1'
-                      # Default value within: https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
-                      $serviceUri = 'https://devdiv.artifacts.visualstudio.com'
-                      $token = '$(dn-bot-devdiv-drop-rw-code-rw)'
-                      $server = Get-VstsDropServer -Url $serviceUri -TraceToHost ActivityTracing -PatAuth $token
-                      # Returns a JSON string. If the drop exists, an array with a single object is returned. If the drop does not exist, an empty array is returned.
-                      $dropJson = $server.Client.List('$(${{ workloadShortName }}_${{ workloadType }}_name)') | ConvertFrom-Json
-                      if ($dropJson.Count -ne 0) {
-                        Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]False"
-                        Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" has already been published. Skipping VS drop publish...'
                         return
                       }
                       Write-Host "PublishWorkloadDrop: True"
