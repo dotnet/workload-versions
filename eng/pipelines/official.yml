@@ -122,15 +122,15 @@ extends:
     - stage: Build
       displayName: Build
       jobs:
-      - template: /eng/common/templates-official/job/job.yml@self
+      - template: /eng/common/templates-official/jobs/jobs.yml@self
         parameters:
-          name: buildRepo
-          displayName: Build Repo
-          timeoutInMinutes: 120
-          pool:
-            name: $(DncEngInternalBuildPool)
-            image: 1es-windows-2022
-            os: windows
+          # name: buildRepo
+          # displayName: Build Repo
+          # timeoutInMinutes: 120
+          # pool:
+          #   name: $(DncEngInternalBuildPool)
+          #   image: 1es-windows-2022
+          #   os: windows
           enableMicrobuild: true
           enablePublishBuildAssets: true
           enableTelemetry: true
@@ -142,252 +142,260 @@ extends:
               artifacts: true
               logs: false
               manifests: true
-          steps:
-          - ${{ if eq(parameters.createVSInsertion, true) }}:
-            - task: AzureCLI@2
-              displayName: 🟣 Download workloads for VS insertion
-              inputs:
-                # TODO: Need our own subscription
-                azureSubscription: DotNetStaging
-                scriptType: pscore
-                scriptPath: $(Build.SourcesDirectory)/eng/download-workloads.ps1
-                # Note: The second $ for usePreComponents allows the value to resolve as `$true` or `$false`.
-                arguments: >-
-                  -workloadPath '$(Build.SourcesDirectory)/artifacts/workloads'
-                  -gitHubPat (ConvertTo-SecureString -String '$(BotAccount-dotnet-bot-repo-PAT)' -AsPlainText -Force)
-                  -azDOPat (ConvertTo-SecureString -String '$(dn-bot-all-drop-rw-code-rw-release-all)' -AsPlainText -Force)
-                  -workloadListJson '${{ convertToJson(parameters.workloadsForVSDrops) }}'
-                  -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }}
-            # This allows setting the VsTopicBranchId variable dynamically.
-            # |default| represents normal operation, set to: yyyy-MM
-            # |temp| is only for pipeline testing, set to: BuildNumber-JobAttempt
-            - pwsh: |
-                $vsTopicBranchId = '${{ parameters.vsTopicBranchId }}'
-                if ($vsTopicBranchId -eq '|default|') {
-                  $vsTopicBranchId = (Get-Date).ToString('yyyy-MM')
-                }
-                # https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/plugin.ps1&version=GBmain&line=278&lineEnd=287&lineStartColumn=1&lineEndColumn=1&lineStyle=plain&_a=contents
-                # temp/DotNet-SDK/dotnet-workload-versions-official-ci-20241216.6-1
-                if ($vsTopicBranchId -eq '|temp|') {
-                  $vsTopicBranchId = "$(Build.BuildNumber)-$(System.JobAttempt)" -replace '[\s\\]+', '-'
-                }
-                Write-Host "VsTopicBranchId: $vsTopicBranchId"
-                Write-Host "##vso[task.setvariable variable=VsTopicBranchId]$vsTopicBranchId"
-              displayName: 🟣 Set VsTopicBranchId variable
+          jobs:
+          - job: buildRepo
+            displayName: Build Repo
+            timeoutInMinutes: 120
+            pool:
+              name: $(DncEngInternalBuildPool)
+              image: 1es-windows-2022
+              os: windows
+            steps:
+            - ${{ if eq(parameters.createVSInsertion, true) }}:
+              - task: AzureCLI@2
+                displayName: 🟣 Download workloads for VS insertion
+                inputs:
+                  # TODO: Need our own subscription
+                  azureSubscription: DotNetStaging
+                  scriptType: pscore
+                  scriptPath: $(Build.SourcesDirectory)/eng/download-workloads.ps1
+                  # Note: The second $ for usePreComponents allows the value to resolve as `$true` or `$false`.
+                  arguments: >-
+                    -workloadPath '$(Build.SourcesDirectory)/artifacts/workloads'
+                    -gitHubPat (ConvertTo-SecureString -String '$(BotAccount-dotnet-bot-repo-PAT)' -AsPlainText -Force)
+                    -azDOPat (ConvertTo-SecureString -String '$(dn-bot-all-drop-rw-code-rw-release-all)' -AsPlainText -Force)
+                    -workloadListJson '${{ convertToJson(parameters.workloadsForVSDrops) }}'
+                    -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }}
+              # This allows setting the VsTopicBranchId variable dynamically.
+              # |default| represents normal operation, set to: yyyy-MM
+              # |temp| is only for pipeline testing, set to: BuildNumber-JobAttempt
+              - pwsh: |
+                  $vsTopicBranchId = '${{ parameters.vsTopicBranchId }}'
+                  if ($vsTopicBranchId -eq '|default|') {
+                    $vsTopicBranchId = (Get-Date).ToString('yyyy-MM')
+                  }
+                  # https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/plugin.ps1&version=GBmain&line=278&lineEnd=287&lineStartColumn=1&lineEndColumn=1&lineStyle=plain&_a=contents
+                  # temp/DotNet-SDK/dotnet-workload-versions-official-ci-20241216.6-1
+                  if ($vsTopicBranchId -eq '|temp|') {
+                    $vsTopicBranchId = "$(Build.BuildNumber)-$(System.JobAttempt)" -replace '[\s\\]+', '-'
+                  }
+                  Write-Host "VsTopicBranchId: $vsTopicBranchId"
+                  Write-Host "##vso[task.setvariable variable=VsTopicBranchId]$vsTopicBranchId"
+                displayName: 🟣 Set VsTopicBranchId variable
 
-            # Sets the VstsDropFolder variable for the path to the MicroBuildUploadVstsDropFolder task.
-            # Used during VS insertion to verify if the drop has been uploaded already or not.
-            # Example: D:\a\_work\_tasks\MicroBuildUploadVstsDropFolder_4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8\2.2.16\
-            - pwsh: |
-                $tasksFolder = '$(Agent.RootDirectory)\_tasks'
-                # The folders in _tasks are hidden. The -Force parameter allows them to be listed.
-                $taskRootFolder = Get-ChildItem $tasksFolder -Directory -Filter 'MicroBuildUploadVstsDropFolder*' -Force | Select-Object -First 1
-                # Get the first version folder since the agent will only install a single version.
-                $vstsDropFolder = ($taskRootFolder | Get-ChildItem -Directory -Force | Select-Object -First 1).FullName
-                Write-Host "VstsDropFolder: $vstsDropFolder"
-                Write-Host "##vso[task.setvariable variable=VstsDropFolder]$vstsDropFolder"
-              displayName: 🟣 Set VstsDropFolder variable
+              # Sets the VstsDropFolder variable for the path to the MicroBuildUploadVstsDropFolder task.
+              # Used during VS insertion to verify if the drop has been uploaded already or not.
+              # Example: D:\a\_work\_tasks\MicroBuildUploadVstsDropFolder_4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8\2.2.16\
+              - pwsh: |
+                  $tasksFolder = '$(Agent.RootDirectory)\_tasks'
+                  # The folders in _tasks are hidden. The -Force parameter allows them to be listed.
+                  $taskRootFolder = Get-ChildItem $tasksFolder -Directory -Filter 'MicroBuildUploadVstsDropFolder*' -Force | Select-Object -First 1
+                  # Get the first version folder since the agent will only install a single version.
+                  $vstsDropFolder = ($taskRootFolder | Get-ChildItem -Directory -Force | Select-Object -First 1).FullName
+                  Write-Host "VstsDropFolder: $vstsDropFolder"
+                  Write-Host "##vso[task.setvariable variable=VstsDropFolder]$vstsDropFolder"
+                displayName: 🟣 Set VstsDropFolder variable
 
-            - pwsh: |
-                $localPluginPath = '$(Build.SourcesDirectory)/eng/VstsDropFolder/plugin.ps1'
-                Write-Host "LocalPluginPath: $localPluginPath"
-                $taskPluginPath = '$(VstsDropFolder)/plugin.ps1'
-                Write-Host "TaskPluginPath: $taskPluginPath"
-                Copy-Item -Path $localPluginPath -Destination $taskPluginPath -Force
-              displayName: 🟣 Replace VstsDropFolder plugin.ps1
+              - pwsh: |
+                  $localPluginPath = '$(Build.SourcesDirectory)/eng/VstsDropFolder/plugin.ps1'
+                  Write-Host "LocalPluginPath: $localPluginPath"
+                  $taskPluginPath = '$(VstsDropFolder)/plugin.ps1'
+                  Write-Host "TaskPluginPath: $taskPluginPath"
+                  Copy-Item -Path $localPluginPath -Destination $taskPluginPath -Force
+                displayName: 🟣 Replace VstsDropFolder plugin.ps1
 
-            - pwsh: |
-                $tasksFolder = '$(Agent.RootDirectory)\_tasks'
-                # The folders in _tasks are hidden. The -Force parameter allows them to be listed.
-                $taskRootFolder = Get-ChildItem $tasksFolder -Directory -Filter 'MicroBuildInsertVsPayload*' -Force | Select-Object -First 1
-                # Get the first version folder since the agent will only install a single version.
-                $insertVsPayload = ($taskRootFolder | Get-ChildItem -Directory -Force | Select-Object -First 1).FullName
-                Write-Host "InsertVsPayload: $insertVsPayload"
-                Write-Host "##vso[task.setvariable variable=InsertVsPayload]$insertVsPayload"
-              displayName: 🟣 Set InsertVsPayload variable
+              - pwsh: |
+                  $tasksFolder = '$(Agent.RootDirectory)\_tasks'
+                  # The folders in _tasks are hidden. The -Force parameter allows them to be listed.
+                  $taskRootFolder = Get-ChildItem $tasksFolder -Directory -Filter 'MicroBuildInsertVsPayload*' -Force | Select-Object -First 1
+                  # Get the first version folder since the agent will only install a single version.
+                  $insertVsPayload = ($taskRootFolder | Get-ChildItem -Directory -Force | Select-Object -First 1).FullName
+                  Write-Host "InsertVsPayload: $insertVsPayload"
+                  Write-Host "##vso[task.setvariable variable=InsertVsPayload]$insertVsPayload"
+                displayName: 🟣 Set InsertVsPayload variable
 
-            - pwsh: |
-                $localPluginPath = '$(Build.SourcesDirectory)/eng/InsertVsPayload/plugin.ps1'
-                Write-Host "LocalPluginPath: $localPluginPath"
-                $taskPluginPath = '$(InsertVsPayload)/plugin.ps1'
-                Write-Host "TaskPluginPath: $taskPluginPath"
-                Copy-Item -Path $localPluginPath -Destination $taskPluginPath -Force
-              displayName: 🟣 Replace InsertVsPayload plugin.ps1
+              - pwsh: |
+                  $localPluginPath = '$(Build.SourcesDirectory)/eng/InsertVsPayload/plugin.ps1'
+                  Write-Host "LocalPluginPath: $localPluginPath"
+                  $taskPluginPath = '$(InsertVsPayload)/plugin.ps1'
+                  Write-Host "TaskPluginPath: $taskPluginPath"
+                  Copy-Item -Path $localPluginPath -Destination $taskPluginPath -Force
+                displayName: 🟣 Replace InsertVsPayload plugin.ps1
 
-          - powershell: >-
-              eng/common/build.ps1
-              -restore -build -sign -pack -publish -ci -msbuildEngine vs
-              -configuration $(BuildConfiguration)
-              /p:CreateVSInsertion=${{ parameters.createVSInsertion }}
-              /p:WorkloadDirectory=$(Build.SourcesDirectory)/artifacts/workloads
-              $(_InternalBuildArgs)
-            displayName: 🟣 Build solution
+            - powershell: >-
+                eng/common/build.ps1
+                -restore -build -sign -pack -publish -ci -msbuildEngine vs
+                -configuration $(BuildConfiguration)
+                /p:CreateVSInsertion=${{ parameters.createVSInsertion }}
+                /p:WorkloadDirectory=$(Build.SourcesDirectory)/artifacts/workloads
+                $(_InternalBuildArgs)
+              displayName: 🟣 Build solution
 
-          - ${{ if eq(parameters.publishToFeed, true) }}:
-            - task: 1ES.PublishNuget@1
-              displayName: 🟣 Publish NuGet package
-              inputs:
-                useDotNetTask: true
-                packagesToPush: $(Build.SourcesDirectory)/artifacts/packages/**/*.nupkg
-                packageParentPath: $(Build.SourcesDirectory)/artifacts/packages
-                publishVstsFeed: ${{ parameters.feedForPublishing }}
-                nuGetFeedType: internal
-                allowPackageConflicts: false
-                publishPackageMetadata: true
+            - ${{ if eq(parameters.publishToFeed, true) }}:
+              - task: 1ES.PublishNuget@1
+                displayName: 🟣 Publish NuGet package
+                inputs:
+                  useDotNetTask: true
+                  packagesToPush: $(Build.SourcesDirectory)/artifacts/packages/**/*.nupkg
+                  packageParentPath: $(Build.SourcesDirectory)/artifacts/packages
+                  publishVstsFeed: ${{ parameters.feedForPublishing }}
+                  nuGetFeedType: internal
+                  allowPackageConflicts: false
+                  publishPackageMetadata: true
 
-          - ${{ if eq(parameters.createVSInsertion, true) }}:
-            - ${{ each workloadShortName in parameters.workloadsForVSDrops }}:
-              - ${{ each workloadType in parameters.workloadTypesForVSDrops }}:
-                # Only create the drop if the workload drop directory exists, or if the drop wasn't published already.
-                # https://stackoverflow.com/a/60630739/294804
-                # Based on the MicroBuildUploadVstsDropFolder task logic. See: https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=%2Fsrc%2FTasks%2FUploadDrop%2Fplugin.ps1
-                # General drop service docs: https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/azure-artifacts/drop-service/azure-artifacts-drop
-                # - pwsh: |
-                #     # If the drop folder doesn't exist (not downloaded via DARC), the drop cannot be published.
-                #     if (-not (Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')) {
-                #       Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]False"
-                #       Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" was not downloaded via DARC. Skipping VS drop publish...'
-                #       return
-                #     }
-                #     Import-Module '$(VstsDropFolder)/Engineering.PowerShell.Vsts.Drop.psd1'
-                #     # Default value within: https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
-                #     $serviceUri = 'https://devdiv.artifacts.visualstudio.com'
-                #     $token = '$(dn-bot-devdiv-drop-rw-code-rw)'
-                #     $server = Get-VstsDropServer -Url $serviceUri -TraceToHost ActivityTracing -PatAuth $token
-                #     # Returns a JSON string. If the drop exists, an array with a single object is returned. If the drop does not exist, an empty array is returned.
-                #     $dropJson = $server.Client.List('$(${{ workloadShortName }}_${{ workloadType }}_name)') | ConvertFrom-Json
-                #     if ($dropJson.Count -ne 0) {
-                #       Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]False"
-                #       Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" has already been published. Skipping VS drop publish...'
-                #       return
-                #     }
-                #     Write-Host "PublishWorkloadDrop: True"
-                #     Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]True"
-                #   displayName: 🟣 Check if ${{ workloadShortName }}_${{ workloadType }} needs published
-                - pwsh: |
-                    # If the drop folder doesn't exist (not downloaded via DARC), the drop cannot be published.
-                    if (-not (Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')) {
-                      Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]False"
-                      Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" was not downloaded via DARC. Skipping VS drop publish...'
-                      return
-                    }
-                    Write-Host "PublishWorkloadDrop: True"
-                    Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]True"
-                  displayName: 🟣 Check if ${{ workloadShortName }}_${{ workloadType }} needs published
+            - ${{ if eq(parameters.createVSInsertion, true) }}:
+              - ${{ each workloadShortName in parameters.workloadsForVSDrops }}:
+                - ${{ each workloadType in parameters.workloadTypesForVSDrops }}:
+                  # Only create the drop if the workload drop directory exists, or if the drop wasn't published already.
+                  # https://stackoverflow.com/a/60630739/294804
+                  # Based on the MicroBuildUploadVstsDropFolder task logic. See: https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=%2Fsrc%2FTasks%2FUploadDrop%2Fplugin.ps1
+                  # General drop service docs: https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/azure-artifacts/drop-service/azure-artifacts-drop
+                  # - pwsh: |
+                  #     # If the drop folder doesn't exist (not downloaded via DARC), the drop cannot be published.
+                  #     if (-not (Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')) {
+                  #       Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]False"
+                  #       Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" was not downloaded via DARC. Skipping VS drop publish...'
+                  #       return
+                  #     }
+                  #     Import-Module '$(VstsDropFolder)/Engineering.PowerShell.Vsts.Drop.psd1'
+                  #     # Default value within: https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
+                  #     $serviceUri = 'https://devdiv.artifacts.visualstudio.com'
+                  #     $token = '$(dn-bot-devdiv-drop-rw-code-rw)'
+                  #     $server = Get-VstsDropServer -Url $serviceUri -TraceToHost ActivityTracing -PatAuth $token
+                  #     # Returns a JSON string. If the drop exists, an array with a single object is returned. If the drop does not exist, an empty array is returned.
+                  #     $dropJson = $server.Client.List('$(${{ workloadShortName }}_${{ workloadType }}_name)') | ConvertFrom-Json
+                  #     if ($dropJson.Count -ne 0) {
+                  #       Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]False"
+                  #       Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" has already been published. Skipping VS drop publish...'
+                  #       return
+                  #     }
+                  #     Write-Host "PublishWorkloadDrop: True"
+                  #     Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]True"
+                  #   displayName: 🟣 Check if ${{ workloadShortName }}_${{ workloadType }} needs published
+                  - pwsh: |
+                      # If the drop folder doesn't exist (not downloaded via DARC), the drop cannot be published.
+                      if (-not (Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')) {
+                        Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]False"
+                        Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" was not downloaded via DARC. Skipping VS drop publish...'
+                        return
+                      }
+                      Write-Host "PublishWorkloadDrop: True"
+                      Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]True"
+                    displayName: 🟣 Check if ${{ workloadShortName }}_${{ workloadType }} needs published
 
-                # Docs: https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/1es-pipeline-templates/features/outputs/microbuild-vsts-drop
-                # YAML reference (original task): https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
-                - task: 1ES.MicroBuildVstsDrop@1
-                  displayName: '🟣 Publish VS insertion drop: ${{ workloadShortName }}_${{ workloadType }}'
+                  # Docs: https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/1es-pipeline-templates/features/outputs/microbuild-vsts-drop
+                  # YAML reference (original task): https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
+                  - task: 1ES.MicroBuildVstsDrop@1
+                    displayName: '🟣 Publish VS insertion drop: ${{ workloadShortName }}_${{ workloadType }}'
+                    inputs:
+                      dropFolder: $(${{ workloadShortName }}_${{ workloadType }}_dir)
+                      dropName: $(${{ workloadShortName }}_${{ workloadType }}_name)
+                      # See: https://dev.azure.com/devdiv/DevDiv/_wiki/wikis/DevDiv.wiki/35351/Retain-Drops
+                      dropRetentionDays: 183
+                      accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
+                    condition: eq(variables['PublishWorkloadDrop'], 'True')
+
+              - ${{ each primaryInsertionBranch in parameters.primaryVsInsertionBranches }}:
+                # Creates VS insertion PRs using the VS drops containing the workloads and vsman files.
+                # One PR is created per branch defined at the top of this file in the primaryVsInsertionBranches parameter.
+                # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/635/Overview?anchor=**build-pipeline**
+                # YAML reference: https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/task.json
+                - task: MicroBuildInsertVsPayload@5
+                  displayName: '🟣 Create VS insertion: ${{ primaryInsertionBranch }}'
                   inputs:
-                    dropFolder: $(${{ workloadShortName }}_${{ workloadType }}_dir)
-                    dropName: $(${{ workloadShortName }}_${{ workloadType }}_name)
-                    # See: https://dev.azure.com/devdiv/DevDiv/_wiki/wikis/DevDiv.wiki/35351/Retain-Drops
-                    dropRetentionDays: 183
-                    accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
-                  condition: eq(variables['PublishWorkloadDrop'], 'True')
-
-            - ${{ each primaryInsertionBranch in parameters.primaryVsInsertionBranches }}:
-              # Creates VS insertion PRs using the VS drops containing the workloads and vsman files.
-              # One PR is created per branch defined at the top of this file in the primaryVsInsertionBranches parameter.
-              # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/635/Overview?anchor=**build-pipeline**
-              # YAML reference: https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/task.json
-              - task: MicroBuildInsertVsPayload@5
-                displayName: '🟣 Create VS insertion: ${{ primaryInsertionBranch }}'
-                inputs:
-                  # InsertionAccessToken: $(dn-bot-devdiv-drop-rw-code-rw)
-                  # InsertionAccessToken: $(dn-bot-all-drop-rw-code-rw-release-all)
-                  # ConnectedServiceName: DotNetRelease-PME
-                  # InsertionAccessToken: $(dn-bot-devdiv-build-rw-code-rw-release-rw)
-                  ConnectedServiceName: MicroBuildInsertionVS
-                  TargetBranch: ${{ primaryInsertionBranch }}
-                  # temp/DotNet-SDK/dotnet-workload-versions-official-ci-20241216.6-1
-                  # https://learn.microsoft.com/azure/devops/pipelines/process/expressions?view=azure-devops#format
-                  InsertionTopicBranch: temp/DotNet-SDK-Workloads/${{ primaryInsertionBranch }}/$(VsTopicBranchId)
-                  # Cannot use '.NET' at the start. The branch name (one used for VS insertion) is created via this value. It produces an error, for example:
-                  # fatal: 'team/.NET-Project-System/DotNet-Project-System-20220818.3-1' is not a valid branch name
-                  TeamName: DotNet SDK
-                  TeamEmail: dotnetdevexcli@microsoft.com
-                  InsertionPayloadName: 'DotNet-SDK-Workloads ($(Build.SourceBranchName):$(Build.BuildNumber))'
-                  # PrimaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
-                  ComponentJsonValues: $(PrimaryVSComponentJsonValues)
-                  AllowTopicBranchUpdate: true
-                  # This is the name of our DevDiv alias.
-                  InsertionReviewers: Dotnet Core SDK and CLI
-                  # Queuing 'Request Perf DDRITs' build policies on Request #599598
-                  # Waiting for Request #599598 to complete its merge
-                  # Cannot find 'Request Perf DDRITs' build policy in Request #599598
-                  # WARNING: Exception updating pull request: VssUnauthorizedException : VS30063: You are not authorized to access https://spsprodwus21.vssps.visualstudio.com.
-                  InsertionBuildPolicies: Request Perf DDRITs
-                  # This action only works on AzDO repos. This warning occurs if enabled:
-                  # ##[warning]WARNING: Cannot extract commit details from vstfs:///Build/Build/6574299: ArgumentException : 'https://github.com/dotnet/project-system' does not look like an Azure DevOps url
-                  # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/631/Copy-Commit-Details-to-PR
-                  AddCommitsToPR: false
-                  # This action only works on AzDO repos. This warning occurs if enabled:
-                  # ##[warning]WARNING: Cannot copy work items from vstfs:///Build/Build/6574299: ArgumentException : 'https://github.com/dotnet/project-system' does not look like an Azure DevOps url
-                  # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/634/Link-Work-Items-to-PR
-                  LinkWorkItemsToPR: false
-                  # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/638/Set-AutoComplete-on-an-Insertion
-                  InsertAutoComplete: true
-                env:
-                  SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-            - ${{ each secondaryInsertionBranch in parameters.secondaryVsInsertionBranches }}:
-              # Creates VS insertion PRs using the VS drops containing the workloads and vsman files.
-              # One PR is created per branch defined at the top of this file in the secondaryVsInsertionBranches parameter.
-              # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/635/Overview?anchor=**build-pipeline**
-              # YAML reference: https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/task.json
-              - task: MicroBuildInsertVsPayload@5
-                displayName: '🟣 Create VS insertion: ${{ secondaryInsertionBranch }}'
-                inputs:
-                  # InsertionAccessToken: $(dn-bot-devdiv-drop-rw-code-rw)
-                  # InsertionAccessToken: $(dn-bot-all-drop-rw-code-rw-release-all)
-                  # ConnectedServiceName: DotNetRelease-PME
-                  # InsertionAccessToken: $(dn-bot-devdiv-build-rw-code-rw-release-rw)
-                  ConnectedServiceName: MicroBuildInsertionVS
-                  TargetBranch: ${{ secondaryInsertionBranch }}
-                  # temp/DotNet-SDK/dotnet-workload-versions-official-ci-20241216.6-1
-                  # https://learn.microsoft.com/azure/devops/pipelines/process/expressions?view=azure-devops#format
-                  InsertionTopicBranch: temp/DotNet-SDK-Workloads/${{ secondaryInsertionBranch }}/$(VsTopicBranchId)
-                  # Cannot use '.NET' at the start. The branch name (one used for VS insertion) is created via this value. It produces an error, for example:
-                  # fatal: 'team/.NET-Project-System/DotNet-Project-System-20220818.3-1' is not a valid branch name
-                  TeamName: DotNet SDK
-                  TeamEmail: dotnetdevexcli@microsoft.com
-                  InsertionPayloadName: 'DotNet-SDK-Workloads ($(Build.SourceBranchName):$(Build.BuildNumber))'
-                  # SecondaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
-                  ComponentJsonValues: $(SecondaryVSComponentJsonValues)
-                  AllowTopicBranchUpdate: true
-                  # This is the name of our DevDiv alias.
-                  InsertionReviewers: Dotnet Core SDK and CLI
-                  # Queuing 'Request Perf DDRITs' build policies on Request #599598
-                  # Waiting for Request #599598 to complete its merge
-                  # Cannot find 'Request Perf DDRITs' build policy in Request #599598
-                  # WARNING: Exception updating pull request: VssUnauthorizedException : VS30063: You are not authorized to access https://spsprodwus21.vssps.visualstudio.com.
-                  InsertionBuildPolicies: Request Perf DDRITs
-                  # This action only works on AzDO repos. This warning occurs if enabled:
-                  # ##[warning]WARNING: Cannot extract commit details from vstfs:///Build/Build/6574299: ArgumentException : 'https://github.com/dotnet/project-system' does not look like an Azure DevOps url
-                  # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/631/Copy-Commit-Details-to-PR
-                  AddCommitsToPR: false
-                  # This action only works on AzDO repos. This warning occurs if enabled:
-                  # ##[warning]WARNING: Cannot copy work items from vstfs:///Build/Build/6574299: ArgumentException : 'https://github.com/dotnet/project-system' does not look like an Azure DevOps url
-                  # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/634/Link-Work-Items-to-PR
-                  LinkWorkItemsToPR: false
-                  # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/638/Set-AutoComplete-on-an-Insertion
-                  InsertAutoComplete: true
-                env:
-                  SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-          # - task: 1ES.PublishBuildArtifacts@1
-          #   displayName: 🟣 Publish Workload Drops to Pipeline
-          #   inputs:
-          #     PathtoPublish: $(Build.SourcesDirectory)/artifacts/workloads/drops
-          #     ArtifactName: WorkloadDrops
-          #     publishLocation: Container
-          #   continueOnError: true
-          #   condition: always()
-          - task: 1ES.PublishBuildArtifacts@1
-            displayName: 🟣 Publish Logs to Pipeline
-            inputs:
-              PathtoPublish: $(Build.SourcesDirectory)/artifacts/log
-              ArtifactName: Log
-              publishLocation: Container
-            continueOnError: true
-            condition: always()
+                    # InsertionAccessToken: $(dn-bot-devdiv-drop-rw-code-rw)
+                    # InsertionAccessToken: $(dn-bot-all-drop-rw-code-rw-release-all)
+                    # ConnectedServiceName: DotNetRelease-PME
+                    # InsertionAccessToken: $(dn-bot-devdiv-build-rw-code-rw-release-rw)
+                    ConnectedServiceName: MicroBuildInsertionVS
+                    TargetBranch: ${{ primaryInsertionBranch }}
+                    # temp/DotNet-SDK/dotnet-workload-versions-official-ci-20241216.6-1
+                    # https://learn.microsoft.com/azure/devops/pipelines/process/expressions?view=azure-devops#format
+                    InsertionTopicBranch: temp/DotNet-SDK-Workloads/${{ primaryInsertionBranch }}/$(VsTopicBranchId)
+                    # Cannot use '.NET' at the start. The branch name (one used for VS insertion) is created via this value. It produces an error, for example:
+                    # fatal: 'team/.NET-Project-System/DotNet-Project-System-20220818.3-1' is not a valid branch name
+                    TeamName: DotNet SDK
+                    TeamEmail: dotnetdevexcli@microsoft.com
+                    InsertionPayloadName: 'DotNet-SDK-Workloads ($(Build.SourceBranchName):$(Build.BuildNumber))'
+                    # PrimaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
+                    ComponentJsonValues: $(PrimaryVSComponentJsonValues)
+                    AllowTopicBranchUpdate: true
+                    # This is the name of our DevDiv alias.
+                    InsertionReviewers: Dotnet Core SDK and CLI
+                    # Queuing 'Request Perf DDRITs' build policies on Request #599598
+                    # Waiting for Request #599598 to complete its merge
+                    # Cannot find 'Request Perf DDRITs' build policy in Request #599598
+                    # WARNING: Exception updating pull request: VssUnauthorizedException : VS30063: You are not authorized to access https://spsprodwus21.vssps.visualstudio.com.
+                    InsertionBuildPolicies: Request Perf DDRITs
+                    # This action only works on AzDO repos. This warning occurs if enabled:
+                    # ##[warning]WARNING: Cannot extract commit details from vstfs:///Build/Build/6574299: ArgumentException : 'https://github.com/dotnet/project-system' does not look like an Azure DevOps url
+                    # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/631/Copy-Commit-Details-to-PR
+                    AddCommitsToPR: false
+                    # This action only works on AzDO repos. This warning occurs if enabled:
+                    # ##[warning]WARNING: Cannot copy work items from vstfs:///Build/Build/6574299: ArgumentException : 'https://github.com/dotnet/project-system' does not look like an Azure DevOps url
+                    # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/634/Link-Work-Items-to-PR
+                    LinkWorkItemsToPR: false
+                    # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/638/Set-AutoComplete-on-an-Insertion
+                    InsertAutoComplete: true
+                  env:
+                    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+              - ${{ each secondaryInsertionBranch in parameters.secondaryVsInsertionBranches }}:
+                # Creates VS insertion PRs using the VS drops containing the workloads and vsman files.
+                # One PR is created per branch defined at the top of this file in the secondaryVsInsertionBranches parameter.
+                # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/635/Overview?anchor=**build-pipeline**
+                # YAML reference: https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/task.json
+                - task: MicroBuildInsertVsPayload@5
+                  displayName: '🟣 Create VS insertion: ${{ secondaryInsertionBranch }}'
+                  inputs:
+                    # InsertionAccessToken: $(dn-bot-devdiv-drop-rw-code-rw)
+                    # InsertionAccessToken: $(dn-bot-all-drop-rw-code-rw-release-all)
+                    # ConnectedServiceName: DotNetRelease-PME
+                    # InsertionAccessToken: $(dn-bot-devdiv-build-rw-code-rw-release-rw)
+                    ConnectedServiceName: MicroBuildInsertionVS
+                    TargetBranch: ${{ secondaryInsertionBranch }}
+                    # temp/DotNet-SDK/dotnet-workload-versions-official-ci-20241216.6-1
+                    # https://learn.microsoft.com/azure/devops/pipelines/process/expressions?view=azure-devops#format
+                    InsertionTopicBranch: temp/DotNet-SDK-Workloads/${{ secondaryInsertionBranch }}/$(VsTopicBranchId)
+                    # Cannot use '.NET' at the start. The branch name (one used for VS insertion) is created via this value. It produces an error, for example:
+                    # fatal: 'team/.NET-Project-System/DotNet-Project-System-20220818.3-1' is not a valid branch name
+                    TeamName: DotNet SDK
+                    TeamEmail: dotnetdevexcli@microsoft.com
+                    InsertionPayloadName: 'DotNet-SDK-Workloads ($(Build.SourceBranchName):$(Build.BuildNumber))'
+                    # SecondaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
+                    ComponentJsonValues: $(SecondaryVSComponentJsonValues)
+                    AllowTopicBranchUpdate: true
+                    # This is the name of our DevDiv alias.
+                    InsertionReviewers: Dotnet Core SDK and CLI
+                    # Queuing 'Request Perf DDRITs' build policies on Request #599598
+                    # Waiting for Request #599598 to complete its merge
+                    # Cannot find 'Request Perf DDRITs' build policy in Request #599598
+                    # WARNING: Exception updating pull request: VssUnauthorizedException : VS30063: You are not authorized to access https://spsprodwus21.vssps.visualstudio.com.
+                    InsertionBuildPolicies: Request Perf DDRITs
+                    # This action only works on AzDO repos. This warning occurs if enabled:
+                    # ##[warning]WARNING: Cannot extract commit details from vstfs:///Build/Build/6574299: ArgumentException : 'https://github.com/dotnet/project-system' does not look like an Azure DevOps url
+                    # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/631/Copy-Commit-Details-to-PR
+                    AddCommitsToPR: false
+                    # This action only works on AzDO repos. This warning occurs if enabled:
+                    # ##[warning]WARNING: Cannot copy work items from vstfs:///Build/Build/6574299: ArgumentException : 'https://github.com/dotnet/project-system' does not look like an Azure DevOps url
+                    # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/634/Link-Work-Items-to-PR
+                    LinkWorkItemsToPR: false
+                    # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/638/Set-AutoComplete-on-an-Insertion
+                    InsertAutoComplete: true
+                  env:
+                    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+            # - task: 1ES.PublishBuildArtifacts@1
+            #   displayName: 🟣 Publish Workload Drops to Pipeline
+            #   inputs:
+            #     PathtoPublish: $(Build.SourcesDirectory)/artifacts/workloads/drops
+            #     ArtifactName: WorkloadDrops
+            #     publishLocation: Container
+            #   continueOnError: true
+            #   condition: always()
+            - task: 1ES.PublishBuildArtifacts@1
+              displayName: 🟣 Publish Logs to Pipeline
+              inputs:
+                PathtoPublish: $(Build.SourcesDirectory)/artifacts/log
+                ArtifactName: Log
+                publishLocation: Container
+              continueOnError: true
+              condition: always()
