@@ -66,8 +66,8 @@ variables:
 - name: _TeamName
   value: DotNet-Cli
 # https://github.com/dotnet/arcade/blob/ccae251ef033746eb0213329953f5e3c1687693b/Documentation/ArcadeSdk.md#common-steps-in-azure-devops-pipeline
-# - name: BuildConfiguration
-- name: _BuildConfig
+- name: BuildConfiguration
+# - name: _BuildConfig
   value: Release
 - name: _SignType
   value: real
@@ -203,8 +203,10 @@ extends:
                   Copy-Item -Path $localPluginPath -Destination $taskPluginPath -Force
                 displayName: 🟣 Replace InsertVsPayload plugin.ps1
 
-            - script: >-
-                $(Build.SourcesDirectory)/build.cmd -test -sign -pack -publish -ci -configuration $(_BuildConfig)
+            - powershell: >-
+                eng/common/build.ps1
+                -restore -build -sign -pack -publish -ci
+                -configuration $(BuildConfiguration)
                 /p:CreateVSInsertion=${{ parameters.createVSInsertion }}
                 /p:WorkloadDirectory=$(Build.SourcesDirectory)/artifacts/workloads
                 $(_InternalBuildArgs)
