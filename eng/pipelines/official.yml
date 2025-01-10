@@ -122,6 +122,7 @@ extends:
     - stage: Build
       displayName: Build
       jobs:
+      # Note: jobs.yml automatically includes the Publish Assets job for pushing the artifacts to DARC.
       - template: /eng/common/templates-official/jobs/jobs.yml@self
         parameters:
           # name: buildRepo
@@ -140,7 +141,7 @@ extends:
           artifacts:
             publish:
               artifacts: true
-              logs: false
+              logs: true
               manifests: true
           jobs:
           - job: buildRepo
@@ -303,7 +304,7 @@ extends:
                 - task: MicroBuildInsertVsPayload@5
                   displayName: '🟣 Create VS insertion: ${{ primaryInsertionBranch }}'
                   inputs:
-                    # InsertionAccessToken: $(dn-bot-devdiv-drop-rw-code-rw)
+                    InsertionAccessToken: $(dn-bot-devdiv-drop-rw-code-rw)
                     # InsertionAccessToken: $(dn-bot-all-drop-rw-code-rw-release-all)
                     # ConnectedServiceName: DotNetRelease-PME
                     # InsertionAccessToken: $(dn-bot-devdiv-build-rw-code-rw-release-rw)
@@ -347,7 +348,7 @@ extends:
                 - task: MicroBuildInsertVsPayload@5
                   displayName: '🟣 Create VS insertion: ${{ secondaryInsertionBranch }}'
                   inputs:
-                    # InsertionAccessToken: $(dn-bot-devdiv-drop-rw-code-rw)
+                    InsertionAccessToken: $(dn-bot-devdiv-drop-rw-code-rw)
                     # InsertionAccessToken: $(dn-bot-all-drop-rw-code-rw-release-all)
                     # ConnectedServiceName: DotNetRelease-PME
                     # InsertionAccessToken: $(dn-bot-devdiv-build-rw-code-rw-release-rw)
@@ -391,11 +392,11 @@ extends:
             #     publishLocation: Container
             #   continueOnError: true
             #   condition: always()
-            - task: 1ES.PublishBuildArtifacts@1
-              displayName: 🟣 Publish Logs to Pipeline
-              inputs:
-                PathtoPublish: $(Build.SourcesDirectory)/artifacts/log
-                ArtifactName: Log
-                publishLocation: Container
-              continueOnError: true
-              condition: always()
+            # - task: 1ES.PublishBuildArtifacts@1
+            #   displayName: 🟣 Publish Logs to Pipeline
+            #   inputs:
+            #     PathtoPublish: $(Build.SourcesDirectory)/artifacts/log
+            #     ArtifactName: Log
+            #     publishLocation: Container
+            #   continueOnError: true
+            #   condition: always()
