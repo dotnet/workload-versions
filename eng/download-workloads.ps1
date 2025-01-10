@@ -32,7 +32,8 @@ $versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency
 # Construct the asset filter to only download the required workload drops.
 $workloadFilter = ''
 if ($workloadListJson) {
-  $workloadList = Get-Content $workloadListJson | ConvertFrom-Json
+  $workloadList = ConvertFrom-Json -InputObject $workloadListJson
+  Write-Host "workloadList: $workloadList"
   if ($workloadList.Count -ne 0) {
     $workloadFilter = "($($workloadList | Join-String -Separator '|'))"
   }
