@@ -19,6 +19,7 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
   $dropDir = "$($_.FullName)\"
 
   # Hash the files within the drop folder to create a unique identifier that represents this workload drop.
+  # Example: 1E3EA4FE202394037253F57436A6EAD5DE1359792B618B9072014A98563A30FB
   $fileHashes = [byte[]]@()
   $dropFiles = Get-ChildItem -Path $dropDir | Sort-Object
   $null = $dropFiles | Get-Content -Encoding Byte -Raw | ForEach-Object { $fileHashes += $hashAlgorithm.ComputeHash($_) }
