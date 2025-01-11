@@ -1,6 +1,6 @@
 parameters:
   targetBranch: main
-  serviceName: ''
+  # serviceName: ''
   topicBranchId: ''
   componentJsonValues: ''
 
@@ -12,7 +12,7 @@ steps:
   displayName: '🟣 Create VS insertion: ${{ parameters.targetBranch }}'
   inputs:
     # https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/40477/Insert-with-a-WIF-Service-Connection
-    ConnectedServiceName: ${{ parameters.serviceName }}
+    ConnectedServiceName: MicroBuildInsertionVS
     TargetBranch: ${{ parameters.targetBranch }}
     # Starting with 'temp' allows this branch to be cleaned up automatically by the VS repo branch policies.
     InsertionTopicBranch: temp/DotNet-SDK-Workloads/${{ parameters.targetBranch }}/${{ parameters.topicBranchId }}
@@ -30,6 +30,6 @@ steps:
     LinkWorkItemsToPR: false
     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/638/Set-AutoComplete-on-an-Insertion
     InsertAutoComplete: true
-  # env:
-  #   # TODO: Is this necessary?
-  #   SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+  env:
+    # TODO: Is this necessary?
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
