@@ -1,6 +1,5 @@
 parameters:
   targetBranch: main
-  # serviceName: ''
   topicBranchId: ''
   componentJsonValues: ''
 
@@ -31,5 +30,5 @@ steps:
     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/638/Set-AutoComplete-on-an-Insertion
     InsertAutoComplete: true
   env:
-    # TODO: Is this necessary?
+    # This is required. See: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/40477/Insert-with-a-WIF-Service-Connection?anchor=steps-to-use-a-wif-service-connection-in-the-insert-vs-task
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
