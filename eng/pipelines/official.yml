@@ -343,7 +343,7 @@ extends:
                   parameters:
                     targetBranch: ${{ primaryInsertionBranch }}
                     # accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
-                    serviceName: MicroBuildInsertionVS
+                    # serviceName: MicroBuildInsertionVS
                     topicBranchId: $(VsTopicBranchId)
                     # PrimaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
                     componentJsonValues: $(PrimaryVSComponentJsonValues)
@@ -396,7 +396,7 @@ extends:
                   parameters:
                     targetBranch: ${{ secondaryInsertionBranch }}
                     # accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
-                    serviceName: MicroBuildInsertionVS
+                    # serviceName: MicroBuildInsertionVS
                     topicBranchId: $(VsTopicBranchId)
                     # SecondaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
                     componentJsonValues: $(SecondaryVSComponentJsonValues)
