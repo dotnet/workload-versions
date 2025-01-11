@@ -1,7 +1,6 @@
 parameters:
   targetBranch: main
-  # accessToken: ''
-  # serviceName: MicroBuildInsertionVS
+  serviceName: ''
   topicBranchId: ''
   componentJsonValues: ''
 
@@ -12,11 +11,10 @@ steps:
 - task: MicroBuildInsertVsPayload@5
   displayName: '🟣 Create VS insertion: ${{ parameters.targetBranch }}'
   inputs:
-    # InsertionAccessToken: ${{ parameters.accessToken }}
     # https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/40477/Insert-with-a-WIF-Service-Connection
-    ConnectedServiceName: MicroBuildInsertionVS
+    ConnectedServiceName: ${{ parameters.serviceName }}
     TargetBranch: ${{ parameters.targetBranch }}
-    # Starting with 'temp' allows this branch to be cleaned up automatically within the VS repo.
+    # Starting with 'temp' allows this branch to be cleaned up automatically by the VS repo branch policies.
     InsertionTopicBranch: temp/DotNet-SDK-Workloads/${{ parameters.targetBranch }}/${{ parameters.topicBranchId }}
     TeamName: DotNet-Cli
     TeamEmail: dotnetdevexcli@microsoft.com

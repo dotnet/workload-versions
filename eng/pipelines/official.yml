@@ -168,8 +168,8 @@ extends:
                   if ($vsTopicBranchId -eq '|default|') {
                     $vsTopicBranchId = (Get-Date).ToString('yyyy-MM')
                   }
-                  # https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/plugin.ps1&version=GBmain&line=278&lineEnd=287&lineStartColumn=1&lineEndColumn=1&lineStyle=plain&_a=contents
-                  # temp/DotNet-SDK/dotnet-workload-versions-official-ci-20241216.6-1
+                  # Loosely based on:
+                  # https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/plugin.ps1&version=GCf10314b240d5f3d0899e80eb2feb5dc33b5f8c20&line=276&lineEnd=280&lineStartColumn=1&lineEndColumn=1&lineStyle=plain&_a=contents
                   if ($vsTopicBranchId -eq '|temp|') {
                     $vsTopicBranchId = "$(Build.BuildNumber)-$(System.JobAttempt)" -replace '[\s\\]+', '-'
                   }
@@ -343,7 +343,7 @@ extends:
                   parameters:
                     targetBranch: ${{ primaryInsertionBranch }}
                     # accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
-                    # serviceName: MicroBuildInsertionVS
+                    serviceName: MicroBuildInsertionVS
                     topicBranchId: $(VsTopicBranchId)
                     # PrimaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
                     componentJsonValues: $(PrimaryVSComponentJsonValues)
@@ -396,7 +396,7 @@ extends:
                   parameters:
                     targetBranch: ${{ secondaryInsertionBranch }}
                     # accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
-                    # serviceName: MicroBuildInsertionVS
+                    serviceName: MicroBuildInsertionVS
                     topicBranchId: $(VsTopicBranchId)
                     # SecondaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
                     componentJsonValues: $(SecondaryVSComponentJsonValues)
