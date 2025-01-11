@@ -69,16 +69,16 @@ variables:
 - template: /eng/common/templates-official/variables/pool-providers.yml@self
 ############### ARCADE ###############
 # Both this (used in Arcade for the MicroBuildSigningPlugin) and DotNetSignType (used in Arcade in Sign.proj) are necessary to set the sign type.
+# https://github.com/dotnet/arcade/blob/ccae251ef033746eb0213329953f5e3c1687693b/Documentation/ArcadeSdk.md#common-steps-in-azure-devops-pipeline
 - name: _SignType
   value: real
-- name: PostBuildSign
-  value: false
 - name: _TeamName
   value: DotNet-Cli
-# https://github.com/dotnet/arcade/blob/ccae251ef033746eb0213329953f5e3c1687693b/Documentation/ArcadeSdk.md#common-steps-in-azure-devops-pipeline
-- name: BuildConfiguration
-# - name: _BuildConfig
+- name: _BuildConfig
   value: Release
+- name: PostBuildSign
+  value: false
+############### GROUPS ###############
 # Provides TSA variables for automatic bug reporting.
 - group: DotNet-CLI-SDLValidation-Params
 # Release-Pipeline provides: BotAccount-dotnet-bot-repo-PAT, dn-bot-all-drop-rw-code-rw-release-all
@@ -87,9 +87,6 @@ variables:
 # DotNet-DevDiv-Insertion-Workflow-Variables provides: dn-bot-devdiv-drop-rw-code-rw
 # https://dnceng.visualstudio.com/internal/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=33&path=DotNet-DevDiv-Insertion-Workflow-Variables
 - group: DotNet-DevDiv-Insertion-Workflow-Variables
-# DotNet-VSTS-Infra-Access provides: dn-bot-devdiv-build-rw-code-rw-release-rw
-# https://dnceng.visualstudio.com/internal/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=4&path=DotNet-VSTS-Infra-Access
-# - group: DotNet-VSTS-Infra-Access
 
 resources:
   repositories:
@@ -118,13 +115,6 @@ extends:
       # Note: jobs.yml automatically includes the Publish Assets job for pushing the artifacts to DARC.
       - template: /eng/common/templates-official/jobs/jobs.yml@self
         parameters:
-          # name: buildRepo
-          # displayName: Build Repo
-          # timeoutInMinutes: 120
-          # pool:
-          #   name: $(DncEngInternalBuildPool)
-          #   image: 1es-windows-2022
-          #   os: windows
           enableMicrobuild: true
           enablePublishBuildAssets: true
           enableTelemetry: true
@@ -220,7 +210,7 @@ extends:
             - powershell: >-
                 eng/common/build.ps1
                 -restore -build -sign -pack -publish -ci -msbuildEngine vs
-                -configuration $(BuildConfiguration)
+                -configuration $(_BuildConfig)
                 /p:CreateVSInsertion=${{ parameters.createVSInsertion }}
                 /p:WorkloadDirectory=$(Build.SourcesDirectory)/artifacts/workloads
                 /p:DotNetSignType=$(_SignType)
@@ -229,9 +219,6 @@ extends:
                 /p:OfficialBuildId=$(Build.BuildNumber)
                 /p:StabilizePackageVersion=${{ parameters.stabilizePackageVersion }}
               displayName: 🟣 Build solution
-              env:
-                # TODO: Is this needed?
-                BuildConfig: $(BuildConfiguration)
 
             - ${{ if eq(parameters.publishToFeed, true) }}:
               - task: 1ES.PublishNuget@1
@@ -246,11 +233,12 @@ extends:
                   publishPackageMetadata: true
 
             - ${{ if eq(parameters.createVSInsertion, true) }}:
+              # The variables comprised of workloadShortName and workloadType are set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
               - ${{ each workloadShortName in parameters.workloadsForVSDrops }}:
                 - ${{ each workloadType in parameters.workloadTypesForVSDrops }}:
                   # Only create the drop if the workload drop directory exists, or if the drop wasn't published already.
                   # Sets the PublishWorkloadDrop variable. See: https://stackoverflow.com/a/60630739/294804
-                  - powershell: >-
+                  - pwsh: >-
                       eng/check-drop-publish.ps1
                       -workloadId '${{ workloadShortName }}_${{ workloadType }}'
                       -workloadPath '$(${{ workloadShortName }}_${{ workloadType }}_dir)'
@@ -305,50 +293,7 @@ extends:
                     condition: eq(variables['PublishWorkloadDrop'], 'True')
 
               - ${{ each primaryInsertionBranch in parameters.primaryVsInsertionBranches }}:
-                # Creates VS insertion PRs using the VS drops containing the workloads and vsman files.
                 # One PR is created per branch defined at the top of this file in the primaryVsInsertionBranches parameter.
-                # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/635/Overview?anchor=**build-pipeline**
-                # YAML reference: https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/task.json
-                # - task: MicroBuildInsertVsPayload@5
-                #   displayName: '🟣 Create VS insertion: ${{ primaryInsertionBranch }}'
-                #   inputs:
-                #     InsertionAccessToken: $(dn-bot-devdiv-drop-rw-code-rw)
-                #     # InsertionAccessToken: $(dn-bot-all-drop-rw-code-rw-release-all)
-                #     # ConnectedServiceName: DotNetRelease-PME
-                #     # InsertionAccessToken: $(dn-bot-devdiv-build-rw-code-rw-release-rw)
-                #     # https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/40477/Insert-with-a-WIF-Service-Connection
-                #     ConnectedServiceName: MicroBuildInsertionVS
-                #     TargetBranch: ${{ primaryInsertionBranch }}
-                #     # temp/DotNet-SDK/dotnet-workload-versions-official-ci-20241216.6-1
-                #     # https://learn.microsoft.com/azure/devops/pipelines/process/expressions?view=azure-devops#format
-                #     InsertionTopicBranch: temp/DotNet-SDK-Workloads/${{ primaryInsertionBranch }}/$(VsTopicBranchId)
-                #     # Cannot use '.NET' at the start. The branch name (one used for VS insertion) is created via this value. It produces an error, for example:
-                #     # fatal: 'team/.NET-Project-System/DotNet-Project-System-20220818.3-1' is not a valid branch name
-                #     TeamName: DotNet SDK
-                #     TeamEmail: dotnetdevexcli@microsoft.com
-                #     InsertionPayloadName: 'DotNet-SDK-Workloads ($(Build.SourceBranchName):$(Build.BuildNumber))'
-                #     # PrimaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
-                #     ComponentJsonValues: $(PrimaryVSComponentJsonValues)
-                #     AllowTopicBranchUpdate: true
-                #     # This is the name of our DevDiv alias.
-                #     InsertionReviewers: Dotnet Core SDK and CLI
-                #     # Queuing 'Request Perf DDRITs' build policies on Request #599598
-                #     # Waiting for Request #599598 to complete its merge
-                #     # Cannot find 'Request Perf DDRITs' build policy in Request #599598
-                #     # WARNING: Exception updating pull request: VssUnauthorizedException : VS30063: You are not authorized to access https://spsprodwus21.vssps.visualstudio.com.
-                #     InsertionBuildPolicies: Request Perf DDRITs
-                #     # This action only works on AzDO repos. This warning occurs if enabled:
-                #     # ##[warning]WARNING: Cannot extract commit details from vstfs:///Build/Build/6574299: ArgumentException : 'https://github.com/dotnet/project-system' does not look like an Azure DevOps url
-                #     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/631/Copy-Commit-Details-to-PR
-                #     AddCommitsToPR: false
-                #     # This action only works on AzDO repos. This warning occurs if enabled:
-                #     # ##[warning]WARNING: Cannot copy work items from vstfs:///Build/Build/6574299: ArgumentException : 'https://github.com/dotnet/project-system' does not look like an Azure DevOps url
-                #     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/634/Link-Work-Items-to-PR
-                #     LinkWorkItemsToPR: false
-                #     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/638/Set-AutoComplete-on-an-Insertion
-                #     InsertAutoComplete: true
-                #   env:
-                #     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
                 - template: /eng/pipelines/templates/steps/workload-insertion.yml@self
                   parameters:
                     targetBranch: ${{ primaryInsertionBranch }}
@@ -356,69 +301,10 @@ extends:
                     # PrimaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
                     componentJsonValues: $(PrimaryVSComponentJsonValues)
               - ${{ each secondaryInsertionBranch in parameters.secondaryVsInsertionBranches }}:
-                # Creates VS insertion PRs using the VS drops containing the workloads and vsman files.
                 # One PR is created per branch defined at the top of this file in the secondaryVsInsertionBranches parameter.
-                # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/635/Overview?anchor=**build-pipeline**
-                # YAML reference: https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/task.json
-                # - task: MicroBuildInsertVsPayload@5
-                #   displayName: '🟣 Create VS insertion: ${{ secondaryInsertionBranch }}'
-                #   inputs:
-                #     InsertionAccessToken: $(dn-bot-devdiv-drop-rw-code-rw)
-                #     # InsertionAccessToken: $(dn-bot-all-drop-rw-code-rw-release-all)
-                #     # ConnectedServiceName: DotNetRelease-PME
-                #     # InsertionAccessToken: $(dn-bot-devdiv-build-rw-code-rw-release-rw)
-                #     # https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/40477/Insert-with-a-WIF-Service-Connection
-                #     ConnectedServiceName: MicroBuildInsertionVS
-                #     TargetBranch: ${{ secondaryInsertionBranch }}
-                #     # temp/DotNet-SDK/dotnet-workload-versions-official-ci-20241216.6-1
-                #     # https://learn.microsoft.com/azure/devops/pipelines/process/expressions?view=azure-devops#format
-                #     InsertionTopicBranch: temp/DotNet-SDK-Workloads/${{ secondaryInsertionBranch }}/$(VsTopicBranchId)
-                #     # Cannot use '.NET' at the start. The branch name (one used for VS insertion) is created via this value. It produces an error, for example:
-                #     # fatal: 'team/.NET-Project-System/DotNet-Project-System-20220818.3-1' is not a valid branch name
-                #     TeamName: DotNet SDK
-                #     TeamEmail: dotnetdevexcli@microsoft.com
-                #     InsertionPayloadName: 'DotNet-SDK-Workloads ($(Build.SourceBranchName):$(Build.BuildNumber))'
-                #     # SecondaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
-                #     ComponentJsonValues: $(SecondaryVSComponentJsonValues)
-                #     AllowTopicBranchUpdate: true
-                #     # This is the name of our DevDiv alias.
-                #     InsertionReviewers: Dotnet Core SDK and CLI
-                #     # Queuing 'Request Perf DDRITs' build policies on Request #599598
-                #     # Waiting for Request #599598 to complete its merge
-                #     # Cannot find 'Request Perf DDRITs' build policy in Request #599598
-                #     # WARNING: Exception updating pull request: VssUnauthorizedException : VS30063: You are not authorized to access https://spsprodwus21.vssps.visualstudio.com.
-                #     InsertionBuildPolicies: Request Perf DDRITs
-                #     # This action only works on AzDO repos. This warning occurs if enabled:
-                #     # ##[warning]WARNING: Cannot extract commit details from vstfs:///Build/Build/6574299: ArgumentException : 'https://github.com/dotnet/project-system' does not look like an Azure DevOps url
-                #     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/631/Copy-Commit-Details-to-PR
-                #     AddCommitsToPR: false
-                #     # This action only works on AzDO repos. This warning occurs if enabled:
-                #     # ##[warning]WARNING: Cannot copy work items from vstfs:///Build/Build/6574299: ArgumentException : 'https://github.com/dotnet/project-system' does not look like an Azure DevOps url
-                #     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/634/Link-Work-Items-to-PR
-                #     LinkWorkItemsToPR: false
-                #     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/638/Set-AutoComplete-on-an-Insertion
-                #     InsertAutoComplete: true
-                #   env:
-                #     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
                 - template: /eng/pipelines/templates/steps/workload-insertion.yml@self
                   parameters:
                     targetBranch: ${{ secondaryInsertionBranch }}
                     topicBranchId: $(VsTopicBranchId)
                     # SecondaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
                     componentJsonValues: $(SecondaryVSComponentJsonValues)
-            # - task: 1ES.PublishBuildArtifacts@1
-            #   displayName: 🟣 Publish Workload Drops to Pipeline
-            #   inputs:
-            #     PathtoPublish: $(Build.SourcesDirectory)/artifacts/workloads/drops
-            #     ArtifactName: WorkloadDrops
-            #     publishLocation: Container
-            #   continueOnError: true
-            #   condition: always()
-            # - task: 1ES.PublishBuildArtifacts@1
-            #   displayName: 🟣 Publish Logs to Pipeline
-            #   inputs:
-            #     PathtoPublish: $(Build.SourcesDirectory)/artifacts/log
-            #     ArtifactName: Log
-            #     publishLocation: Container
-            #   continueOnError: true
-            #   condition: always()

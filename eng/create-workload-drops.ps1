@@ -45,7 +45,6 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
 
     Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_name]$vsDropName"
     Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_dir]$dropDir"
-    # Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_full]$assemblyName"
     Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_url]$dropUrl"
 
     # Each vsman file is comma-separated. First .vsman is destination and the second is source.
