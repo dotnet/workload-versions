@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.11" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.12" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
-      <Sha>9cb3b725e3ad2b57ddc9fb2dd48d2d170563a8f5</Sha>
+      <Sha>89ef51c5d8f5239345127a1e282e11036e590c8b</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100" Version="8.0.11" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100" Version="8.0.12" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>f6237140b33bf18c72dccfeda14be8d103c3b93e</Sha>
+      <Sha>c458a7647c04e323c238f381eb176af24254b3ff</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-8.0.100" Version="34.0.145">
       <Uri>https://github.com/dotnet/android</Uri>
@@ -29,13 +29,13 @@
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
       <Sha>0ee28379dd5e85c830bad0270d064bbcec467647</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-8.0.100" Version="8.0.83">
+    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-8.0.100" Version="8.0.100">
       <Uri>https://github.com/dotnet/maui</Uri>
-      <Sha>a33a875ef023fdab35aefb57c5f70addd965f3e4</Sha>
+      <Sha>f4dbb744f19d479c9dc0582e97ba7753df149638</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.404-servicing.24521.39">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.405-servicing.24605.2">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-installer</Uri>
-      <Sha>7b190310f25ae8d6e735d9b31fb2dbb599e75803</Sha>
+      <Sha>e3d68acb74ed83beffa1d96b43e59adfb719fe86</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
