@@ -9,9 +9,8 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <LangVersion>Latest</LangVersion>
     <NoSwixBuildPlugin>true</NoSwixBuildPlugin>
-    <!-- BUG: The toolset says it requires this property, but in reality, it doesn't. However, we need to set it to make it run the target properly. See: -->
-    <!-- https://devdiv.visualstudio.com/DevDiv/_git/Microsoft.VisualStudio.Internal.MicroBuild?path=/src/Microsoft.VisualStudio.Internal.MicroBuild.Vsman/Sdk/Sdk.targets&version=GBmain&line=92&lineEnd=92&lineStartColumn=103&lineEndColumn=144&lineStyle=plain&_a=contents -->
-    <NerdbankGitVersioningTasksPath>WORKAROUND</NerdbankGitVersioningTasksPath>
+    <!-- See: https://dev.azure.com/devdiv/DevDiv/_wiki/wikis/DevDiv.wiki/29608/How-to-Build-a-vsman-file?anchor=creating-your-.vsman-file -->
+    <GetBuildVersionTargetDefined>true</GetBuildVersionTargetDefined>
   </PropertyGroup>
 
 </Project>

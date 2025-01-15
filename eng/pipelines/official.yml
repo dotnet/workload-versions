@@ -290,6 +290,7 @@ extends:
                       # See: https://dev.azure.com/devdiv/DevDiv/_wiki/wikis/DevDiv.wiki/35351/Retain-Drops
                       dropRetentionDays: 183
                       accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
+                      # skipUploadIfExists: true
                     condition: eq(variables['PublishWorkloadDrop'], 'True')
 
               - ${{ each primaryInsertionBranch in parameters.primaryVsInsertionBranches }}:
