@@ -1,0 +1,208 @@
+parameters:
+  # These types match the types handled in create-workload-drops.ps1. There is a RegEx in that script that parses the workload type out of the workload path.
+  # If this list needs to be updated, the RegEx in the script also needs to be updated.
+  # The hardcoded list here is necessary as these types need to be available during compilation of the pipeline.
+  # The workload types become separate variables in the create-workload-drops.ps1 and this list is looped over to create multiple drop tasks.
+  workloadDropTypes:
+  - components
+  - packs
+  - precomponents
+
+jobs:
+# Note: jobs.yml automatically includes the Publish Assets job for pushing the artifacts to DARC.
+- template: /eng/common/templates-official/jobs/jobs.yml
+  parameters:
+    enableMicrobuild: true
+    enablePublishBuildAssets: true
+    enableTelemetry: true
+    enablePublishUsingPipelines: true
+    publishAssetsImmediately: true
+    enableSbom: true
+    artifacts:
+      publish:
+        artifacts: true
+        logs: true
+        manifests: true
+    jobs:
+    - job: buildRepo
+      displayName: Build Repo
+      timeoutInMinutes: 120
+      pool:
+        name: $(DncEngInternalBuildPool)
+        image: 1es-windows-2022
+        os: windows
+      steps:
+      - ${{ if eq(parameters.createVSInsertion, true) }}:
+        - task: AzureCLI@2
+          displayName: 🟣 Download workloads for VS insertion
+          inputs:
+            # TODO: Need our own subscription
+            azureSubscription: DotNetStaging
+            scriptType: pscore
+            scriptPath: $(Build.SourcesDirectory)/eng/download-workloads.ps1
+            # Note: The second $ for usePreComponents allows the value to resolve as `$true` or `$false`.
+            arguments: >-
+              -workloadPath '$(Build.SourcesDirectory)/artifacts/workloads'
+              -gitHubPat (ConvertTo-SecureString -String '$(BotAccount-dotnet-bot-repo-PAT)' -AsPlainText -Force)
+              -azDOPat (ConvertTo-SecureString -String '$(dn-bot-all-drop-rw-code-rw-release-all)' -AsPlainText -Force)
+              -workloadListJson '${{ convertToJson(parameters.workloadDropNames) }}'
+              -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }}
+        # This allows setting the VsTopicBranchId variable dynamically.
+        # |default| represents normal operation, set to: yyyy-MM
+        # |temp| is only for pipeline testing, set to: BuildNumber-JobAttempt
+        - pwsh: |
+            $vsTopicBranchId = '${{ parameters.vsTopicBranchId }}'
+            if ($vsTopicBranchId -eq '|default|') {
+              $vsTopicBranchId = (Get-Date).ToString('yyyy-MM')
+            }
+            # Loosely based on:
+            # https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/plugin.ps1&version=GCf10314b240d5f3d0899e80eb2feb5dc33b5f8c20&line=276&lineEnd=280&lineStartColumn=1&lineEndColumn=1&lineStyle=plain&_a=contents
+            if ($vsTopicBranchId -eq '|temp|') {
+              $vsTopicBranchId = '$(Build.BuildNumber)-$(System.JobAttempt)'
+            }
+            Write-Host "VsTopicBranchId: $vsTopicBranchId"
+            Write-Host "##vso[task.setvariable variable=VsTopicBranchId]$vsTopicBranchId"
+          displayName: 🟣 Set VsTopicBranchId variable
+
+        # Sets the VstsDropFolder variable for the path to the MicroBuildUploadVstsDropFolder task.
+        # Used during VS insertion to verify if the drop has been uploaded already or not.
+        # Example: D:\a\_work\_tasks\MicroBuildUploadVstsDropFolder_4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8\2.2.16\
+        - pwsh: |
+            $tasksFolder = '$(Agent.RootDirectory)\_tasks'
+            # The folders in _tasks are hidden. The -Force parameter allows them to be listed.
+            $taskRootFolder = Get-ChildItem $tasksFolder -Directory -Filter 'MicroBuildUploadVstsDropFolder*' -Force | Select-Object -First 1
+            # Get the first version folder since the agent will only install a single version.
+            $vstsDropFolder = ($taskRootFolder | Get-ChildItem -Directory -Force | Select-Object -First 1).FullName
+            Write-Host "VstsDropFolder: $vstsDropFolder"
+            Write-Host "##vso[task.setvariable variable=VstsDropFolder]$vstsDropFolder"
+          displayName: 🟣 Set VstsDropFolder variable
+
+        # - pwsh: |
+        #     $localPluginPath = '$(Build.SourcesDirectory)/eng/VstsDropFolder/plugin.ps1'
+        #     Write-Host "LocalPluginPath: $localPluginPath"
+        #     $taskPluginPath = '$(VstsDropFolder)/plugin.ps1'
+        #     Write-Host "TaskPluginPath: $taskPluginPath"
+        #     Copy-Item -Path $localPluginPath -Destination $taskPluginPath -Force
+        #   displayName: 🟣 Replace VstsDropFolder plugin.ps1
+
+        # - pwsh: |
+        #     $tasksFolder = '$(Agent.RootDirectory)\_tasks'
+        #     # The folders in _tasks are hidden. The -Force parameter allows them to be listed.
+        #     $taskRootFolder = Get-ChildItem $tasksFolder -Directory -Filter 'MicroBuildInsertVsPayload*' -Force | Select-Object -First 1
+        #     # Get the first version folder since the agent will only install a single version.
+        #     $insertVsPayload = ($taskRootFolder | Get-ChildItem -Directory -Force | Select-Object -First 1).FullName
+        #     Write-Host "InsertVsPayload: $insertVsPayload"
+        #     Write-Host "##vso[task.setvariable variable=InsertVsPayload]$insertVsPayload"
+        #   displayName: 🟣 Set InsertVsPayload variable
+
+        # - pwsh: |
+        #     $localPluginPath = '$(Build.SourcesDirectory)/eng/InsertVsPayload/plugin.ps1'
+        #     Write-Host "LocalPluginPath: $localPluginPath"
+        #     $taskPluginPath = '$(InsertVsPayload)/plugin.ps1'
+        #     Write-Host "TaskPluginPath: $taskPluginPath"
+        #     Copy-Item -Path $localPluginPath -Destination $taskPluginPath -Force
+        #   displayName: 🟣 Replace InsertVsPayload plugin.ps1
+
+      # https://github.com/dotnet/arcade/blob/ccae251ef033746eb0213329953f5e3c1687693b/Documentation/CorePackages/Publishing.md#basic-onboarding-scenario-for-new-repositories-to-the-current-publishing-version-v3
+      - powershell: >-
+          eng/common/build.ps1
+          -restore -build -sign -pack -publish -ci -msbuildEngine vs
+          -configuration $(_BuildConfig)
+          /p:CreateVSInsertion=${{ parameters.createVSInsertion }}
+          /p:WorkloadDirectory=$(Build.SourcesDirectory)/artifacts/workloads
+          /p:DotNetSignType=$(_SignType)
+          /p:TeamName=$(_TeamName)
+          /p:DotNetPublishUsingPipelines=true
+          /p:OfficialBuildId=$(Build.BuildNumber)
+          /p:StabilizePackageVersion=${{ parameters.stabilizePackageVersion }}
+        displayName: 🟣 Build solution
+
+      - ${{ if eq(parameters.publishToFeed, true) }}:
+        - task: 1ES.PublishNuget@1
+          displayName: 🟣 Publish NuGet package
+          inputs:
+            useDotNetTask: true
+            packagesToPush: $(Build.SourcesDirectory)/artifacts/packages/**/*.nupkg
+            packageParentPath: $(Build.SourcesDirectory)/artifacts/packages
+            publishVstsFeed: ${{ parameters.feedForPublishing }}
+            nuGetFeedType: internal
+            allowPackageConflicts: false
+            publishPackageMetadata: true
+
+      - ${{ if eq(parameters.createVSInsertion, true) }}:
+        # The variables comprised of workloadShortName and workloadType are set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
+        - ${{ each workloadShortName in parameters.workloadDropNames }}:
+          - ${{ each workloadType in parameters.workloadDropTypes }}:
+            # Only create the drop if the workload drop directory exists, or if the drop wasn't published already.
+            # Sets the PublishWorkloadDrop variable. See: https://stackoverflow.com/a/60630739/294804
+            - pwsh: >-
+                eng/check-drop-publish.ps1
+                -workloadId '${{ workloadShortName }}_${{ workloadType }}'
+                -workloadPath '$(${{ workloadShortName }}_${{ workloadType }}_dir)'
+                -workloadName '$(${{ workloadShortName }}_${{ workloadType }}_name)'
+                -token (ConvertTo-SecureString -String '$(dn-bot-devdiv-drop-rw-code-rw)' -AsPlainText -Force)
+                -vstsDropFolder '$(VstsDropFolder)'
+              displayName: 🟣 Check if ${{ workloadShortName }}_${{ workloadType }} needs published
+
+            # - pwsh: |
+            #     # If the drop folder doesn't exist (not downloaded via DARC), the drop cannot be published.
+            #     if (-not (Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')) {
+            #       Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]False"
+            #       Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" was not downloaded via DARC. Skipping VS drop publish...'
+            #       return
+            #     }
+            #     Import-Module '$(VstsDropFolder)/Engineering.PowerShell.Vsts.Drop.psd1'
+            #     # Default value within: https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
+            #     $serviceUri = 'https://devdiv.artifacts.visualstudio.com'
+            #     $token = '$(dn-bot-devdiv-drop-rw-code-rw)'
+            #     $server = Get-VstsDropServer -Url $serviceUri -TraceToHost ActivityTracing -PatAuth $token
+            #     # Returns a JSON string. If the drop exists, an array with a single object is returned. If the drop does not exist, an empty array is returned.
+            #     $dropJson = $server.Client.List('$(${{ workloadShortName }}_${{ workloadType }}_name)') | ConvertFrom-Json
+            #     if ($dropJson.Count -ne 0) {
+            #       Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]False"
+            #       Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" has already been published. Skipping VS drop publish...'
+            #       return
+            #     }
+            #     Write-Host "PublishWorkloadDrop: True"
+            #     Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]True"
+            #   displayName: 🟣 Check if ${{ workloadShortName }}_${{ workloadType }} needs published
+            # - pwsh: |
+            #     # If the drop folder doesn't exist (not downloaded via DARC), the drop cannot be published.
+            #     if (-not (Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')) {
+            #       Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]False"
+            #       Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" was not downloaded via DARC. Skipping VS drop publish...'
+            #       return
+            #     }
+            #     Write-Host "PublishWorkloadDrop: True"
+            #     Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]True"
+            #   displayName: 🟣 Check if ${{ workloadShortName }}_${{ workloadType }} needs published
+
+            # Docs: https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/1es-pipeline-templates/features/outputs/microbuild-vsts-drop
+            # YAML reference (original task): https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
+            - task: 1ES.MicroBuildVstsDrop@1
+              displayName: '🟣 Publish VS insertion drop: ${{ workloadShortName }}_${{ workloadType }}'
+              inputs:
+                dropFolder: $(${{ workloadShortName }}_${{ workloadType }}_dir)
+                dropName: $(${{ workloadShortName }}_${{ workloadType }}_name)
+                # See: https://dev.azure.com/devdiv/DevDiv/_wiki/wikis/DevDiv.wiki/35351/Retain-Drops
+                dropRetentionDays: 183
+                accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
+                # skipUploadIfExists: true
+              condition: eq(variables['PublishWorkloadDrop'], 'True')
+
+        - ${{ each primaryInsertionBranch in parameters.primaryVsInsertionBranches }}:
+          # One PR is created per branch defined at the top of this file in the primaryVsInsertionBranches parameter.
+          - template: /eng/pipelines/templates/steps/workload-insertion.yml@self
+            parameters:
+              targetBranch: ${{ primaryInsertionBranch }}
+              topicBranchId: $(VsTopicBranchId)
+              # PrimaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
+              componentJsonValues: $(PrimaryVSComponentJsonValues)
+        - ${{ each secondaryInsertionBranch in parameters.secondaryVsInsertionBranches }}:
+          # One PR is created per branch defined at the top of this file in the secondaryVsInsertionBranches parameter.
+          - template: /eng/pipelines/templates/steps/workload-insertion.yml@self
+            parameters:
+              targetBranch: ${{ secondaryInsertionBranch }}
+              topicBranchId: $(VsTopicBranchId)
+              # SecondaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
+              componentJsonValues: $(SecondaryVSComponentJsonValues)
