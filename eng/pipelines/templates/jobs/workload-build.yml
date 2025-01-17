@@ -47,22 +47,6 @@ jobs:
               -azDOPat (ConvertTo-SecureString -String '$(dn-bot-all-drop-rw-code-rw-release-all)' -AsPlainText -Force)
               -workloadListJson '${{ convertToJson(parameters.workloadDropNames) }}'
               -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }}
-        # This allows setting the VsTopicBranchId variable dynamically.
-        # |default| represents normal operation, set to: yyyy-MM
-        # |temp| is only for pipeline testing, set to: BuildNumber-JobAttempt
-        - pwsh: |
-            $vsTopicBranchId = '${{ parameters.vsTopicBranchId }}'
-            if ($vsTopicBranchId -eq '|default|') {
-              $vsTopicBranchId = (Get-Date).ToString('yyyy-MM')
-            }
-            # Loosely based on:
-            # https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/plugin.ps1&version=GCf10314b240d5f3d0899e80eb2feb5dc33b5f8c20&line=276&lineEnd=280&lineStartColumn=1&lineEndColumn=1&lineStyle=plain&_a=contents
-            if ($vsTopicBranchId -eq '|temp|') {
-              $vsTopicBranchId = '$(Build.BuildNumber)-$(System.JobAttempt)'
-            }
-            Write-Host "VsTopicBranchId: $vsTopicBranchId"
-            Write-Host "##vso[task.setvariable variable=VsTopicBranchId]$vsTopicBranchId"
-          displayName: 🟣 Set VsTopicBranchId variable
 
         # Sets the VstsDropFolder variable for the path to the MicroBuildUploadVstsDropFolder task.
         # Used during VS insertion to verify if the drop has been uploaded already or not.
@@ -195,7 +179,7 @@ jobs:
           - template: /eng/pipelines/templates/steps/workload-insertion.yml@self
             parameters:
               targetBranch: ${{ primaryInsertionBranch }}
-              topicBranchId: $(VsTopicBranchId)
+              topicBranch: ${{ parameters.vsTopicBranch }}
               # PrimaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
               componentJsonValues: $(PrimaryVSComponentJsonValues)
         - ${{ each secondaryInsertionBranch in parameters.secondaryVsInsertionBranches }}:
@@ -203,6 +187,6 @@ jobs:
           - template: /eng/pipelines/templates/steps/workload-insertion.yml@self
             parameters:
               targetBranch: ${{ secondaryInsertionBranch }}
-              topicBranchId: $(VsTopicBranchId)
+              topicBranch: ${{ parameters.vsTopicBranch }}
               # SecondaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
               componentJsonValues: $(SecondaryVSComponentJsonValues)

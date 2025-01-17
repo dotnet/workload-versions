@@ -1,9 +1,26 @@
 parameters:
   targetBranch: main
-  topicBranchId: ''
+  topicBranch: ''
   componentJsonValues: ''
 
 steps:
+# This allows setting the InsertionTopicBranch variable dynamically.
+# |default| represents normal operation, set to: temp/{team}/{target}/yyyy-MM
+# |temp| is only for pipeline testing, set to: temp/{team}/{target}/BuildNumber-JobAttempt
+- pwsh: |
+    $topicBranch = '${{ parameters.topicBranch }}'
+    if ($topicBranch -eq '|default|') {
+      # Starting with 'temp' allows this branch to be cleaned up automatically by the VS repo branch policies.
+      $topicBranch = "temp/$(_TeamName)/${{ parameters.targetBranch }}/$((Get-Date).ToString('yyyy-MM'))"
+    }
+    # Loosely based on:
+    # https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/plugin.ps1&version=GCf10314b240d5f3d0899e80eb2feb5dc33b5f8c20&line=276&lineEnd=280&lineStartColumn=1&lineEndColumn=1&lineStyle=plain&_a=contents
+    if ($topicBranch -eq '|temp|') {
+      $topicBranch = 'temp/$(_TeamName)/${{ parameters.targetBranch }}/$(Build.BuildNumber)-$(System.JobAttempt)'
+    }
+    Write-Host "InsertionTopicBranch: $topicBranch"
+    Write-Host "##vso[task.setvariable variable=InsertionTopicBranch]$topicBranch"
+  displayName: 🟣 Set InsertionTopicBranch variable
 # Creates VS insertion PRs using the VS drops containing the workloads and vsman files.
 # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/635/Overview?anchor=**build-pipeline**
 # YAML reference: https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/task.json
@@ -14,8 +31,7 @@ steps:
     # Docs: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/40477/Insert-with-a-WIF-Service-Connection
     ConnectedServiceName: MicroBuildInsertionVS
     TargetBranch: ${{ parameters.targetBranch }}
-    # Starting with 'temp' allows this branch to be cleaned up automatically by the VS repo branch policies.
-    InsertionTopicBranch: temp/DotNet-SDK-Workloads/${{ parameters.targetBranch }}/${{ parameters.topicBranchId }}
+    InsertionTopicBranch: $(InsertionTopicBranch)
     TeamName: $(_TeamName)
     TeamEmail: dotnetdevexcli@microsoft.com
     InsertionPayloadName: 'DotNet-SDK-Workloads ($(Build.SourceBranchName):$(Build.BuildNumber))'

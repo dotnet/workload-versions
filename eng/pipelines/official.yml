@@ -30,8 +30,8 @@ parameters:
   displayName: Use Preview Components for VS insertion
   type: boolean
   default: false
-- name: vsTopicBranchId
-  displayName: 'VS Topic Branch Identifier [default: yyyy-MM]'
+- name: vsTopicBranch
+  displayName: 'VS Topic Branch [default: temp/{team}/{target}/yyyy-MM]'
   type: string
   default: '|default|'
 - name: workloadDropNames
@@ -109,7 +109,7 @@ extends:
           feedForPublishing: ${{ parameters.feedForPublishing }}
           createVSInsertion: ${{ parameters.createVSInsertion }}
           usePreComponentsForVSInsertion: ${{ parameters.usePreComponentsForVSInsertion }}
-          vsTopicBranchId: ${{ parameters.vsTopicBranchId }}
+          vsTopicBranch: ${{ parameters.vsTopicBranch }}
           workloadDropNames: ${{ parameters.workloadDropNames }}
           primaryVsInsertionBranches: ${{ parameters.primaryVsInsertionBranches }}
           secondaryVsInsertionBranches: ${{ parameters.secondaryVsInsertionBranches }}
