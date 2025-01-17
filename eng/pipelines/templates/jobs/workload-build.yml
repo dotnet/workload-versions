@@ -37,7 +37,8 @@ jobs:
           displayName: 🟣 Download workloads for VS insertion
           inputs:
             # TODO: Need our own subscription
-            azureSubscription: DotNetStaging
+            # azureSubscription: DotNetStaging
+            azureSubscription: MicroBuildInsertionVS
             scriptType: pscore
             scriptPath: $(Build.SourcesDirectory)/eng/download-workloads.ps1
             # Note: The second $ for usePreComponents allows the value to resolve as `$true` or `$false`.
