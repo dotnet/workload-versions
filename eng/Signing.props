@@ -6,11 +6,6 @@
     <InternalCertificateId Condition="'$(InternalCertificateId)' == ''">MicrosoftDotNet500</InternalCertificateId>
   </PropertyGroup>
 
-  <!-- <ItemGroup>
-    <ItemsToSign Include="$(ArtifactsPackagesDir)**\*.msi" />
-    <ItemsToSign Include="$(ArtifactsPackagesDir)**\*.nupkg" />
-  </ItemGroup> -->
-
   <ItemGroup>
     <ItemsToSignPostBuild Remove="*.wixpack.zip" />
   </ItemGroup>
