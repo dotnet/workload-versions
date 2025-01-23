@@ -9,9 +9,9 @@
       <Uri>https://github.com/dotnet/emsdk</Uri>
       <Sha>c458a7647c04e323c238f381eb176af24254b3ff</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-8.0.100" Version="34.0.145">
+    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-8.0.100" Version="34.0.147">
       <Uri>https://github.com/dotnet/android</Uri>
-      <Sha>df9aaf29a52042a4fbf800daf2f3a38964b9e958</Sha>
+      <Sha>a8cd27e430e55df3e3c1e3a43d35c11d9512a2db</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-8.0.100" Version="18.0.8319">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
