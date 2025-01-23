@@ -10,25 +10,25 @@
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
       <Sha>9d5a6a9aa463d6d10b0b0ba6d5982cc82f363dc3</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-9.0.100" Version="35.0.24">
+    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-9.0.100" Version="35.0.39">
       <Uri>https://github.com/dotnet/android</Uri>
-      <Sha>4b20432d95ea8965a41cc73997e459d7fa561233</Sha>
+      <Sha>0ccdc57cf7fc59bd3f6cbf900c9cdbebadfe4609</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-9.0.100" Version="18.2.9170">
+    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-9.0.100" Version="18.2.9173">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>4c5dd937c3705d1f784a877a9af3219709d6b700</Sha>
+      <Sha>b3ee0f2422cd950a0c0c676fb8ac9e7dc5f98290</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-9.0.100" Version="18.2.9170">
+    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-9.0.100" Version="18.2.9173">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>4c5dd937c3705d1f784a877a9af3219709d6b700</Sha>
+      <Sha>b3ee0f2422cd950a0c0c676fb8ac9e7dc5f98290</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-9.0.100" Version="18.2.9170">
+    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-9.0.100" Version="18.2.9173">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>4c5dd937c3705d1f784a877a9af3219709d6b700</Sha>
+      <Sha>b3ee0f2422cd950a0c0c676fb8ac9e7dc5f98290</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-9.0.100" Version="15.2.9170">
+    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-9.0.100" Version="15.2.9173">
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
-      <Sha>4c5dd937c3705d1f784a877a9af3219709d6b700</Sha>
+      <Sha>b3ee0f2422cd950a0c0c676fb8ac9e7dc5f98290</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-9.0.100" Version="9.0.14">
       <Uri>https://github.com/dotnet/maui</Uri>
