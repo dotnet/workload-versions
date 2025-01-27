@@ -18,4 +18,3 @@ This repository contains the version information for .NET SDK Workloads.
   - This allows the local AzDO machine auth to gather internal assets from AzDO.
   - ***Message Matt Mitchell*** (@mmitche) for approval after requesting access to the entitlement.
   - Should take about 20 mins for the entitlement process to complete (will appear on your [entitlements list](https://coreidentity.microsoft.com/manage/entitlement)) and another 30 mins the access to propagate to DARC. Basically, after approval, wait an hour until you actually attempt to build.
-7. **TODO**: Test to see if PowerShell Core is required.
