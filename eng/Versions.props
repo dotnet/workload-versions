@@ -22,6 +22,11 @@
     <VersionSDKMinor>2</VersionSDKMinor>
     <VersionFeature>00</VersionFeature>
     <VersionPatch>0</VersionPatch>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(FeatureBand)' == '9.0.300'">
+    <VersionSDKMinor>3</VersionSDKMinor>
+    <VersionFeature>00</VersionFeature>
+    <VersionPatch>0</VersionPatch>
     <StabilizePackageVersion>false</StabilizePackageVersion>
     <!-- Calculate prerelease label
     Use preview and prerelease version 0 for SDK feature band previews

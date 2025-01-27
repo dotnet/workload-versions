@@ -176,8 +176,16 @@ extends:
                 -prepareMachine
                 /p:FeatureBand=9.0.200
                 $(_AdditionalBuildArgs)
+                /p:StabilizePackageVersion=${{ parameters.StabilizePackageVersion }}
                 $(_InternalBuildArgs)
               displayName: $(_BuildJobDisplayName) 9.0.200
+            - script: eng\common\CIBuild.cmd
+                -configuration $(_BuildConfig)
+                -prepareMachine
+                /p:FeatureBand=9.0.300
+                $(_AdditionalBuildArgs)
+                $(_InternalBuildArgs)
+              displayName: $(_BuildJobDisplayName) 9.0.300
             - ${{ if eq(parameters.publishToFeed, true) }}:
               - task: 1ES.PublishNuget@1
                 displayName: Publish Nuget package
