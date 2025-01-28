@@ -59,7 +59,7 @@ $SkipUploadIfExists = Get-VstsInput -Name 'SkipUploadIfExists' -AsBool
 Write-Host "SkipUploadIfExists: $SkipUploadIfExists"
 Write-Host "DropName: $DropName"
 if ($SkipUploadIfExists) {
-    # Returns a JSON string. If the drop exists, an array is returned. Must check the name of each drop in the array to see if it's an exact match for the drop we're trying to publish.
+    # The List operation returns a JSON string. If the DropName matches any drops, an array of drop metadata objects is returned.
     $dropJsonString = $server.Client.List($DropName)
     Write-Host "dropJsonString: $dropJsonString"
     $dropJson = $dropJsonString | ConvertFrom-Json
@@ -67,16 +67,17 @@ if ($SkipUploadIfExists) {
     Write-Host "dropJsonType: $($dropJson.GetType())"
     Write-Host "dropJsonCount: $($dropJson.Count)"
     Write-Host "CountCheck: $($dropJson.Count -ne 0)"
-    if ($dropJson.Count -ne 0) {
-        $dropJson | ForEach-Object {
-            Write-Host "Name: $($_.Name)"
-            Write-Host "NameCheck: $($_.Name -eq $DropName)"
-            if ($_.Name -eq $DropName) {
+    # The DropName might match multiple drops. Check each drop in the array and see if an exact match is found.
+    if (($dropJson | Where-Object { $_.Name -eq $DropName }).Count -ne 0) {
+        # $dropJson | ForEach-Object {
+        #     Write-Host "Name: $($_.Name)"
+        #     Write-Host "NameCheck: $($_.Name -eq $DropName)"
+        #     if ($_.Name -eq $DropName) {
                 Write-Host "Drop '$DropName' has already been published. Skipping VS drop publish..."
                 Write-Telemetry "DropSkipped" "True"
                 Write-TelemetryMetricFinishSeconds "Upload Drop"
                 return
-            }
+            # }
         }
     }
 }
