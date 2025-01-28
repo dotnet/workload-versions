@@ -60,11 +60,15 @@ Write-Host "SkipUploadIfExists: $SkipUploadIfExists"
 Write-Host "DropName: $DropName"
 if ($SkipUploadIfExists) {
     # Returns a JSON string. If the drop exists, an array is returned. Must check the name of each drop in the array to see if it's an exact match for the drop we're trying to publish.
-    $dropJson = $server.Client.List($DropName) | ConvertFrom-Json
+    $dropJsonString = $server.Client.List($DropName)
+    Write-Host "dropJsonString: $dropJsonString"
+    $dropJson = $dropJsonString | ConvertFrom-Json
     Write-Host "dropJson: $dropJson"
+    Write-Host "dropJsonType: $($dropJson.GetType())"
+    Write-Host "dropJsonCount: $($dropJson.Count)"
     Write-Host "CountCheck: $($dropJson.Count -ne 0)"
     if ($dropJson.Count -ne 0) {
-        $dropJson.Name | ForEach-Object {
+        $dropJson | ForEach-Object {
             Write-Host "Name: $($_.Name)"
             Write-Host "NameCheck: $($_.Name -eq $DropName)"
             if ($_.Name -eq $DropName) {
