@@ -78,7 +78,7 @@ if ($SkipUploadIfExists) {
                 Write-TelemetryMetricFinishSeconds "Upload Drop"
                 return
             # }
-        }
+        # }
     }
 }
 
