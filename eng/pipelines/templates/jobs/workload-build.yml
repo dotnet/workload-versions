@@ -51,23 +51,23 @@ jobs:
         # Sets the VstsDropFolder variable for the path to the MicroBuildUploadVstsDropFolder task.
         # Used during VS insertion to verify if the drop has been uploaded already or not.
         # Example: D:\a\_work\_tasks\MicroBuildUploadVstsDropFolder_4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8\2.2.16\
-        # - pwsh: |
-        #     $tasksFolder = '$(Agent.RootDirectory)\_tasks'
-        #     # The folders in _tasks are hidden. The -Force parameter allows them to be listed.
-        #     $taskRootFolder = Get-ChildItem $tasksFolder -Directory -Filter 'MicroBuildUploadVstsDropFolder*' -Force | Select-Object -First 1
-        #     # Get the first version folder since the agent will only install a single version.
-        #     $vstsDropFolder = ($taskRootFolder | Get-ChildItem -Directory -Force | Select-Object -First 1).FullName
-        #     Write-Host "VstsDropFolder: $vstsDropFolder"
-        #     Write-Host "##vso[task.setvariable variable=VstsDropFolder]$vstsDropFolder"
-        #   displayName: 🟣 Set VstsDropFolder variable
+        - pwsh: |
+            $tasksFolder = '$(Agent.RootDirectory)\_tasks'
+            # The folders in _tasks are hidden. The -Force parameter allows them to be listed.
+            $taskRootFolder = Get-ChildItem $tasksFolder -Directory -Filter 'MicroBuildUploadVstsDropFolder*' -Force | Select-Object -First 1
+            # Get the first version folder since the agent will only install a single version.
+            $vstsDropFolder = ($taskRootFolder | Get-ChildItem -Directory -Force | Select-Object -First 1).FullName
+            Write-Host "VstsDropFolder: $vstsDropFolder"
+            Write-Host "##vso[task.setvariable variable=VstsDropFolder]$vstsDropFolder"
+          displayName: 🟣 Set VstsDropFolder variable
 
-        # - pwsh: |
-        #     $localPluginPath = '$(Build.SourcesDirectory)/eng/VstsDropFolder/plugin.ps1'
-        #     Write-Host "LocalPluginPath: $localPluginPath"
-        #     $taskPluginPath = '$(VstsDropFolder)/plugin.ps1'
-        #     Write-Host "TaskPluginPath: $taskPluginPath"
-        #     Copy-Item -Path $localPluginPath -Destination $taskPluginPath -Force
-        #   displayName: 🟣 Replace VstsDropFolder plugin.ps1
+        - pwsh: |
+            $localPluginPath = '$(Build.SourcesDirectory)/eng/VstsDropFolder/plugin.ps1'
+            Write-Host "LocalPluginPath: $localPluginPath"
+            $taskPluginPath = '$(VstsDropFolder)/plugin.ps1'
+            Write-Host "TaskPluginPath: $taskPluginPath"
+            Copy-Item -Path $localPluginPath -Destination $taskPluginPath -Force
+          displayName: 🟣 Replace VstsDropFolder plugin.ps1
 
         # - pwsh: |
         #     $tasksFolder = '$(Agent.RootDirectory)\_tasks'
@@ -172,7 +172,7 @@ jobs:
                 # See: https://dev.azure.com/devdiv/DevDiv/_wiki/wikis/DevDiv.wiki/35351/Retain-Drops
                 dropRetentionDays: 183
                 accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
-                skipUploadIfExists: 'True'
+                skipUploadIfExists: true
               condition: eq(variables['PublishWorkloadDrop'], 'True')
 
         - ${{ each primaryInsertionBranch in parameters.primaryVsInsertionBranches }}:
