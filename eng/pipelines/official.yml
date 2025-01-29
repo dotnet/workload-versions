@@ -40,7 +40,6 @@ parameters:
   default:
   - emsdk
   - mono
-  - android
 # These insert (pre)components & packs into VS.
 - name: primaryVsInsertionBranches
   displayName: Primary VS insertion branches
