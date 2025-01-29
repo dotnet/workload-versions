@@ -2,6 +2,42 @@
 
 Based on https://github.com/dotnet/sdk/issues/41607
 
+## Current Process
+
+This section details the current process for releasing workloads.
+
+1. **Identify the current versions of the workloads you want to ship**
+2. **Identify an existing PR that makes those changes**
+3. **Update the branding in the Version.props file for the release**
+    - If it's a monthly release, update the VersionFeature to match the SDK release and set VersionPatch to 0
+    - If it's an in-between release, increment the VersionPatch value
+    - Note, if you are prepping 9 release, make sure you update all impacted branches since we are shipping multiple .NET9 SDKs from one branch
+4. **Merge the change**
+5. **Wait for the change to flow internally**
+    - You can check the branch history internally to see if you change made it     
+7. **Queue a build**
+    - Target the branch you are shipping from
+    - Only select both the checkbox for a stable version and publish to the feed if you have high confidence that the branding and versions are correct.
+      - Without the stable box selected, you will get a -servicing version of the stable ID workload which can be used for testing and saved on the feed
+      - You can select stable and not publish to the feed and download the packageartifacts locally for testing
+8. **Test the build**
+    - start a sandbox
+    - install the SDK band you intend to test
+    - create a test folder
+      - cd \
+      - mkdir test
+      - cd test
+      - dotnet new nugetconfig
+    - if you published to a feed
+      - dotnet nuget add source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9-workloads/nuget/v3/index.json
+    - if you didn't publish to a feed
+      - copy the packageartifacts into c:\packages
+      - dotnet nuget add source c:\packages
+    - dotnet workload update --version <version>
+      - note that if you are testing before release day, you may have to find and add additional feeds for the various manifest.
+    - testing the manifests is typically enough 
+9. **Ping Rahul to ask him to publish the bits on nuget.org**
+
 ## Ideal Process
 
 > [!NOTE]
