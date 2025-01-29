@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ItemsToSign Include="$(ArtifactsPackagesDir)**\*.msi" />
-    <ItemsToSign Include="$(ArtifactsPackagesDir)**\*.nupkg" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ItemsToSignPostBuild Remove="*.wixpack.zip" />
   </ItemGroup>
 

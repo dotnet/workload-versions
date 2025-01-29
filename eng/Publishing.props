@@ -6,9 +6,4 @@
     <PublishingVersion>3</PublishingVersion>
   </PropertyGroup>
 
-  <ItemGroup>
-    <SdkAssetsToPublish Include="$(ArtifactsShippingPackagesDir)*.msi" />
-    <SdkAssetsToPublish Include="$(ArtifactsNonShippingPackagesDir)*.wixpack.zip" />
-  </ItemGroup>
-
 </Project>
