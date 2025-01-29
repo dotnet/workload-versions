@@ -48,45 +48,6 @@ jobs:
               -workloadListJson '${{ convertToJson(parameters.workloadDropNames) }}'
               -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }}
 
-        # Sets the VstsDropFolder variable for the path to the MicroBuildUploadVstsDropFolder task.
-        # Used during VS insertion to verify if the drop has been uploaded already or not.
-        # Example: D:\a\_work\_tasks\MicroBuildUploadVstsDropFolder_4305a8de-ba66-4d8b-b2d1-0dc4ecbbf5e8\2.2.16\
-        # - pwsh: |
-        #     $tasksFolder = '$(Agent.RootDirectory)\_tasks'
-        #     # The folders in _tasks are hidden. The -Force parameter allows them to be listed.
-        #     $taskRootFolder = Get-ChildItem $tasksFolder -Directory -Filter 'MicroBuildUploadVstsDropFolder*' -Force | Select-Object -First 1
-        #     # Get the first version folder since the agent will only install a single version.
-        #     $vstsDropFolder = ($taskRootFolder | Get-ChildItem -Directory -Force | Select-Object -First 1).FullName
-        #     Write-Host "VstsDropFolder: $vstsDropFolder"
-        #     Write-Host "##vso[task.setvariable variable=VstsDropFolder]$vstsDropFolder"
-        #   displayName: 🟣 Set VstsDropFolder variable
-
-        # - pwsh: |
-        #     $localPluginPath = '$(Build.SourcesDirectory)/eng/VstsDropFolder/plugin.ps1'
-        #     Write-Host "LocalPluginPath: $localPluginPath"
-        #     $taskPluginPath = '$(VstsDropFolder)/plugin.ps1'
-        #     Write-Host "TaskPluginPath: $taskPluginPath"
-        #     Copy-Item -Path $localPluginPath -Destination $taskPluginPath -Force
-        #   displayName: 🟣 Replace VstsDropFolder plugin.ps1
-
-        # - pwsh: |
-        #     $tasksFolder = '$(Agent.RootDirectory)\_tasks'
-        #     # The folders in _tasks are hidden. The -Force parameter allows them to be listed.
-        #     $taskRootFolder = Get-ChildItem $tasksFolder -Directory -Filter 'MicroBuildInsertVsPayload*' -Force | Select-Object -First 1
-        #     # Get the first version folder since the agent will only install a single version.
-        #     $insertVsPayload = ($taskRootFolder | Get-ChildItem -Directory -Force | Select-Object -First 1).FullName
-        #     Write-Host "InsertVsPayload: $insertVsPayload"
-        #     Write-Host "##vso[task.setvariable variable=InsertVsPayload]$insertVsPayload"
-        #   displayName: 🟣 Set InsertVsPayload variable
-
-        # - pwsh: |
-        #     $localPluginPath = '$(Build.SourcesDirectory)/eng/InsertVsPayload/plugin.ps1'
-        #     Write-Host "LocalPluginPath: $localPluginPath"
-        #     $taskPluginPath = '$(InsertVsPayload)/plugin.ps1'
-        #     Write-Host "TaskPluginPath: $taskPluginPath"
-        #     Copy-Item -Path $localPluginPath -Destination $taskPluginPath -Force
-        #   displayName: 🟣 Replace InsertVsPayload plugin.ps1
-
       # https://github.com/dotnet/arcade/blob/ccae251ef033746eb0213329953f5e3c1687693b/Documentation/CorePackages/Publishing.md#basic-onboarding-scenario-for-new-repositories-to-the-current-publishing-version-v3
       - powershell: >-
           eng/common/build.ps1
@@ -117,40 +78,8 @@ jobs:
         # The variables comprised of workloadShortName and workloadType are set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
         - ${{ each workloadShortName in parameters.workloadDropNames }}:
           - ${{ each workloadType in parameters.workloadDropTypes }}:
-            # Only create the drop if the workload drop directory exists, or if the drop wasn't published already.
+            # Only create the drop if the workload drop directory exists.
             # Sets the PublishWorkloadDrop variable. See: https://stackoverflow.com/a/60630739/294804
-            # - pwsh: >-
-            #     eng/check-drop-publish.ps1
-            #     -workloadId '${{ workloadShortName }}_${{ workloadType }}'
-            #     -workloadPath '$(${{ workloadShortName }}_${{ workloadType }}_dir)'
-            #     -workloadName '$(${{ workloadShortName }}_${{ workloadType }}_name)'
-            #     -token (ConvertTo-SecureString -String '$(dn-bot-devdiv-drop-rw-code-rw)' -AsPlainText -Force)
-            #     -vstsDropFolder '$(VstsDropFolder)'
-            #   displayName: 🟣 Check if ${{ workloadShortName }}_${{ workloadType }} needs published
-
-            # - pwsh: |
-            #     # If the drop folder doesn't exist (not downloaded via DARC), the drop cannot be published.
-            #     if (-not (Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')) {
-            #       Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]False"
-            #       Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" was not downloaded via DARC. Skipping VS drop publish...'
-            #       return
-            #     }
-            #     Import-Module '$(VstsDropFolder)/Engineering.PowerShell.Vsts.Drop.psd1'
-            #     # Default value within: https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
-            #     $serviceUri = 'https://devdiv.artifacts.visualstudio.com'
-            #     $token = '$(dn-bot-devdiv-drop-rw-code-rw)'
-            #     $server = Get-VstsDropServer -Url $serviceUri -TraceToHost ActivityTracing -PatAuth $token
-            #     # Returns a JSON string. If the drop exists, an array with a single object is returned. If the drop does not exist, an empty array is returned.
-            #     $dropJson = $server.Client.List('$(${{ workloadShortName }}_${{ workloadType }}_name)') | ConvertFrom-Json
-            #     if ($dropJson.Count -ne 0) {
-            #       Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]False"
-            #       Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" has already been published. Skipping VS drop publish...'
-            #       return
-            #     }
-            #     Write-Host "PublishWorkloadDrop: True"
-            #     Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]True"
-            #   displayName: 🟣 Check if ${{ workloadShortName }}_${{ workloadType }} needs published
-
             - pwsh: |
                 # If the drop folder doesn't exist (not downloaded via DARC), the drop cannot be published.
                 if (-not (Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')) {

@@ -48,8 +48,7 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
     Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_url]$dropUrl"
 
     # Each vsman file is comma-separated. First .vsman is destination and the second is source.
-    # $vsComponentValue = "$assemblyName.vsman{$workloadVersion}=$dropUrl,"
-    $vsComponentValue = "$assemblyName.vsman=$dropUrl,"
+    $vsComponentValue = "$assemblyName.vsman{$workloadVersion}=$dropUrl,"
     # All VS components are added to the primary VS component JSON string.
     $primaryVSComponentJsonValues += $vsComponentValue
 
