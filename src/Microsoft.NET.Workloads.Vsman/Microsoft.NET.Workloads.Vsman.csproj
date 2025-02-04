@@ -5,7 +5,7 @@
     <TargetFramework>$(SdkTargetFramework)</TargetFramework>
   </PropertyGroup>
 
-  <!-- This acquires the workloads, creates the VSMAN file for each, and readys the drop for upload. -->
+  <!-- This acquires the workloads, creates the VSMAN file for each, and readies the drop for upload. -->
   <Target Name="BuildVsmanProj" AfterTargets="Build" Condition="'$(CreateVSInsertion)' == 'true'">
 
     <PropertyGroup>
