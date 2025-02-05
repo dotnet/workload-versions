@@ -1,3 +1,11 @@
+# Using the downloaded workloads, this creates the VS drops to upload for VS insertion.
+# It builds the Microsoft.NET.Workloads.Vsman.vsmanproj per workload ZIP, which creates the appropriate VSMAN file.
+
+# $workloadPath: The path to the directory containing the workload ZIPs, usually the output path used by DARC in the download-workloads.ps1 script.
+# - Example Value: "$(RepoRoot)artifacts\workloads"
+# $msBuildToolsPath: The path to the MSBuild tools directory, generally $(MSBuildToolsPath) in MSBuild.
+# - Example Value: 'C:\Program Files\Microsoft Visual Studio\2022\Preview\MSBuild\Current\Bin'
+
 param ([Parameter(Mandatory=$true)] [string] $workloadPath, [Parameter(Mandatory=$true)] [string] $msBuildToolsPath)
 
 # Extracts the workload drop zips.
@@ -12,7 +20,6 @@ $null = $workloads | ForEach-Object { Expand-Archive -Path $_.FullName -Destinat
 $dropInfoRegex = '^Workload\.VSDrop\.(?<full>(?<short>\w*)\..*?(?<type>(pre\.)?components$|packs$))'
 $primaryVSComponentJsonValues = ''
 $secondaryVSComponentJsonValues = ''
-$hashAlgorithm = [System.Security.Cryptography.SHA256]::Create()
 Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
   $null = $_.Name -match $dropInfoRegex
   $assemblyName = "$($Matches.full)"
@@ -20,10 +27,16 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
 
   # Hash the files within the drop folder to create a unique identifier that represents this workload drop.
   # Example: 1E3EA4FE202394037253F57436A6EAD5DE1359792B618B9072014A98563A30FB
-  $fileHashes = [byte[]]@()
+  # See: https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/get-filehash#example-4-compute-the-hash-of-a-string
+  $contentStream = [System.IO.MemoryStream]::new()
+  $writer = [System.IO.StreamWriter]::new($contentStream)
   $dropFiles = Get-ChildItem -Path $dropDir | Sort-Object
-  $null = $dropFiles | Get-Content -Encoding Byte -Raw | ForEach-Object { $fileHashes += $hashAlgorithm.ComputeHash($_) }
-  $dropHash = [System.BitConverter]::ToString($hashAlgorithm.ComputeHash([byte[]]$fileHashes)).Replace('-','')
+  # Note: We're using ASCII because when testing between PS 5.1 and PS 7.5, this would result in the same hash. Other encodings arrived at different hashes.
+  $null = $dropFiles | Get-Content -Encoding ASCII -Raw | ForEach-Object { $writer.Write($_) }
+  $writer.Flush()
+  $contentStream.Position = 0
+  $dropHash = (Get-FileHash -InputStream $contentStream).Hash
+  $writer.Close()
 
   $vsDropName = "Products/dotnet/workloads/$assemblyName/$dropHash"
   # Reads the first line out of the .metadata file in the workload's output folder and sets it to the workload version.
@@ -58,7 +71,7 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
     }
   }
 
-  Write-Host 'After upload, your workload drop will be available at:'
+  Write-Host '❗ After upload, your workload drop will be available at:'
   Write-Host "https://devdiv.visualstudio.com/_apps/hub/ms-vscs-artifact.build-tasks.drop-hub-group-explorer-hub?name=$vsDropName"
 }
 

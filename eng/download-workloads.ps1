@@ -1,3 +1,18 @@
+# This downloads the workloads using DARC.
+# In CI, we need to pass PATs to this, so it runs in Azure Pipelines only (not through MSBuild).
+# For local builds, some preconfiguration is necessary. Check the README.md for details.
+
+# $workloadPath: The path to the directory as output for the workload ZIPs. This is --output-dir in the DARC command.
+# - Example Value: "$(RepoRoot)artifacts\workloads"
+# $gitHubPat: The GitHub PAT to use for DARC (CI build only). See workload-build.yml for converting the PAT to SecureString.
+# $azDOPat: The Azure DevOps PAT to use for DARC (CI build only). See workload-build.yml for converting the PAT to SecureString.
+# $workloadListJson: The JSON string of the list of workload drop names to download. If not provided, all workloads found in Version.Details.xml will be downloaded.
+# - See the workloadDropNames parameter in official.yml for the list generally passed to this script.
+# - Example Value: '{["emsdk","mono"]}'
+# $usePreComponents:
+# - If $true, includes *pre.components.zip drops and excludes *components.zip drops.
+# - If $false, excludes *pre.components.zip drops and includes *components.zip drops.
+
 param ([Parameter(Mandatory=$true)] [string] $workloadPath, [SecureString] $gitHubPat, [SecureString] $azDOPat, [string] $workloadListJson = '', [bool] $usePreComponents = $false)
 
 ### Local Build ###

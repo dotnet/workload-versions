@@ -36,7 +36,6 @@ jobs:
         - task: AzureCLI@2
           displayName: 🟣 Download workloads for VS insertion
           inputs:
-            # TODO: Need our own subscription
             azureSubscription: DotNetStaging
             scriptType: pscore
             scriptPath: $(Build.SourcesDirectory)/eng/download-workloads.ps1

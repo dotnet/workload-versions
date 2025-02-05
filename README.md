@@ -16,5 +16,5 @@ This repository contains the version information for .NET SDK Workloads.
   - **Do not** create an AzDO PAT. Leave that entry blank in the darc-authenticate file for it to use local machine auth.
 6. Request access to the [.NET Daily Internal Build Access](https://coreidentity.microsoft.com/manage/Entitlement/entitlement/netdailyinte-q2ql) entitlement
   - This allows the local AzDO machine auth to gather internal assets from AzDO.
-  - ***Message Matt Mitchell*** (@mmitche) for approval after requesting access to the entitlement.
+  - **Send a message** to one of the primary owners on the entitlement page for approval after requesting access to the entitlement.
   - Should take about 20 mins for the entitlement process to complete (will appear on your [entitlements list](https://coreidentity.microsoft.com/manage/entitlement)) and another 30 mins the access to propagate to DARC. Basically, after approval, wait an hour until you actually attempt to build.
