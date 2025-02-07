@@ -59,6 +59,7 @@ jobs:
           /p:DotNetPublishUsingPipelines=true
           /p:OfficialBuildId=$(Build.BuildNumber)
           /p:StabilizePackageVersion=${{ parameters.stabilizePackageVersion }}
+          /p:FeatureBand=${{ parameters.featureBand }}
         displayName: 🟣 Build solution
 
       - ${{ if eq(parameters.publishToFeed, true) }}:
