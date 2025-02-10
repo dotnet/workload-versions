@@ -45,8 +45,6 @@ parameters:
   displayName: Primary VS insertion branches
   type: object
   default:
-  - main
-  - rel/d17.12
   - rel/d17.13
 # These insert packs only into VS [no (pre)components].
 - name: secondaryVsInsertionBranches

@@ -7,32 +7,16 @@
   <PropertyGroup>
     <VersionMajor>9</VersionMajor>
     <VersionMinor>0</VersionMinor>
-    <VersionSDKMinor>1</VersionSDKMinor>
+    <VersionSDKMinor>2</VersionSDKMinor>
     <!-- Use the feature version for each monthly servicng release -->
     <!-- Use the patch version for intra-monthly releases and hotfixes -->
-    <VersionFeature>03</VersionFeature>
+    <VersionFeature>00</VersionFeature>
     <VersionPatch>0</VersionPatch>
     <!-- Enable to remove prerelease label. -->
     <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">false</StabilizePackageVersion>
     <PreReleaseVersionLabel>servicing</PreReleaseVersionLabel>
     <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'">
     </PreReleaseVersionIteration>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(FeatureBand)' == '9.0.200'">
-    <VersionSDKMinor>2</VersionSDKMinor>
-    <VersionFeature>00</VersionFeature>
-    <VersionPatch>0</VersionPatch>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(FeatureBand)' == '9.0.300'">
-    <VersionSDKMinor>3</VersionSDKMinor>
-    <VersionFeature>00</VersionFeature>
-    <VersionPatch>0</VersionPatch>
-    <StabilizePackageVersion>false</StabilizePackageVersion>
-    <!-- Calculate prerelease label
-    Use preview and prerelease version 0 for SDK feature band previews
-    Use preview and the matching SDK preview version for Major version previews -->
-    <PreReleaseVersionLabel>preview</PreReleaseVersionLabel>
-    <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'">0</PreReleaseVersionIteration>
   </PropertyGroup>
   <PropertyGroup>
     <VersionPrefix>$(VersionMajor).$(VersionSDKMinor)$(VersionFeature).$(VersionPatch)</VersionPrefix>
