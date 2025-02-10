@@ -10,10 +10,6 @@ trigger:
 pr: none
 
 parameters:
-- name: featureBand
-  displayName: Feature Band to build
-  type: string
-  default: 10.0.100
 - name: stabilizePackageVersion
   displayName: Stabilize package version
   type: boolean
@@ -117,4 +113,3 @@ extends:
           workloadDropNames: ${{ parameters.workloadDropNames }}
           primaryVsInsertionBranches: ${{ parameters.primaryVsInsertionBranches }}
           secondaryVsInsertionBranches: ${{ parameters.secondaryVsInsertionBranches }}
-          featureBand: ${{ parameters.featureBand }}
