@@ -10,7 +10,7 @@
     <VersionSDKMinor>1</VersionSDKMinor>
     <!-- Use the feature version for each monthly servicng release -->
     <!-- Use the patch version for intra-monthly releases and hotfixes -->
-    <VersionFeature>03</VersionFeature>
+    <VersionFeature>04</VersionFeature>
     <VersionPatch>0</VersionPatch>
     <!-- Enable to remove prerelease label. -->
     <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">false</StabilizePackageVersion>
