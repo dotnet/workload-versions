@@ -30,9 +30,9 @@
       <Uri>https://github.com/xamarin/xamarin-macios</Uri>
       <Sha>e32808dcbdb7bf9a6c207c3462540ed0cfb9564d</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-10.0.100-preview.1" Version="10.0.0-preview.1.25111.11">
+    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-10.0.100-preview.1" Version="10.0.0-preview.1.25114.15">
       <Uri>https://github.com/dotnet/maui</Uri>
-      <Sha>4389ba34d843b1887e3a4876c5c83294eb02feaf</Sha>
+      <Sha>ee6d778579743fa0062c91e698939c454f4487d5</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk" Version="10.0.100-preview.1.25103.13">
       <Uri>https://github.com/dotnet/sdk</Uri>
