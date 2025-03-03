@@ -11,7 +11,7 @@
     <!-- Use the feature version for each monthly servicng release -->
     <!-- Use the patch version for intra-monthly releases and hotfixes -->
     <VersionFeature>00</VersionFeature>
-    <VersionPatch>0</VersionPatch>
+    <VersionPatch>1</VersionPatch>
     <!-- Enable to remove prerelease label. -->
     <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">false</StabilizePackageVersion>
     <PreReleaseVersionLabel>servicing</PreReleaseVersionLabel>
@@ -51,7 +51,7 @@
   </PropertyGroup>
   <PropertyGroup Label="MauiWorkloads">
     <MauiFeatureBand>9.0.100</MauiFeatureBand>
-    <MicrosoftNETSdkAndroidManifest90100PackageVersion>35.0.50</MicrosoftNETSdkAndroidManifest90100PackageVersion>
+    <MicrosoftNETSdkAndroidManifest90100PackageVersion>35.0.39</MicrosoftNETSdkAndroidManifest90100PackageVersion>
     <MicrosoftNETSdkiOSManifest90100PackageVersion>18.2.9180</MicrosoftNETSdkiOSManifest90100PackageVersion>
     <MicrosoftNETSdktvOSManifest90100PackageVersion>18.2.9180</MicrosoftNETSdktvOSManifest90100PackageVersion>
     <MicrosoftNETSdkMacCatalystManifest90100PackageVersion>18.2.9180</MicrosoftNETSdkMacCatalystManifest90100PackageVersion>
