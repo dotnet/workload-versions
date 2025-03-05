@@ -39,13 +39,14 @@ jobs:
             azureSubscription: DotNetStaging
             scriptType: pscore
             scriptPath: $(Build.SourcesDirectory)/eng/download-workloads.ps1
-            # Note: The second $ for usePreComponents allows the value to resolve as `$true` or `$false`.
+            # Note: The second $ for usePreComponents and includeNonShipping allows the value to resolve as `$true` or `$false`.
             arguments: >-
               -workloadPath '$(Build.SourcesDirectory)/artifacts/workloads'
               -gitHubPat (ConvertTo-SecureString -String '$(BotAccount-dotnet-bot-repo-PAT)' -AsPlainText -Force)
               -azDOPat (ConvertTo-SecureString -String '$(dn-bot-all-drop-rw-code-rw-release-all)' -AsPlainText -Force)
               -workloadListJson '${{ convertToJson(parameters.workloadDropNames) }}'
               -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }}
+              -includeNonShipping:$${{ parameters.includeNonShippingWorkloads }}
 
       # https://github.com/dotnet/arcade/blob/ccae251ef033746eb0213329953f5e3c1687693b/Documentation/CorePackages/Publishing.md#basic-onboarding-scenario-for-new-repositories-to-the-current-publishing-version-v3
       - powershell: >-

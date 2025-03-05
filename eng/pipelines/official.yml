@@ -30,6 +30,10 @@ parameters:
   displayName: Use Preview Components for VS insertion
   type: boolean
   default: false
+- name: includeNonShippingWorkloads
+  displayName: Include non-shipping workloads
+  type: boolean
+  default: false
 - name: vsTopicBranch
   displayName: 'VS Topic Branch [default: temp/{team}/{target}/yyyy-MM]'
   type: string
@@ -107,6 +111,7 @@ extends:
           feedForPublishing: ${{ parameters.feedForPublishing }}
           createVSInsertion: ${{ parameters.createVSInsertion }}
           usePreComponentsForVSInsertion: ${{ parameters.usePreComponentsForVSInsertion }}
+          includeNonShippingWorkloads: ${{ parameters.includeNonShippingWorkloads }}
           vsTopicBranch: ${{ parameters.vsTopicBranch }}
           workloadDropNames: ${{ parameters.workloadDropNames }}
           primaryVsInsertionBranches: ${{ parameters.primaryVsInsertionBranches }}
