@@ -50,12 +50,12 @@
   </PropertyGroup>
   <PropertyGroup Label="MauiWorkloads">
     <MauiFeatureBand>10.0.100-preview.2</MauiFeatureBand>
-    <MicrosoftNETSdkAndroidManifest100100preview2PackageVersion>35.99.0-preview.2.198</MicrosoftNETSdkAndroidManifest100100preview2PackageVersion>
-    <MicrosoftNETSdkiOSManifest100100preview2PackageVersion>18.2.10547-net10-p2</MicrosoftNETSdkiOSManifest100100preview2PackageVersion>
-    <MicrosoftNETSdktvOSManifest100100preview2PackageVersion>18.2.10547-net10-p2</MicrosoftNETSdktvOSManifest100100preview2PackageVersion>
-    <MicrosoftNETSdkMacCatalystManifest100100preview2PackageVersion>18.2.10547-net10-p2</MicrosoftNETSdkMacCatalystManifest100100preview2PackageVersion>
-    <MicrosoftNETSdkmacOSManifest100100preview2PackageVersion>15.2.10547-net10-p2</MicrosoftNETSdkmacOSManifest100100preview2PackageVersion>
-    <MicrosoftNETSdkMauiManifest100100preview2PackageVersion>10.0.0-preview.2.25153.5</MicrosoftNETSdkMauiManifest100100preview2PackageVersion>
+    <MicrosoftNETSdkAndroidManifest100100preview2PackageVersion>35.99.0-preview.2.205</MicrosoftNETSdkAndroidManifest100100preview2PackageVersion>
+    <MicrosoftNETSdkiOSManifest100100preview2PackageVersion>18.2.10552-net10-p2</MicrosoftNETSdkiOSManifest100100preview2PackageVersion>
+    <MicrosoftNETSdktvOSManifest100100preview2PackageVersion>18.2.10552-net10-p2</MicrosoftNETSdktvOSManifest100100preview2PackageVersion>
+    <MicrosoftNETSdkMacCatalystManifest100100preview2PackageVersion>18.2.10552-net10-p2</MicrosoftNETSdkMacCatalystManifest100100preview2PackageVersion>
+    <MicrosoftNETSdkmacOSManifest100100preview2PackageVersion>15.2.10552-net10-p2</MicrosoftNETSdkmacOSManifest100100preview2PackageVersion>
+    <MicrosoftNETSdkMauiManifest100100preview2PackageVersion>10.0.0-preview.2.25160.10</MicrosoftNETSdkMauiManifest100100preview2PackageVersion>
     <MauiWorkloadManifestVersion>$(MicrosoftNETSdkMauiManifest100100preview2PackageVersion)</MauiWorkloadManifestVersion>
     <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest100100preview2PackageVersion)</XamarinAndroidWorkloadManifestVersion>
     <XamarinIOSWorkloadManifestVersion>$(MicrosoftNETSdkiOSManifest100100preview2PackageVersion)</XamarinIOSWorkloadManifestVersion>
