@@ -55,7 +55,7 @@
     <MicrosoftNETSdktvOSManifest100100preview2PackageVersion>18.2.10552-net10-p2</MicrosoftNETSdktvOSManifest100100preview2PackageVersion>
     <MicrosoftNETSdkMacCatalystManifest100100preview2PackageVersion>18.2.10552-net10-p2</MicrosoftNETSdkMacCatalystManifest100100preview2PackageVersion>
     <MicrosoftNETSdkmacOSManifest100100preview2PackageVersion>15.2.10552-net10-p2</MicrosoftNETSdkmacOSManifest100100preview2PackageVersion>
-    <MicrosoftNETSdkMauiManifest100100preview2PackageVersion>10.0.0-preview.2.25160.10</MicrosoftNETSdkMauiManifest100100preview2PackageVersion>
+    <MicrosoftNETSdkMauiManifest100100preview2PackageVersion>10.0.0-preview.2.25162.8</MicrosoftNETSdkMauiManifest100100preview2PackageVersion>
     <MauiWorkloadManifestVersion>$(MicrosoftNETSdkMauiManifest100100preview2PackageVersion)</MauiWorkloadManifestVersion>
     <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest100100preview2PackageVersion)</XamarinAndroidWorkloadManifestVersion>
     <XamarinIOSWorkloadManifestVersion>$(MicrosoftNETSdkiOSManifest100100preview2PackageVersion)</XamarinIOSWorkloadManifestVersion>
@@ -64,7 +64,7 @@
     <XamarinTvOSWorkloadManifestVersion>$(MicrosoftNETSdktvOSManifest100100preview2PackageVersion)</XamarinTvOSWorkloadManifestVersion>
   </PropertyGroup>
   <PropertyGroup Label="MonoWorkloads">
-    <MicrosoftNETCoreAppRefPackageVersion>10.0.0-preview.2.25125.14</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>10.0.0-preview.2.25160.1</MicrosoftNETCoreAppRefPackageVersion>
     <!-- Workloads from dotnet/runtime use MicrosoftNETCoreAppRefPackageVersion because it has a stable name that does not include the full feature band -->
     <MonoWorkloadManifestVersion>$(MicrosoftNETCoreAppRefPackageVersion)</MonoWorkloadManifestVersion>
     <!-- mono workload prerelease version band must match the runtime feature band -->
