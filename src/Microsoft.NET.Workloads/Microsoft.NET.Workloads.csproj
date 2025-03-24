@@ -16,6 +16,8 @@
     <!-- See: https://devblogs.microsoft.com/nuget/add-a-readme-to-your-nuget-package/ -->
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <ReadmeFile>$(IntermediateOutputPath)README.md</ReadmeFile>
+    <PackageProjectUrl>https://learn.microsoft.com/dotnet/core/tools/dotnet-workload-sets</PackageProjectUrl>
+    <Description>This package contains the workload set manifest for the $(SDKFeatureBand) version of the .NET SDK. This package is not intended for direct reference - instead it is an internal implementation detail of the 'dotnet workload' command. See https://learn.microsoft.com/dotnet/core/tools/dotnet-workload-sets for more details.</Description>
     <!-- LGHT1105: Warning generated from MSI creation process. -->
     <!-- See: https://github.com/orgs/wixtoolset/discussions/6715 -->
     <NoWarn>LGHT1105</NoWarn>
