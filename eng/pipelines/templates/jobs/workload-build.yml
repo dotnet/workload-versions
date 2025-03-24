@@ -62,18 +62,6 @@ jobs:
           /p:StabilizePackageVersion=${{ parameters.stabilizePackageVersion }}
         displayName: 🟣 Build solution
 
-      - ${{ if eq(parameters.publishToFeed, true) }}:
-        - task: 1ES.PublishNuget@1
-          displayName: 🟣 Publish NuGet package
-          inputs:
-            useDotNetTask: true
-            packagesToPush: $(Build.SourcesDirectory)/artifacts/packages/**/*.nupkg
-            packageParentPath: $(Build.SourcesDirectory)/artifacts/packages
-            publishVstsFeed: ${{ parameters.feedForPublishing }}
-            nuGetFeedType: internal
-            allowPackageConflicts: false
-            publishPackageMetadata: true
-
       - ${{ if eq(parameters.createVSInsertion, true) }}:
         # The variables comprised of workloadShortName and workloadType are set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
         - ${{ each workloadShortName in parameters.workloadDropNames }}:

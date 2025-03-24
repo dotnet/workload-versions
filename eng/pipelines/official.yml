@@ -116,3 +116,25 @@ extends:
           workloadDropNames: ${{ parameters.workloadDropNames }}
           primaryVsInsertionBranches: ${{ parameters.primaryVsInsertionBranches }}
           secondaryVsInsertionBranches: ${{ parameters.secondaryVsInsertionBranches }}
+    - stage: Publish
+      displayName: Publish
+      dependsOn: Build
+      condition: succeeded()
+      jobs:
+      - deployment: Publish
+        environment: 'DotNet-SDK-Workloads'
+        pool:
+          name: $(DncEngInternalBuildPool)
+          image: 1es-windows-2022
+          os: windows
+        templateContext:
+          type: releaseJob
+          isProduction: true
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+              - template: /eng/pipelines/templates/steps/workload-publish.yml@self
+                parameters:
+                  publishToFeed: ${{ parameters.publishToFeed }}
+                  feedForPublishing: ${{ parameters.feedForPublishing }}
