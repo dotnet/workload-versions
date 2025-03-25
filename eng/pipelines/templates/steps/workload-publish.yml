@@ -1,6 +1,6 @@
 parameters:
   publishToFeed: false
-  feedForPublishing: public/dotnet10-workloads
+  feedForPublishing: ''
 
 steps:
 - task: 1ES.PublishNuget@1
