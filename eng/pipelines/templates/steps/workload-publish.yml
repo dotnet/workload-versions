@@ -1,12 +1,6 @@
 parameters:
-- name: publishToFeed
-  displayName: Publish to feed
-  type: boolean
-  default: false
-- name: feedForPublishing
-  displayName: Feed for publishing
-  type: string
-  default: public/dotnet10-workloads
+  publishToFeed: false
+  feedForPublishing: public/dotnet10-workloads
 
 steps:
 - task: 1ES.PublishNuget@1
