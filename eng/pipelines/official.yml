@@ -116,13 +116,6 @@ extends:
           workloadDropNames: ${{ parameters.workloadDropNames }}
           primaryVsInsertionBranches: ${{ parameters.primaryVsInsertionBranches }}
           secondaryVsInsertionBranches: ${{ parameters.secondaryVsInsertionBranches }}
-      - job: CopyArtifacts
-        displayName: Copy Artifacts
-        templateContext:
-          outputs:
-          - output: pipelineArtifact
-            path: '$(Build.SourcesDirectory)/artifacts'
-            artifact: artifactsPackagesDrop
     - stage: Publish
       displayName: Publish
       dependsOn: Build
