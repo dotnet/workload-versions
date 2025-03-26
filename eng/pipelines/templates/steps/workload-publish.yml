@@ -8,8 +8,8 @@ steps:
   displayName: 🟣 Publish NuGet package
   inputs:
     useDotNetTask: true
-    packagesToPush: $(Build.SourcesDirectory)/artifacts/packages/**/*.nupkg
-    packageParentPath: $(Build.SourcesDirectory)/artifacts/packages
+    packagesToPush: $(Pipeline.Workspace)/artifactsPackagesDrop/packages/**/*.nupkg
+    packageParentPath: $(Pipeline.Workspace)/artifactsPackagesDrop/packages
     publishVstsFeed: ${{ parameters.feedForPublishing }}
     nuGetFeedType: internal
     allowPackageConflicts: false
