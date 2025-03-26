@@ -110,8 +110,8 @@ jobs:
               componentJsonValues: $(SecondaryVSComponentJsonValues)
     - job: copyArtifacts
       displayName: Copy Artifacts
-          templateContext:
-            outputs:
-            - output: pipelineArtifact
-              path: '$(Build.SourcesDirectory)/artifacts'
-              artifact: artifactsPackagesDrop
+      templateContext:
+        outputs:
+        - output: pipelineArtifact
+          path: '$(Build.SourcesDirectory)/artifacts'
+          artifact: artifactsPackagesDrop
