@@ -110,6 +110,7 @@ jobs:
               componentJsonValues: $(SecondaryVSComponentJsonValues)
     - job: copyArtifacts
       displayName: Copy Artifacts
+      dependsOn: buildRepo
       templateContext:
         outputs:
         - output: pipelineArtifact
