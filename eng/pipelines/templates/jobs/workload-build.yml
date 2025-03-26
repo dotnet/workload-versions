@@ -27,6 +27,11 @@ jobs:
     - job: buildRepo
       displayName: Build Repo
       timeoutInMinutes: 120
+      templateContext:
+        outputs:
+        - output: pipelineArtifact
+          path: '$(Build.SourcesDirectory)/artifacts'
+          artifact: artifactsPackagesDrop
       pool:
         name: $(DncEngInternalBuildPool)
         image: 1es-windows-2022
@@ -108,11 +113,3 @@ jobs:
               topicBranch: ${{ parameters.vsTopicBranch }}
               # SecondaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
               componentJsonValues: $(SecondaryVSComponentJsonValues)
-    - job: copyArtifacts
-      displayName: Copy Artifacts
-      dependsOn: buildRepo
-      templateContext:
-        outputs:
-        - output: pipelineArtifact
-          path: '$(Build.SourcesDirectory)/artifacts'
-          artifact: artifactsPackagesDrop
