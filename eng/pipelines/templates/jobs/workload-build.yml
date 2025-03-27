@@ -27,11 +27,6 @@ jobs:
     - job: buildRepo
       displayName: Build Repo
       timeoutInMinutes: 120
-      templateContext:
-        outputs:
-        - output: pipelineArtifact
-          path: '$(Build.SourcesDirectory)/artifacts'
-          artifact: artifactsPackagesDrop
       pool:
         name: $(DncEngInternalBuildPool)
         image: 1es-windows-2022

@@ -135,10 +135,10 @@ extends:
             deploy:
               steps:
               - task: 1ES.DownloadPipelineArtifact@1
-                displayName: 📥 Download pipeline artifact
+                displayName: 📥 Download PackageArtifacts
                 inputs:
-                  artifactName: artifactsPackagesDrop
-                  targetPath: $(Pipeline.Workspace)/artifactsPackagesDrop
+                  artifactName: PackageArtifacts
+                  targetPath: $(Pipeline.Workspace)/PackageArtifacts
               - template: /eng/pipelines/templates/steps/workload-publish.yml@self
                 parameters:
                   publishToFeed: ${{ parameters.publishToFeed }}
