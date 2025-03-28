@@ -107,8 +107,6 @@ extends:
       - template: /eng/pipelines/templates/jobs/workload-build.yml@self
         parameters:
           stabilizePackageVersion: ${{ parameters.stabilizePackageVersion }}
-          publishToFeed: ${{ parameters.publishToFeed }}
-          feedForPublishing: ${{ parameters.feedForPublishing }}
           createVSInsertion: ${{ parameters.createVSInsertion }}
           usePreComponentsForVSInsertion: ${{ parameters.usePreComponentsForVSInsertion }}
           includeNonShippingWorkloads: ${{ parameters.includeNonShippingWorkloads }}
@@ -116,7 +114,7 @@ extends:
           workloadDropNames: ${{ parameters.workloadDropNames }}
           primaryVsInsertionBranches: ${{ parameters.primaryVsInsertionBranches }}
           secondaryVsInsertionBranches: ${{ parameters.secondaryVsInsertionBranches }}
-    - stage: Publish
+    - stage: Publish to feed
       displayName: Publish
       dependsOn: Build
       condition: succeeded()
