@@ -141,3 +141,26 @@ extends:
                 parameters:
                   publishToFeed: ${{ parameters.publishToFeed }}
                   feedForPublishing: ${{ parameters.feedForPublishing }}
+    - stage: Publish to NuGet
+      displayName: Publish to NuGet
+      dependsOn: build
+      condition: succeeded()
+      jobs:
+      - deployment: Publish
+        environment: DotNet-SDK-Workloads
+        pool:
+          name: $(DncEngInternalBuildPool)
+          image: 1es-windows-2022
+          os: windows
+        templateContext:
+          type: releaseJob
+          isProduction: true
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+              - task: 1ES.DownloadPipelineArtifact@1
+                displayName: 📥 Download PackageArtifacts
+                inputs:
+                  artifactName: PackageArtifacts
+                  targetPath: $(Pipeline.Workspace)/PackageArtifacts
