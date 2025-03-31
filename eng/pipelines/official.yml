@@ -114,12 +114,13 @@ extends:
           workloadDropNames: ${{ parameters.workloadDropNames }}
           primaryVsInsertionBranches: ${{ parameters.primaryVsInsertionBranches }}
           secondaryVsInsertionBranches: ${{ parameters.secondaryVsInsertionBranches }}
-    - stage: Publish to feed
+    - stage: Publish
       displayName: Publish
       dependsOn: Build
       condition: succeeded()
       jobs:
-      - deployment: Publish
+      - deployment: PublishFeed
+        displayName: Publish to feed
         environment: DotNet-SDK-Workloads
         pool:
           name: $(DncEngInternalBuildPool)
@@ -133,7 +134,7 @@ extends:
             deploy:
               steps:
               - task: 1ES.DownloadPipelineArtifact@1
-                displayName: 📥 Download PackageArtifacts
+                displayName: 🟣 Import PackageArtifacts from Previous Stage
                 inputs:
                   artifactName: PackageArtifacts
                   targetPath: $(Pipeline.Workspace)/PackageArtifacts
