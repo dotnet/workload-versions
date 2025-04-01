@@ -5,7 +5,6 @@ parameters:
 steps:
 - task: 1ES.PublishNuget@1
   condition: ${{ eq(parameters.publishToFeed, true) }}
-  displayName: 🟣 Publish package to AzDO
   inputs:
     useDotNetTask: true
     packagesToPush: $(Pipeline.Workspace)/PackageArtifacts/*.nupkg

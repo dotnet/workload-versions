@@ -14,14 +14,22 @@ parameters:
   displayName: Stabilize package version
   type: boolean
   default: false
-- name: publishToFeed
+- name: publishToFeedAzDO
   displayName: Publish to feed
   type: boolean
   default: false
-- name: feedForPublishing
-  displayName: Feed for publishing
+- name: publishToFeedNuGet
+  displayName: Publish to NuGet.org
+  type: boolean
+  default: false
+- name: feedForPublishingAzDO
+  displayName: Feed for publishing to Azure DevOps
   type: string
   default: public/dotnet10-workloads
+- name: feedForPublishingNuGet
+  displayName: Feed for publishing to NuGet.org
+  type: string
+  default: dotnet-sdk-workloads
 - name: createVSInsertion
   displayName: Create VS insertion
   type: boolean
@@ -139,6 +147,12 @@ extends:
                   artifactName: PackageArtifacts
                   targetPath: $(Pipeline.Workspace)/PackageArtifacts
               - template: /eng/pipelines/templates/steps/workload-publish.yml@self
+                displayName: 🟣 Publish package to AzDO
                 parameters:
-                  publishToFeed: ${{ parameters.publishToFeed }}
-                  feedForPublishing: ${{ parameters.feedForPublishing }}
+                  publishToFeed: ${{ parameters.publishToFeedAzDO }}
+                  feedForPublishing: ${{ parameters.feedForPublishingAzDO }}
+              - template: /eng/pipelines/templates/steps/workload-publish.yml@self
+                displayName: 🟣 Publish package to NuGet.org
+                parameters:
+                  publishToFeed: ${{ parameters.publishToFeedAzDO }}
+                  feedForPublishing: ${{ parameters.feedForPublishingNuGet }}
