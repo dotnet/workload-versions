@@ -17,5 +17,5 @@ steps:
     nuGetFeedType: ${{ parameters.nugGetFeedType }}
     allowPackageConflicts: false
     publishPackageMetadata: true
-    ${{ if parameters.nuGetFeedType == 'external' }}:
+    ${{ if eq(parameters.nuGetFeedType, 'external') }}:
       publishFeedCredentials: ${{ parameters.publishFeedCredentials }}
