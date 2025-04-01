@@ -107,8 +107,6 @@ extends:
       - template: /eng/pipelines/templates/jobs/workload-build.yml@self
         parameters:
           stabilizePackageVersion: ${{ parameters.stabilizePackageVersion }}
-          publishToFeed: ${{ parameters.publishToFeed }}
-          feedForPublishing: ${{ parameters.feedForPublishing }}
           createVSInsertion: ${{ parameters.createVSInsertion }}
           usePreComponentsForVSInsertion: ${{ parameters.usePreComponentsForVSInsertion }}
           includeNonShippingWorkloads: ${{ parameters.includeNonShippingWorkloads }}
@@ -116,3 +114,31 @@ extends:
           workloadDropNames: ${{ parameters.workloadDropNames }}
           primaryVsInsertionBranches: ${{ parameters.primaryVsInsertionBranches }}
           secondaryVsInsertionBranches: ${{ parameters.secondaryVsInsertionBranches }}
+    - stage: Publish
+      displayName: Publish
+      dependsOn: Build
+      condition: succeeded()
+      jobs:
+      - deployment: PublishFeed
+        displayName: Publish to feed
+        environment: DotNet-SDK-Workloads
+        pool:
+          name: $(DncEngInternalBuildPool)
+          image: 1es-windows-2022
+          os: windows
+        templateContext:
+          type: releaseJob
+          isProduction: true
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+              - task: 1ES.DownloadPipelineArtifact@1
+                displayName: 🟣 Import PackageArtifacts from Previous Stage
+                inputs:
+                  artifactName: PackageArtifacts
+                  targetPath: $(Pipeline.Workspace)/PackageArtifacts
+              - template: /eng/pipelines/templates/steps/workload-publish.yml@self
+                parameters:
+                  publishToFeed: ${{ parameters.publishToFeed }}
+                  feedForPublishing: ${{ parameters.feedForPublishing }}
