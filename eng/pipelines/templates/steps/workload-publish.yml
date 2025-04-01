@@ -1,10 +1,9 @@
 parameters:
-  publishToFeed: false
   feedForPublishing: ''
 
 steps:
 - task: 1ES.PublishNuget@1
-  condition: ${{ eq(parameters.publishToFeed, true) }}
+  condition: ${{ neq(parameters.feedForPublishing, '') }}
   displayName: 🟣 Publish package to AzDO
   inputs:
     useDotNetTask: true

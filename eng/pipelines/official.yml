@@ -14,10 +14,6 @@ parameters:
   displayName: Stabilize package version
   type: boolean
   default: false
-- name: publishToFeed
-  displayName: Publish to feed
-  type: boolean
-  default: false
 - name: feedForPublishing
   displayName: Feed for publishing
   type: string
@@ -140,5 +136,4 @@ extends:
                   targetPath: $(Pipeline.Workspace)/PackageArtifacts
               - template: /eng/pipelines/templates/steps/workload-publish.yml@self
                 parameters:
-                  publishToFeed: ${{ parameters.publishToFeed }}
                   feedForPublishing: ${{ parameters.feedForPublishing }}
