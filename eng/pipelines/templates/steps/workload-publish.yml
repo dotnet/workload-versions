@@ -1,15 +1,21 @@
 parameters:
+  displayName: ''
   publishToFeed: false
   feedForPublishing: ''
+  nugGetFeedType: internal
+  publishFeedCredentials: ''
 
 steps:
 - task: 1ES.PublishNuget@1
   condition: ${{ eq(parameters.publishToFeed, true) }}
+  displayName: ${{ parameters.displayName }}
   inputs:
     useDotNetTask: true
     packagesToPush: $(Pipeline.Workspace)/PackageArtifacts/*.nupkg
     packageParentPath: $(Pipeline.Workspace)/PackageArtifacts
     publishVstsFeed: ${{ parameters.feedForPublishing }}
-    nuGetFeedType: internal
+    nuGetFeedType: ${{ parameters.nugGetFeedType }}
     allowPackageConflicts: false
     publishPackageMetadata: true
+    ${{ if parameters.nuGetFeedType == 'external' }}:
+      publishFeedCredentials: ${{ parameters.publishFeedCredentials }}

@@ -15,7 +15,7 @@ parameters:
   type: boolean
   default: false
 - name: publishToFeedAzDO
-  displayName: Publish to feed
+  displayName: Publish to Azure DevOps
   type: boolean
   default: false
 - name: publishToFeedNuGet
@@ -147,12 +147,14 @@ extends:
                   artifactName: PackageArtifacts
                   targetPath: $(Pipeline.Workspace)/PackageArtifacts
               - template: /eng/pipelines/templates/steps/workload-publish.yml@self
-                displayName: 🟣 Publish package to AzDO
                 parameters:
+                  displayName: 🟣 Publish package to AzDO
                   publishToFeed: ${{ parameters.publishToFeedAzDO }}
                   feedForPublishing: ${{ parameters.feedForPublishingAzDO }}
               - template: /eng/pipelines/templates/steps/workload-publish.yml@self
-                displayName: 🟣 Publish package to NuGet.org
                 parameters:
+                  displayName: 🟣 Publish package to NuGet.org
                   publishToFeed: ${{ parameters.publishToFeedAzDO }}
                   feedForPublishing: ${{ parameters.feedForPublishingNuGet }}
+                  nugGetFeedType: external
+                  publishFeedCredentials: 'Credentials?'
