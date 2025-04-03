@@ -3,7 +3,7 @@ parameters:
 
 steps:
 - task: 1ES.PublishNuget@1
-  condition: ${{ neq(parameters.feedForPublishing, '') }}
+  condition: ${{ ne(parameters.feedForPublishing, '') }}
   displayName: 🟣 Publish package to AzDO
   inputs:
     useDotNetTask: true
