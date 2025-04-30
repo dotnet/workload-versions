@@ -7,8 +7,8 @@ steps:
   displayName: 🟣 Publish package to AzDO
   inputs:
     useDotNetTask: true
-    packagesToPush: $(Pipeline.Workspace)/PackageArtifacts/*.nupkg
-    packageParentPath: $(Pipeline.Workspace)/PackageArtifacts
+    packagesToPush: $(Pipeline.Workspace)/Artifacts_Windows_NT_Release/packages/Release/Shipping/*.nupkg
+    packageParentPath: $(Pipeline.Workspace)/Artifacts_Windows_NT_Release/
     publishVstsFeed: ${{ parameters.feedForPublishing }}
     nuGetFeedType: internal
     allowPackageConflicts: false

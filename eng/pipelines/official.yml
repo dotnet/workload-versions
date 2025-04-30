@@ -132,8 +132,8 @@ extends:
               - task: 1ES.DownloadPipelineArtifact@1
                 displayName: 🟣 Import PackageArtifacts from Previous Stage
                 inputs:
-                  artifactName: PackageArtifacts
-                  targetPath: $(Pipeline.Workspace)/PackageArtifacts
+                  artifactName: Artifacts_Windows_NT_Release
+                  targetPath: $(Pipeline.Workspace)/Artifacts_Windows_NT_Release
               - template: /eng/pipelines/templates/steps/workload-publish.yml@self
                 parameters:
                   feedForPublishing: ${{ parameters.feedForPublishing }}
