@@ -134,6 +134,7 @@ extends:
                 inputs:
                   artifactName: PackageArtifacts
                   targetPath: $(Pipeline.Workspace)/PackageArtifacts
+                  sbomEnabled: false
               - template: /eng/pipelines/templates/steps/workload-publish.yml@self
                 parameters:
                   feedForPublishing: ${{ parameters.feedForPublishing }}
