@@ -14,25 +14,25 @@
       <Uri>https://github.com/dotnet/android</Uri>
       <Sha>97dbdfe90dfc4b9fa62ff216cfb46bc6b12d14f6</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-10.0.100-preview.4" Version="18.4.10468-net10-p4">
+    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-10.0.100-preview.4" Version="18.4.10469-net10-p4">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>34879ba893d7c0bb1a288868a6682dde7321ec21</Sha>
+      <Sha>93510bc8decc9767552c338d2d431c57c1d9611d</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-10.0.100-preview.4" Version="18.4.10468-net10-p4">
+    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-10.0.100-preview.4" Version="18.4.10469-net10-p4">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>34879ba893d7c0bb1a288868a6682dde7321ec21</Sha>
+      <Sha>93510bc8decc9767552c338d2d431c57c1d9611d</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-10.0.100-preview.4" Version="18.4.10468-net10-p4">
+    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-10.0.100-preview.4" Version="18.4.10469-net10-p4">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>34879ba893d7c0bb1a288868a6682dde7321ec21</Sha>
+      <Sha>93510bc8decc9767552c338d2d431c57c1d9611d</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-10.0.100-preview.4" Version="15.4.10468-net10-p4">
+    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-10.0.100-preview.4" Version="15.4.10469-net10-p4">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>34879ba893d7c0bb1a288868a6682dde7321ec21</Sha>
+      <Sha>93510bc8decc9767552c338d2d431c57c1d9611d</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-10.0.100-preview.4" Version="10.0.0-preview.4.25253.2">
+    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-10.0.100-preview.4" Version="10.0.0-preview.4.25255.4">
       <Uri>https://github.com/dotnet/maui</Uri>
-      <Sha>19889c4c245f4cdd6a7af1ac6f40fbc2a8db6e21</Sha>
+      <Sha>fb7d354c0f6b86d4a32f42e5b146d121cffd6f08</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk" Version="10.0.100-preview.4.25252.106">
       <Uri>https://github.com/dotnet/dotnet</Uri>
