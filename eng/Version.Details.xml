@@ -10,31 +10,31 @@
       <Uri>https://github.com/dotnet/runtime</Uri>
       <Sha>0a33e18a0bccc10a0c4646dbf5b0fc70cbb3aa44</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-10.0.100-preview.3" Version="36.0.0-preview.3.11">
+    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-10.0.100-preview.4" Version="36.0.0-preview.4.79">
       <Uri>https://github.com/dotnet/android</Uri>
-      <Sha>e71524ac874e90d9879661cafe230d8e99ba9cec</Sha>
+      <Sha>97dbdfe90dfc4b9fa62ff216cfb46bc6b12d14f6</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-10.0.100-preview.3" Version="18.2.10694-net10-p3">
+    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-10.0.100-preview.4" Version="18.4.10468-net10-p4">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>33cbf6b34cd42e62994551f8c911426baba8647c</Sha>
+      <Sha>34879ba893d7c0bb1a288868a6682dde7321ec21</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-10.0.100-preview.3" Version="18.2.10694-net10-p3">
+    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-10.0.100-preview.4" Version="18.4.10468-net10-p4">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>33cbf6b34cd42e62994551f8c911426baba8647c</Sha>
+      <Sha>34879ba893d7c0bb1a288868a6682dde7321ec21</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-10.0.100-preview.3" Version="18.2.10694-net10-p3">
+    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-10.0.100-preview.4" Version="18.4.10468-net10-p4">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>33cbf6b34cd42e62994551f8c911426baba8647c</Sha>
+      <Sha>34879ba893d7c0bb1a288868a6682dde7321ec21</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-10.0.100-preview.3" Version="15.2.10694-net10-p3">
+    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-10.0.100-preview.4" Version="15.4.10468-net10-p4">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>33cbf6b34cd42e62994551f8c911426baba8647c</Sha>
+      <Sha>34879ba893d7c0bb1a288868a6682dde7321ec21</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-10.0.100-preview.3" Version="10.0.0-preview.3.25179.4">
+    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-10.0.100-preview.4" Version="10.0.0-preview.4.25253.2">
       <Uri>https://github.com/dotnet/maui</Uri>
-      <Sha>94745f4640c092297782af1207865d555a5c128c</Sha>
+      <Sha>19889c4c245f4cdd6a7af1ac6f40fbc2a8db6e21</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="10.0.100-preview.3.25201.16">
+    <Dependency Name="Microsoft.NET.Sdk" Version="10.0.100-preview.4.25201.16">
       <Uri>https://github.com/dotnet/sdk</Uri>
       <Sha>9dee3cf508254bc3859d9cd2fe96aeb2ad1b9751</Sha>
     </Dependency>
