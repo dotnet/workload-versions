@@ -42,7 +42,7 @@
     <SwixPackageVersion>1.1.392</SwixPackageVersion>
   </PropertyGroup>
   <PropertyGroup Label="EmscriptenWorkloads">
-    <!-- Workloads from dotnet/emsdk -->
+    <!-- Workloads from dotnet/sdk -->
     <MicrosoftNETWorkloadEmscriptenCurrentManifest100100TransportPackageVersion>10.0.100-preview.4.25252.106</MicrosoftNETWorkloadEmscriptenCurrentManifest100100TransportPackageVersion>
     <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest100100TransportPackageVersion)</EmscriptenWorkloadManifestVersion>
     <!-- emsdk workload prerelease version band must match the emsdk feature band -->
@@ -65,8 +65,9 @@
   </PropertyGroup>
   <PropertyGroup Label="MonoWorkloads">
     <MicrosoftNETCoreAppRefPackageVersion>10.0.0-preview.4.25252.106</MicrosoftNETCoreAppRefPackageVersion>
-    <!-- Workloads from dotnet/runtime use MicrosoftNETCoreAppRefPackageVersion because it has a stable name that does not include the full feature band -->
-    <MonoWorkloadManifestVersion>$(MicrosoftNETCoreAppRefPackageVersion)</MonoWorkloadManifestVersion>
+    <MicrosoftNETSdkPackageVersion>10.0.100-preview.4.25252.106</MicrosoftNETSdkPackageVersion>
+    <!-- Workloads from dotnet/sdk use MicrosoftNETSdkPackageVersion as the manifests are now built from the dotnet/sdk repo -->
+    <MonoWorkloadManifestVersion>$(MicrosoftNETSdkPackageVersion)</MonoWorkloadManifestVersion>
     <!-- mono workload prerelease version band must match the runtime feature band -->
     <MonoWorkloadFeatureBand>10.0.100$([System.Text.RegularExpressions.Regex]::Match($(MonoWorkloadManifestVersion), `-[A-z]*[\.]*\d*`))</MonoWorkloadFeatureBand>
   </PropertyGroup>
