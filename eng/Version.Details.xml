@@ -30,9 +30,9 @@
       <Uri>https://github.com/dotnet/macios</Uri>
       <Sha>d61a8ac52577fce61cc28d1894dc19984c6e422d</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-10.0.100-preview.4" Version="10.0.0-preview.4.25257.2">
+    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-10.0.100-preview.4" Version="10.0.0-preview.4.25259.2">
       <Uri>https://github.com/dotnet/maui</Uri>
-      <Sha>9c4f280356f677ec8835428d28c1a5566ea9cb5e</Sha>
+      <Sha>221e314907900a60ab654570b133d0c90d9927b1</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk" Version="10.0.100-preview.4.25252.106">
       <Uri>https://github.com/dotnet/dotnet</Uri>
