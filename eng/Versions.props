@@ -1,9 +1,5 @@
-<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE.md file in the project root for more information. -->
 <Project>
   <!-- Arcade features -->
-  <PropertyGroup>
-    <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
-  </PropertyGroup>
   <PropertyGroup>
     <VersionMajor>10</VersionMajor>
     <VersionMinor>0</VersionMinor>
@@ -75,5 +71,9 @@
     <AspireFeatureBand>8.0.100</AspireFeatureBand>
     <MicrosoftNETSdkAspireManifest80100PackageVersion>8.2.2</MicrosoftNETSdkAspireManifest80100PackageVersion>
     <AspireWorkloadManifestVersion>$(MicrosoftNETSdkAspireManifest80100PackageVersion)</AspireWorkloadManifestVersion>
+  </PropertyGroup>
+  <!-- deployment-tools dependencies -->
+  <PropertyGroup>
+    <MicrosoftDeploymentDotNetReleasesVersion>2.0.0-preview.1.24406.1</MicrosoftDeploymentDotNetReleasesVersion>
   </PropertyGroup>
 </Project>
