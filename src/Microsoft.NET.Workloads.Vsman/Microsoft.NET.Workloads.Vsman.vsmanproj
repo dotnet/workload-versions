@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.VisualStudio.Internal.MicroBuild.Vsman">
 
   <PropertyGroup>
-    <TargetFramework>$(SdkTargetFramework)</TargetFramework>
+    <TargetFramework>$(NetCurrent)</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
