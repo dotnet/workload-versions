@@ -134,6 +134,26 @@ extends:
                 inputs:
                   artifactName: Artifacts_Windows_NT_Release
                   targetPath: $(Pipeline.Workspace)/Artifacts_Windows_NT_Release
-              - template: /eng/pipelines/templates/steps/workload-publish.yml@self
-                parameters:
-                  feedForPublishing: ${{ parameters.feedForPublishing }}
+              - task: 1ES.PublishNuget@1
+                condition: ${{ ne(parameters.feedForPublishing, '') }}
+                displayName: 🟣 Publish package to AzDO
+                inputs:
+                  useDotNetTask: true
+                  packagesToPush: $(Pipeline.Workspace)/Artifacts_Windows_NT_Release/packages/Release/Shipping/*.nupkg
+                  packageParentPath: $(Pipeline.Workspace)/Artifacts_Windows_NT_Release/
+                  publishVstsFeed: ${{ parameters.feedForPublishing }}
+                  nuGetFeedType: internal
+                  allowPackageConflicts: false
+                  publishPackageMetadata: true
+              - task: 1ES.PublishNuget@1
+                condition: ${{ eq(parameters.feedForPublishing, '') }}
+                displayName: 🟣 Publish package to NuGet.org
+                inputs:
+                  useDotNetTask: true
+                  packagesToPush: $(Pipeline.Workspace)/Artifacts_Windows_NT_Release/packages/Release/Shipping/*.nupkg
+                  packageParentPath: $(Pipeline.Workspace)/Artifacts_Windows_NT_Release/
+                  publishVstsFeed: https://api.nuget.org/v3/index.json
+                  nuGetFeedType: external
+                  allowPackageConflicts: false
+                  publishPackageMetadata: true
+                  publishFeedCredentials: DotNet-SDK-Workloads-NuGet
