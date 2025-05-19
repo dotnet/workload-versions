@@ -1,11 +1,3 @@
 <Project>
 
-  <PropertyGroup>
-    <InternalCertificateId Condition="'$(InternalCertificateId)' == ''">MicrosoftDotNet500</InternalCertificateId>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <FileExtensionSignInfo Include=".msi" CertificateName="$(InternalCertificateId)" />
-  </ItemGroup>
-
 </Project>
