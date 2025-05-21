@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-10.0.100.Transport" Version="10.0.0-preview.3.25168.2" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>c17dd0e6bf60245f81e91cb85b96acf4b2b31c9c</Sha>
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-10.0.100.Transport" Version="10.0.100-preview.5.25263.102">
+      <Uri>https://github.com/dotnet/dotnet</Uri>
+      <Sha>cf33f78eb2f8f7e593e3511c9c4c2d58c86c729d</Sha>
       <SourceBuild RepoName="emsdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="10.0.0-preview.3.25171.5" CoherentParentDependency="Microsoft.NET.Sdk">
-      <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>0a33e18a0bccc10a0c4646dbf5b0fc70cbb3aa44</Sha>
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="10.0.0-preview.5.25263.102">
+      <Uri>https://github.com/dotnet/dotnet</Uri>
+      <Sha>cf33f78eb2f8f7e593e3511c9c4c2d58c86c729d</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-10.0.100-preview.3" Version="36.0.0-preview.3.22">
+    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-10.0.100-preview.4" Version="36.0.0-preview.4.80">
       <Uri>https://github.com/dotnet/android</Uri>
-      <Sha>e0dedeab627ae08baeaa8693242c1a6577ff1757</Sha>
+      <Sha>9e0a3a898247eb86526bdb172e197347d5612839</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-10.0.100-preview.3" Version="18.2.10695-net10-p3">
+    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-10.0.100-preview.4" Version="18.4.10471-net10-p4">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>425ab2e107e3e800beb346870d7c5572c5dee863</Sha>
+      <Sha>b0ddb243b690ce7f6e96da7e1e6aa590521bfd65</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-10.0.100-preview.3" Version="18.2.10695-net10-p3">
+    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-10.0.100-preview.4" Version="18.4.10471-net10-p4">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>425ab2e107e3e800beb346870d7c5572c5dee863</Sha>
+      <Sha>b0ddb243b690ce7f6e96da7e1e6aa590521bfd65</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-10.0.100-preview.3" Version="18.2.10695-net10-p3">
+    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-10.0.100-preview.4" Version="18.4.10471-net10-p4">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>425ab2e107e3e800beb346870d7c5572c5dee863</Sha>
+      <Sha>b0ddb243b690ce7f6e96da7e1e6aa590521bfd65</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-10.0.100-preview.3" Version="15.2.10695-net10-p3">
+    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-10.0.100-preview.4" Version="15.4.10471-net10-p4">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>425ab2e107e3e800beb346870d7c5572c5dee863</Sha>
+      <Sha>b0ddb243b690ce7f6e96da7e1e6aa590521bfd65</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-10.0.100-preview.3" Version="10.0.0-preview.3.25208.1">
+    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-10.0.100-preview.4" Version="10.0.0-preview.4.25263.4">
       <Uri>https://github.com/dotnet/maui</Uri>
-      <Sha>33fff49d7ec5a833252965c8349f0675e156146a</Sha>
+      <Sha>f25eccaaadc2e6664750320809d716413f040457</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="10.0.100-preview.3.25178.6">
-      <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>f1136b96aa547132927220cea7207e22ce0f59e1</Sha>
+    <Dependency Name="Microsoft.NET.Sdk" Version="10.0.100-preview.5.25263.102">
+      <Uri>https://github.com/dotnet/dotnet</Uri>
+      <Sha>cf33f78eb2f8f7e593e3511c9c4c2d58c86c729d</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="9.0.0-beta.25077.4">
-      <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>bac7e1caea791275b7c3ccb4cb75fd6a04a26618</Sha>
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="10.0.0-beta.25263.102">
+      <Uri>https://github.com/dotnet/dotnet</Uri>
+      <Sha>cf33f78eb2f8f7e593e3511c9c4c2d58c86c729d</Sha>
       <SourceBuild RepoName="arcade" ManagedOnly="true" />
     </Dependency>
   </ToolsetDependencies>
