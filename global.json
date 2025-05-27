@@ -1,15 +1,15 @@
 {
   "sdk": {
-    "version": "10.0.100-preview.3.25201.16",
+    "version": "10.0.100-preview.6.25272.112",
     "allowPrerelease": true,
     "rollForward": "major"
   },
   "tools": {
-    "dotnet": "10.0.100-preview.3.25201.16"
+    "dotnet": "10.0.100-preview.6.25272.112"
   },
   "msbuild-sdks": {
     "Microsoft.Build.NoTargets": "3.7.0",
-    "Microsoft.DotNet.Arcade.Sdk": "10.0.0-beta.25263.102",
+    "Microsoft.DotNet.Arcade.Sdk": "10.0.0-beta.25277.101",
     "Microsoft.VisualStudio.Internal.MicroBuild.Vsman": "2.0.174"
   }
 }
