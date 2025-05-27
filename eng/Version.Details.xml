@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-10.0.100.Transport" Version="10.0.100-preview.6.25276.103">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-10.0.100.Transport" Version="10.0.100-preview.5.25277.101">
       <Uri>https://github.com/dotnet/dotnet</Uri>
-      <Sha>f5705c8f4c5079bba77bae8698ba1583bde0388c</Sha>
+      <Sha>f5d9b958dcf29830364266e82147d90cf3dbd86c</Sha>
       <SourceBuild RepoName="emsdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="10.0.0-preview.6.25276.103">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="10.0.0-preview.5.25277.101">
       <Uri>https://github.com/dotnet/dotnet</Uri>
-      <Sha>f5705c8f4c5079bba77bae8698ba1583bde0388c</Sha>
+      <Sha>f5d9b958dcf29830364266e82147d90cf3dbd86c</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-10.0.100-preview.4" Version="36.0.0-preview.4.80">
       <Uri>https://github.com/dotnet/android</Uri>
@@ -34,15 +34,15 @@
       <Uri>https://github.com/dotnet/maui</Uri>
       <Sha>f25eccaaadc2e6664750320809d716413f040457</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="10.0.100-preview.6.25276.103">
+    <Dependency Name="Microsoft.NET.Sdk" Version="10.0.100-preview.5.25277.101">
       <Uri>https://github.com/dotnet/dotnet</Uri>
-      <Sha>f5705c8f4c5079bba77bae8698ba1583bde0388c</Sha>
+      <Sha>f5d9b958dcf29830364266e82147d90cf3dbd86c</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="10.0.0-beta.25276.103">
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="10.0.0-beta.25277.101">
       <Uri>https://github.com/dotnet/dotnet</Uri>
-      <Sha>f5705c8f4c5079bba77bae8698ba1583bde0388c</Sha>
+      <Sha>f5d9b958dcf29830364266e82147d90cf3dbd86c</Sha>
       <SourceBuild RepoName="arcade" ManagedOnly="true" />
     </Dependency>
   </ToolsetDependencies>
