@@ -40,6 +40,9 @@ parameters:
   default:
   - emsdk
   - mono
+  - iOS
+  - android
+  - maui
 # These insert (pre)components & packs into VS.
 - name: primaryVsInsertionBranches
   displayName: Primary VS insertion branches
