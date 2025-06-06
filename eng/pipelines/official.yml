@@ -163,5 +163,4 @@ extends:
                     # TODO: Will this work with the service connection?
                     # Site: https://int.nugettest.org
                     publishVstsFeed: https://apiint.nugettest.org/v3/index.json
-                    # TODO: Awaiting service connection.
-                    publishFeedCredentials: ''
+                    publishFeedCredentials: nuget.org (dotnetframework)
