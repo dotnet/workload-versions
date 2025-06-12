@@ -155,6 +155,8 @@ extends:
                     packageParentPath: $(Build.SourcesDirectory)/artifacts
                     publishVstsFeed: ${{ parameters.feedForPublishing }}
               - ${{ if eq(parameters.publishToNuGet, true) }}:
+                - pwsh: Write-Host "##vso[task.setendpoint id=479fdc43-a27d-4f5f-b2fc-5cf19dce159a;field=url]https://apiint.nugettest.org/v3/index.json"
+                  displayName: Change service connection endpoint
                 - task: 1ES.PublishNuget@1
                   displayName: 🟣 Publish packages to NuGet.org
                   inputs:
