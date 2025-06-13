@@ -10,25 +10,25 @@
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
       <Sha>3875b54e7b10b10606b105340199946d0b877754</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-9.0.100" Version="35.0.61">
+    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-9.0.100" Version="35.0.78">
       <Uri>https://github.com/dotnet/android</Uri>
-      <Sha>e7876a4f92d894b40c191a24c2b74f06d4bf4573</Sha>
+      <Sha>9abff7703206541fdb83ffa80fe2c2753ad1997b</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-9.0.100" Version="18.4.9288">
+    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-9.0.100" Version="18.5.9199">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>dd5e708b171daffa6d8f3561aee062425a380670</Sha>
+      <Sha>cfa2b952433c21c42ba30ce123510ec5ef9613f1</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-9.0.100" Version="18.4.9288">
+    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-9.0.100" Version="18.5.9199">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>dd5e708b171daffa6d8f3561aee062425a380670</Sha>
+      <Sha>cfa2b952433c21c42ba30ce123510ec5ef9613f1</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-9.0.100" Version="18.4.9288">
+    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-9.0.100" Version="18.5.9199">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>dd5e708b171daffa6d8f3561aee062425a380670</Sha>
+      <Sha>cfa2b952433c21c42ba30ce123510ec5ef9613f1</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-9.0.100" Version="15.4.9288">
+    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-9.0.100" Version="15.5.9199">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>dd5e708b171daffa6d8f3561aee062425a380670</Sha>
+      <Sha>cfa2b952433c21c42ba30ce123510ec5ef9613f1</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-9.0.100" Version="9.0.51">
       <Uri>https://github.com/dotnet/maui</Uri>
