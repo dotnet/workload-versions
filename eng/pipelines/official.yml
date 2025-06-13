@@ -164,8 +164,6 @@ extends:
                     packagesToPush: $(Build.SourcesDirectory)/artifacts/packages/**/*.nupkg
                     packageParentPath: $(Build.SourcesDirectory)/artifacts
                     nuGetFeedType: external
-                    # publishVstsFeed: https://api.nuget.org/v3/index.json
-                    # TODO: Will this work with the service connection?
-                    # Site: https://int.nugettest.org
-                    publishVstsFeed: https://apiint.nugettest.org/v3/index.json
+                    publishVstsFeed: https://api.nuget.org/v3/index.json
+                    # Service connection: https://dev.azure.com/dnceng/internal/_settings/adminservices?resourceId=479fdc43-a27d-4f5f-b2fc-5cf19dce159a
                     publishFeedCredentials: nuget.org (dotnetframework)
