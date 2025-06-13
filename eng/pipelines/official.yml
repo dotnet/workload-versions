@@ -14,10 +14,18 @@ parameters:
   displayName: Stabilize package version
   type: boolean
   default: false
-- name: feedForPublishing
-  displayName: Feed for publishing
+- name: publishToAzDO
+  displayName: Publish to AzDO
+  type: boolean
+  default: false
+- name: azDOPublishFeed
+  displayName: AzDO publish feed
   type: string
   default: public/dotnet10-workloads
+- name: publishToNuGet
+  displayName: Publish to NuGet.org
+  type: boolean
+  default: false
 - name: createVSInsertion
   displayName: Create VS insertion
   type: boolean
@@ -116,7 +124,6 @@ extends:
     - stage: Publish
       displayName: Publish
       dependsOn: Build
-      condition: succeeded()
       jobs:
       - deployment: PublishFeed
         displayName: Publish to feed
@@ -133,10 +140,28 @@ extends:
             deploy:
               steps:
               - task: 1ES.DownloadPipelineArtifact@1
-                displayName: 🟣 Import PackageArtifacts from Previous Stage
+                displayName: 🟣 Download build artifacts
                 inputs:
-                  artifactName: Artifacts_Windows_NT_Release
-                  targetPath: $(Pipeline.Workspace)/Artifacts_Windows_NT_Release
-              - template: /eng/pipelines/templates/steps/workload-publish.yml@self
-                parameters:
-                  feedForPublishing: ${{ parameters.feedForPublishing }}
+                  artifactName: Artifacts
+                  targetPath: $(Build.SourcesDirectory)/artifacts
+              # 1ES docs: https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/1es-pipeline-templates/features/outputs/nuget-packages
+              # DotNetCoreCLI@2 docs: https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/dotnet-core-cli-v2
+              - ${{ if eq(parameters.publishToAzDO, true) }}:
+                - task: 1ES.PublishNuget@1
+                  displayName: 🟣 Publish packages to AzDO
+                  inputs:
+                    useDotNetTask: true
+                    packagesToPush: $(Build.SourcesDirectory)/artifacts/packages/**/*.nupkg
+                    packageParentPath: $(Build.SourcesDirectory)/artifacts
+                    publishVstsFeed: ${{ parameters.feedForPublishing }}
+              - ${{ if eq(parameters.publishToNuGet, true) }}:
+                - task: 1ES.PublishNuget@1
+                  displayName: 🟣 Publish packages to NuGet.org
+                  inputs:
+                    useDotNetTask: false
+                    packagesToPush: $(Build.SourcesDirectory)/artifacts/packages/**/*.nupkg
+                    packageParentPath: $(Build.SourcesDirectory)/artifacts
+                    nuGetFeedType: external
+                    publishVstsFeed: https://api.nuget.org/v3/index.json
+                    # Service connection: https://dev.azure.com/dnceng/internal/_settings/adminservices?resourceId=479fdc43-a27d-4f5f-b2fc-5cf19dce159a
+                    publishFeedCredentials: nuget.org (dotnetframework)
