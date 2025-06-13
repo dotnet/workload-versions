@@ -11,7 +11,7 @@
     <!-- Use the feature version for each monthly servicng release -->
     <!-- Use the patch version for intra-monthly releases and hotfixes -->
     <VersionFeature>07</VersionFeature>
-    <VersionPatch>0</VersionPatch>
+    <VersionPatch>1</VersionPatch>
     <!-- Enable to remove prerelease label. -->
     <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">false</StabilizePackageVersion>
     <PreReleaseVersionLabel>servicing</PreReleaseVersionLabel>
