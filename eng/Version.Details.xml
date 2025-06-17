@@ -14,21 +14,21 @@
       <Uri>https://github.com/dotnet/android</Uri>
       <Sha>9abff7703206541fdb83ffa80fe2c2753ad1997b</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-9.0.100" Version="18.4.9288">
+    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-9.0.100" Version="18.5.9199">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>dd5e708b171daffa6d8f3561aee062425a380670</Sha>
+      <Sha>cfa2b952433c21c42ba30ce123510ec5ef9613f1</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-9.0.100" Version="18.4.9288">
+    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-9.0.100" Version="18.5.9199">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>dd5e708b171daffa6d8f3561aee062425a380670</Sha>
+      <Sha>cfa2b952433c21c42ba30ce123510ec5ef9613f1</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-9.0.100" Version="18.4.9288">
+    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-9.0.100" Version="18.5.9199">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>dd5e708b171daffa6d8f3561aee062425a380670</Sha>
+      <Sha>cfa2b952433c21c42ba30ce123510ec5ef9613f1</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-9.0.100" Version="15.4.9288">
+    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-9.0.100" Version="15.5.9199">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>dd5e708b171daffa6d8f3561aee062425a380670</Sha>
+      <Sha>cfa2b952433c21c42ba30ce123510ec5ef9613f1</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-9.0.100" Version="9.0.71">
       <Uri>https://github.com/dotnet/maui</Uri>
@@ -40,9 +40,9 @@
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="9.0.0-beta.25225.6">
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="9.0.0-beta.25302.2">
       <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>bfbc858ba868b60fffaf7b2150f1d2165b01e786</Sha>
+      <Sha>0d52a8b262d35fa2fde84e398cb2e791b8454bd2</Sha>
       <SourceBuild RepoName="arcade" ManagedOnly="true" />
     </Dependency>
   </ToolsetDependencies>
