@@ -20,8 +20,10 @@ jobs:
     enableSbom: true
     artifacts:
       publish:
-        artifacts: true
-        logs: true
+        artifacts:
+          name: Artifacts
+        logs:
+          name: Logs
         manifests: true
     jobs:
     - job: buildRepo
