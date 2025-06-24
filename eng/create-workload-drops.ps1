@@ -71,7 +71,7 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
     }
   }
 
-  Write-Host '❗ After upload, your workload drop will be available at:'
+  Write-Host '⚠︎ After upload, your workload drop will be available at:'
   Write-Host "https://devdiv.visualstudio.com/_apps/hub/ms-vscs-artifact.build-tasks.drop-hub-group-explorer-hub?name=$vsDropName"
 }
 

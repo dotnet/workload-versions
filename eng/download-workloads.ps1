@@ -12,8 +12,11 @@
 # $usePreComponents:
 # - If $true, includes *pre.components.zip drops and excludes *components.zip drops.
 # - If $false, excludes *pre.components.zip drops and includes *components.zip drops.
+# $includeNonShipping:
+# - If $true, includes workloads that are in the 'non-shipping' folder.
+# - If $false, excludes workloads that are in the 'non-shipping' folder.
 
-param ([Parameter(Mandatory=$true)] [string] $workloadPath, [SecureString] $gitHubPat, [SecureString] $azDOPat, [string] $workloadListJson = '', [bool] $usePreComponents = $false)
+param ([Parameter(Mandatory=$true)] [string] $workloadPath, [SecureString] $gitHubPat, [SecureString] $azDOPat, [string] $workloadListJson = '', [bool] $usePreComponents = $false, [bool] $includeNonShipping = $false)
 
 ### Local Build ###
 # Local build requires the installation of DARC. See: https://github.com/dotnet/arcade/blob/main/Documentation/Darc.md#setting-up-your-darc-client
@@ -62,6 +65,11 @@ if ($usePreComponents) {
 $assetFilter = "Workload\.VSDrop\.$workloadFilter.*$componentFilter"
 Write-Host "assetFilter: $assetFilter"
 
+$nonShippingFlag = ''
+if ($includeNonShipping) {
+  $nonShippingFlag = '--non-shipping'
+}
+
 # Runs DARC against each workload build to download the drops (if applicable based on the filter).
 $versionDetails | ForEach-Object {
   $darcArguments = @(
@@ -78,6 +86,7 @@ $versionDetails | ForEach-Object {
     '--skip-existing'
     '--continue-on-error'
     '--use-azure-credential-for-blobs'
+    $nonShippingFlag
   )
 
   & $darc ($darcArguments + $ciArguments)
