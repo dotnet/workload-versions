@@ -150,7 +150,7 @@ extends:
                     useDotNetTask: true
                     packagesToPush: $(Build.SourcesDirectory)/artifacts/packages/**/*.nupkg
                     packageParentPath: $(Build.SourcesDirectory)/artifacts
-                    publishVstsFeed: ${{ parameters.publishToAzDO }}
+                    publishVstsFeed: ${{ parameters.azDOPublishFeed }}
               - ${{ if eq(parameters.publishToNuGet, true) }}:
                 - task: 1ES.PublishNuget@1
                   displayName: 🟣 Publish packages to NuGet.org
