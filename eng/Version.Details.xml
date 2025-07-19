@@ -8,7 +8,7 @@
     </Dependency>
     <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.8" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
-      <Sha>b1de385893698d29b537e9fae6edd4c18c2a5d4f</Sha>
+      <Sha>aae90fa09086a9be09dac83fa66542232c7269d8</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-9.0.100" Version="35.0.78">
       <Uri>https://github.com/dotnet/android</Uri>
@@ -34,9 +34,9 @@
       <Uri>https://github.com/dotnet/maui</Uri>
       <Sha>dd13512d027bd88f1ecfe7ed92fcf96e7c2e48f6</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="9.0.109-servicing.25365.30">
+    <Dependency Name="Microsoft.NET.Sdk" Version="9.0.109-servicing.25368.18">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>813d331e95df999aa64281ccd1b2c6fd2eb31826</Sha>
+      <Sha>08d4728191a45fec511546d838af146ecf80943f</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
