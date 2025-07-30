@@ -14,12 +14,12 @@ This section details the current process for releasing workloads.
     - Note, if you are prepping 9 release, make sure you update all impacted branches since we are shipping multiple .NET9 SDKs from one branch
 4. **Merge the change**
 5. **Wait for the change to flow internally**
-    - You can check the branch history internally to see if you change made it     
+    - You can check the branch history internally to see if you change made it
 7. **Queue a build**
     - Target the branch you are shipping from
     - Only select both the checkbox for a stable version and publish to the feed if you have high confidence that the branding and versions are correct.
       - Without the stable box selected, you will get a -servicing version of the stable ID workload which can be used for testing and saved on the feed
-      - You can select stable and not publish to the feed and download the packageartifacts locally for testing
+      - You can select stable and not publish to the feed and download the package artifacts locally for testing
 8. **Test the build**
     - start a sandbox
     - install the SDK band you intend to test
@@ -36,7 +36,7 @@ This section details the current process for releasing workloads.
     - dotnet workload update --version <version>
       - note that if you are testing before release day, you may have to find and add additional feeds for the various manifest.
     - testing the manifests is typically enough 
-9. **Ping Rahul to ask him to publish the bits on nuget.org**
+9. **Approve the 'publish on NuGet.org' stage in the AzDO pipeline**
 
 ## Ideal Process
 
@@ -81,7 +81,7 @@ This section details the current process for releasing workloads.
     - Query nuget.org until the packs are available
     - Publish manifests for all workloads
     - Query nuget.org until the manifests are available
-    - Publish the wokload set
+    - Publish the workload set
 
 ## Additional Details
 
