@@ -14,6 +14,8 @@ resources:
     type: github
     name: dotnet/workload-versions
     ref: refs/heads/eng
+    # https://dev.azure.com/dnceng-public/public/_settings/adminservices?resourceId=690f39b4-7746-42c2-be89-281bd7c78b9e
+    endpoint: public
 
 variables:
 - template: /eng/pipelines/templates/variables/workload-public.yml@eng
