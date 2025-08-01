@@ -2,7 +2,7 @@ stages:
 - stage: Build
   displayName: Build
   jobs:
-  - template: /eng/common/templates/job/job.yml
+  - template: /eng/common/templates/job/job.yml@self
     parameters:
       name: buildRepo
       displayName: Build Repo
