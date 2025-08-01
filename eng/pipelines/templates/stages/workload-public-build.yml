@@ -18,9 +18,9 @@ stages:
       # https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/steps-checkout?view=azure-pipelines
       # https://learn.microsoft.com/en-us/azure/devops/pipelines/repos/multi-repo-checkout?view=azure-devops#checkout-path
       - checkout: self
-        path: $(Pipeline.Workspace)/s
+        path: s
       - checkout: eng
-        path: $(Pipeline.Workspace)/s
+        path: s
       - powershell: 'Get-ChildItem env:'
         displayName: List Environment Variables
       - powershell: >-
