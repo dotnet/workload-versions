@@ -13,6 +13,16 @@ stages:
         publish:
           logs: true
       steps:
+      # For checkout mechanics, see:
+      # https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services
+      # https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/steps-checkout?view=azure-pipelines
+      # https://learn.microsoft.com/en-us/azure/devops/pipelines/repos/multi-repo-checkout?view=azure-devops#checkout-path
+      - checkout: self
+        path: $(Pipeline.Workspace)/s
+      - checkout: eng
+        path: $(Pipeline.Workspace)/s
+      - powershell: 'Get-ChildItem env:'
+        displayName: List Environment Variables
       - powershell: >-
           eng/common/build.ps1
           -restore -build -pack -ci -msbuildEngine vs
