@@ -8,38 +8,25 @@ pr:
 
 trigger: none
 
+resources:
+  repositories:
+  - repository: eng
+    type: github
+    name: dotnet/workload-versions
+    ref: refs/heads/eng
+
 variables:
+- template: /eng/pipelines/templates/variables/workload-public.yml@eng
 # Variables used: DncEngPublicBuildPool
-- template: /eng/common/templates/variables/pool-providers.yml
-############### ARCADE ###############
-- name: _SignType
-  value: test
-- name: _TeamName
-  value: DotNet-Cli
-- name: _BuildConfig
-  value: Release
-- name: PostBuildSign
-  value: true
+- template: /eng/common/templates/variables/pool-providers.yml@eng
 
 stages:
-- stage: Build
-  displayName: Build
-  jobs:
-  - template: /eng/common/templates/job/job.yml
-    parameters:
-      name: buildRepo
-      displayName: Build Repo
-      pool:
-        name: $(DncEngPublicBuildPool)
-        demands: ImageOverride -equals windows.vs2022.amd64.open
-      artifacts:
-        publish:
-          logs: true
-      steps:
-      - powershell: >-
-          eng/common/build.ps1
-          -restore -build -pack -ci -msbuildEngine vs
-          -configuration $(_BuildConfig)
-          /p:DotNetSignType=$(_SignType)
-          /p:TeamName=$(_TeamName)
-        displayName: 🟣 Build solution
+# For checkout mechanics, see:
+# https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services
+# https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/steps-checkout?view=azure-pipelines
+# https://learn.microsoft.com/en-us/azure/devops/pipelines/repos/multi-repo-checkout?view=azure-devops#checkout-path
+- checkout: self
+  path: $(Pipeline.Workspace)/s
+- checkout: eng
+  path: $(Pipeline.Workspace)/s
+- template: /eng/pipelines/templates/stages/workload-public-build.yml@eng
