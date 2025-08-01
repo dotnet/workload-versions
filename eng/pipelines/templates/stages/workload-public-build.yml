@@ -1,0 +1,22 @@
+stages:
+- stage: Build
+  displayName: Build
+  jobs:
+  - template: /eng/common/templates/job/job.yml
+    parameters:
+      name: buildRepo
+      displayName: Build Repo
+      pool:
+        name: $(DncEngPublicBuildPool)
+        demands: ImageOverride -equals windows.vs2022.amd64.open
+      artifacts:
+        publish:
+          logs: true
+      steps:
+      - powershell: >-
+          eng/common/build.ps1
+          -restore -build -pack -ci -msbuildEngine vs
+          -configuration $(_BuildConfig)
+          /p:DotNetSignType=$(_SignType)
+          /p:TeamName=$(_TeamName)
+        displayName: 🟣 Build solution
