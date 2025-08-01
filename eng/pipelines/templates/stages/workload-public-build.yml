@@ -18,14 +18,18 @@ stages:
       # https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/steps-checkout?view=azure-pipelines
       # https://learn.microsoft.com/en-us/azure/devops/pipelines/repos/multi-repo-checkout?view=azure-devops#checkout-path
       - checkout: eng
-        # path: eng
-        path: s
+        path: eng
+        # path: s
       - checkout: self
-        # path: self
-        path: s
+        path: self
+        # path: s
         workspaceRepo: true
-      # - powershell: Copy-Item -Path "$(Agent.BuildDirectory)\eng" -Destination "$(Agent.BuildDirectory)\self" -Recurse -Force
-      #   displayName: Copy `eng` to `self`
+      - powershell: Get-ChildItem -Path "$(Agent.BuildDirectory)\self"
+        displayName: List self contents
+      - powershell: Copy-Item -Path "$(Agent.BuildDirectory)\eng" -Destination "$(Agent.BuildDirectory)\self" -Exclude '.git','.gitignore' -Recurse -Force
+        displayName: Copy eng to self
+      - powershell: Get-ChildItem -Path "$(Agent.BuildDirectory)\self"
+        displayName: List self contents
       - powershell: 'Get-ChildItem env:'
         displayName: List Environment Variables
       - powershell: >-
