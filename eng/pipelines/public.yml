@@ -21,12 +21,4 @@ variables:
 - template: /eng/common/templates/variables/pool-providers.yml@eng
 
 stages:
-# For checkout mechanics, see:
-# https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services
-# https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/steps-checkout?view=azure-pipelines
-# https://learn.microsoft.com/en-us/azure/devops/pipelines/repos/multi-repo-checkout?view=azure-devops#checkout-path
-- checkout: self
-  path: $(Pipeline.Workspace)/s
-- checkout: eng
-  path: $(Pipeline.Workspace)/s
 - template: /eng/pipelines/templates/stages/workload-public-build.yml@eng
