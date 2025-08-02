@@ -18,16 +18,28 @@ stages:
       # https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/steps-checkout?view=azure-pipelines
       # https://learn.microsoft.com/en-us/azure/devops/pipelines/repos/multi-repo-checkout?view=azure-devops#checkout-path
       - checkout: eng
-        path: s/eng-branch
+        path: eng-branch
         # path: s
+        displayName: 🟣 Checkout eng branch
+      # There is a warning when performing the second checkout, ##[warning]Unable move and reuse existing repository to required location.
+      # This happens because both checkouts are of the same repository, thus have the same path of: D:\a\_work\1\s\workload-versions
+      # The first checkout deletes this directory. To avoid the warning, simply create the directory beforehand.
+      # See: https://developercommunity.visualstudio.com/t/warning-when-fetching-additional-repositories/1065143
+      - powershell: |
+          Write-Host "RepoName: $(Build.Repository.Name)"
+          New-Item -Path "$(Agent.BuildDirectory)\s" -Name "$(Build.Repository.Name)" -ItemType Directory
+        displayName: 🟣 (Workaround) Create checkout directory
       - checkout: self
-        path: s/self-branch
+        path: self-branch
         # path: s
         workspaceRepo: true
-      - powershell: Copy-Item -Path "$(Agent.BuildDirectory)\s\eng-branch\*" -Destination "$(Agent.BuildDirectory)\s\self-branch" -Exclude '.git','.gitignore' -Recurse -Force
-        displayName: Copy eng-branch to self-branch
+        displayName: 🟣 Checkout self branch
+      # The \* is required for the Exclude to work properly.
+      # See: https://stackoverflow.com/a/67407481/294804
+      - powershell: Copy-Item -Path "$(Agent.BuildDirectory)\eng-branch\*" -Destination "$(Agent.BuildDirectory)\self-branch" -Exclude '.git','.gitignore' -Recurse -Force
+        displayName: 🟣 Copy eng-branch to self-branch
       - powershell: 'Get-ChildItem env:'
-        displayName: List Environment Variables
+        displayName: 🟣 List Environment Variables
       - powershell: >-
           eng/common/build.ps1
           -restore -build -pack -ci -msbuildEngine vs
