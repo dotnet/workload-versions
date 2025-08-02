@@ -27,7 +27,7 @@ stages:
       # See: https://developercommunity.visualstudio.com/t/warning-when-fetching-additional-repositories/1065143
       # Despite all the documentation about Build.Repository.Name, it does not simply give you the repository name. It gives: organization/repositoryName
       # To resolve this, we split on '/' and take the last element, which will always be the repository name only.
-      - powershell: New-Item -Path "$(Agent.BuildDirectory)\s" -Name "$($(Build.Repository.Name) -split '/' | Select-Object -Last 1)" -ItemType Directory
+      - powershell: New-Item -Path "$(Agent.BuildDirectory)\s" -Name "$('$(Build.Repository.Name)' -Split '/' | Select-Object -Last 1)" -ItemType Directory
         displayName: 🟣 (Workaround) Create checkout directory
       - checkout: eng
         path: eng-branch
