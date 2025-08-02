@@ -17,10 +17,10 @@ stages:
       # https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services
       # https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/steps-checkout?view=azure-pipelines
       # https://learn.microsoft.com/en-us/azure/devops/pipelines/repos/multi-repo-checkout?view=azure-devops#checkout-path
-      - checkout: eng
-        path: eng-branch
-        # path: s
-        displayName: 🟣 Checkout eng branch
+      - checkout: self
+        path: self-branch
+        workspaceRepo: true
+        displayName: 🟣 Checkout self branch
       # There is a warning when performing the second checkout, ##[warning]Unable move and reuse existing repository to required location.
       # This happens because both checkouts are of the same repository, thus have the same path of: D:\a\_work\1\s\workload-versions
       # The first checkout deletes this directory. To avoid the warning, simply create the directory beforehand.
@@ -29,11 +29,9 @@ stages:
           Write-Host "RepoName: $(Build.Repository.Name)"
           New-Item -Path "$(Agent.BuildDirectory)\s" -Name "$(Build.Repository.Name)" -ItemType Directory
         displayName: 🟣 (Workaround) Create checkout directory
-      - checkout: self
-        path: self-branch
-        # path: s
-        workspaceRepo: true
-        displayName: 🟣 Checkout self branch
+      - checkout: eng
+        path: eng-branch
+        displayName: 🟣 Checkout eng branch
       # The \* is required for the Exclude to work properly.
       # See: https://stackoverflow.com/a/67407481/294804
       - powershell: Copy-Item -Path "$(Agent.BuildDirectory)\eng-branch\*" -Destination "$(Agent.BuildDirectory)\self-branch" -Exclude '.git','.gitignore' -Recurse -Force
