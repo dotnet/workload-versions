@@ -25,9 +25,9 @@ stages:
       # This happens because both checkouts are of the same repository, thus have the same path of: D:\a\_work\1\s\workload-versions
       # The first checkout deletes this directory. To avoid the warning, simply create the directory beforehand.
       # See: https://developercommunity.visualstudio.com/t/warning-when-fetching-additional-repositories/1065143
-      - powershell: |
-          Write-Host "RepoName: $(Build.Repository.Name)"
-          New-Item -Path "$(Agent.BuildDirectory)\s" -Name "$(Build.Repository.Name)" -ItemType Directory
+      # Despite all the documentation about Build.Repository.Name, it does not simply give you the repository name. It gives: organization/repositoryName
+      # To resolve this, we split on '/' and take the last element, which will always be the repository name only.
+      - powershell: New-Item -Path "$(Agent.BuildDirectory)\s" -Name "$($(Build.Repository.Name) -split '/' | Select-Object -Last 1)" -ItemType Directory
         displayName: 🟣 (Workaround) Create checkout directory
       - checkout: eng
         path: eng-branch
