@@ -18,29 +18,14 @@ stages:
       # https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/steps-checkout?view=azure-pipelines
       # https://learn.microsoft.com/en-us/azure/devops/pipelines/repos/multi-repo-checkout?view=azure-devops#checkout-path
       - checkout: eng
-        path: eng
+        path: s/eng-branch
         # path: s
       - checkout: self
-        path: self
+        path: s/self-branch
         # path: s
         workspaceRepo: true
-      # - powershell: Get-ChildItem -Path "$(Agent.BuildDirectory)\self"
-      #   displayName: List self contents
-      - powershell: |
-          Write-Host "Eng: $(Agent.BuildDirectory)\eng"
-          Get-ChildItem -Path "$(Agent.BuildDirectory)\eng"
-          Write-Host "Self: $(Agent.BuildDirectory)\eng"
-          Get-ChildItem -Path "$(Agent.BuildDirectory)\self"
-          Write-Host "Copying eng to self"
-          Copy-Item -Path "$(Agent.BuildDirectory)\eng\*" -Destination "$(Agent.BuildDirectory)\self" -Exclude '.git','.gitignore' -Recurse -Force
-          Write-Host "Copied eng to self"
-          Write-Host "Eng: $(Agent.BuildDirectory)\eng"
-          Get-ChildItem -Path "$(Agent.BuildDirectory)\eng"
-          Write-Host "Self: $(Agent.BuildDirectory)\eng"
-          Get-ChildItem -Path "$(Agent.BuildDirectory)\self"
-        displayName: Copy eng to self
-      # - powershell: Get-ChildItem -Path "$(Agent.BuildDirectory)\self"
-      #   displayName: List self contents
+      - powershell: Copy-Item -Path "$(Agent.BuildDirectory)\s\eng-branch\*" -Destination "$(Agent.BuildDirectory)\s\self-branch" -Exclude '.git','.gitignore' -Recurse -Force
+        displayName: Copy eng-branch to self-branch
       - powershell: 'Get-ChildItem env:'
         displayName: List Environment Variables
       - powershell: >-
