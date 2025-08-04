@@ -11,7 +11,7 @@
     <!-- Use the feature version for each monthly servicng release -->
     <!-- Use the patch version for intra-monthly releases and hotfixes -->
     <VersionFeature>03</VersionFeature>
-    <VersionPatch>0</VersionPatch>
+    <VersionPatch>1</VersionPatch>
     <!-- Enable to remove prerelease label. -->
     <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">false</StabilizePackageVersion>
     <PreReleaseVersionLabel>servicing</PreReleaseVersionLabel>
@@ -52,10 +52,10 @@
   <PropertyGroup Label="MauiWorkloads">
     <MauiFeatureBand>9.0.100</MauiFeatureBand>
     <MicrosoftNETSdkAndroidManifest90100PackageVersion>35.0.92</MicrosoftNETSdkAndroidManifest90100PackageVersion>
-    <MicrosoftNETSdkiOSManifest90100PackageVersion>18.5.9215</MicrosoftNETSdkiOSManifest90100PackageVersion>
-    <MicrosoftNETSdktvOSManifest90100PackageVersion>18.5.9215</MicrosoftNETSdktvOSManifest90100PackageVersion>
-    <MicrosoftNETSdkMacCatalystManifest90100PackageVersion>18.5.9215</MicrosoftNETSdkMacCatalystManifest90100PackageVersion>
-    <MicrosoftNETSdkmacOSManifest90100PackageVersion>15.5.9215</MicrosoftNETSdkmacOSManifest90100PackageVersion>
+    <MicrosoftNETSdkiOSManifest90100PackageVersion>18.5.9214</MicrosoftNETSdkiOSManifest90100PackageVersion>
+    <MicrosoftNETSdktvOSManifest90100PackageVersion>18.5.9214</MicrosoftNETSdktvOSManifest90100PackageVersion>
+    <MicrosoftNETSdkMacCatalystManifest90100PackageVersion>18.5.9214</MicrosoftNETSdkMacCatalystManifest90100PackageVersion>
+    <MicrosoftNETSdkmacOSManifest90100PackageVersion>15.5.9214</MicrosoftNETSdkmacOSManifest90100PackageVersion>
     <MicrosoftNETSdkMauiManifest90100PackageVersion>9.0.82</MicrosoftNETSdkMauiManifest90100PackageVersion>
     <MauiWorkloadManifestVersion>$(MicrosoftNETSdkMauiManifest90100PackageVersion)</MauiWorkloadManifestVersion>
     <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest90100PackageVersion)</XamarinAndroidWorkloadManifestVersion>
