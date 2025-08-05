@@ -17,8 +17,8 @@ parameters:
   type: string
 
 - name: dividerAzDO
-  # ~66 character max width for a single line, but the font is not a fixed-width font.
-  displayName: =-=-=-=-=-=-=-=-=-=-=-=-=-💠AzDO💠-=-=-=-=-=-=-=-=-=-=-=-=-=
+  # The display name is not a fixed-width font. End it here: --|
+  displayName: =-=-=-=-=-=-=-=-=-=-💠AzDO💠-=-=-=-=-=-=-=-=-=-=
   type: boolean
   default: false
 - name: publishToAzDO
@@ -31,8 +31,8 @@ parameters:
   default: public/dotnet10-workloads
 
 - name: dividerVSInsertion
-  # ~66 character max width for a single line, but the font is not a fixed-width font.
-  displayName: =-=-=-=-=-=-=-=-=-=-=-=-=-♾️VS INSERTION♾️-=-=-=-=-=-=-=-=-=-=-=-=-=
+  # The display name is not a fixed-width font. End it here: --|
+  displayName: =-=-=-=-=-=-=-=-♾️VS INSERTION♾️-=-=-=-=-=-=-=-=
   type: boolean
   default: false
 - name: createVSInsertion
@@ -66,8 +66,8 @@ parameters:
   default: []
 
 - name: dividerOfficial
-  # ~66 character max width for a single line, but the font is not a fixed-width font.
-  displayName: =-=-=-=-=-=-=-=-=-=-=-=-=-🟣OFFICIAL🟣-=-=-=-=-=-=-=-=-=-=-=-=-=
+  # The display name is not a fixed-width font. End it here: --|
+  displayName: =-=-=-=-=-=-=-=-=-🟣OFFICIAL🟣-=-=-=-=-=-=-=-=-=
   type: boolean
   default: false
 - name: stabilizePackageVersion
@@ -81,8 +81,8 @@ parameters:
   default: false
 
 - name: dividerAdvanced
-  # ~66 character max width for a single line, but the font is not a fixed-width font.
-  displayName: =-=-=-=-=-=-=-=-=-=-=-=-=-⚠️ADVANCED⚠️-=-=-=-=-=-=-=-=-=-=-=-=-=
+  # The display name is not a fixed-width font. End it here: --|
+  displayName: =-=-=-=-=-=-=-=-=-⚠️ADVANCED⚠️-=-=-=-=-=-=-=-=-=
   type: boolean
   default: false
 - name: usePreComponentsForVSInsertion
