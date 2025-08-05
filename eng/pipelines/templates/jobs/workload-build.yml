@@ -34,6 +34,10 @@ jobs:
         image: 1es-windows-2022
         os: windows
       steps:
+      - template: /eng/pipelines/templates/steps/workload-checkout.yml
+        parameters:
+          sourceBranch: source
+          engBranch: self
       - ${{ if eq(parameters.createVSInsertion, true) }}:
         - task: AzureCLI@2
           displayName: 🟣 Download workloads for VS insertion

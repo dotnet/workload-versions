@@ -17,8 +17,7 @@ parameters:
   type: string
 
 - name: dividerAzDO
-  # The display name is not a fixed-width font. End it here: --|
-  displayName: =-=-=-=-=-=-=-=-=-=-💠AzDO💠-=-=-=-=-=-=-=-=-=-=
+  displayName: === 💠 AZURE DEVOPS 💠 ===
   type: boolean
   default: false
 - name: publishToAzDO
@@ -31,8 +30,7 @@ parameters:
   default: public/dotnet10-workloads
 
 - name: dividerVSInsertion
-  # The display name is not a fixed-width font. End it here: --|
-  displayName: =-=-=-=-=-=-=-=-♾️VS INSERTION♾️-=-=-=-=-=-=-=-=
+  displayName: === ♾️ VS INSERTION ♾️ ===
   type: boolean
   default: false
 - name: createVSInsertion
@@ -66,13 +64,11 @@ parameters:
   default: []
 
 - name: dividerOfficial
-  # The display name is not a fixed-width font. End it here: --|
-  displayName: =-=-=-=-=-=-=-=-=-🟣OFFICIAL🟣-=-=-=-=-=-=-=-=-=
+  displayName: === 🟣 OFFICIAL 🟣 ===
   type: boolean
   default: false
 - name: stabilizePackageVersion
   displayName: 🚨 Stabilize package version
-  # displayName: ⚠︎ OFFICIAL ⚠︎ 🚨 🟣 Stabilize package version ⚠️❗️‼️ⓘ
   type: boolean
   default: false
 - name: publishToNuGet
@@ -81,8 +77,7 @@ parameters:
   default: false
 
 - name: dividerAdvanced
-  # The display name is not a fixed-width font. End it here: --|
-  displayName: =-=-=-=-=-=-=-=-=-⚠️ADVANCED⚠️-=-=-=-=-=-=-=-=-=
+  displayName: === ⚠️ ADVANCED ⚠️ ===
   type: boolean
   default: false
 - name: usePreComponentsForVSInsertion
@@ -94,6 +89,7 @@ parameters:
   type: boolean
   default: false
 
+  # displayName: ⚠︎ OFFICIAL ⚠︎ 🚨 🟣 Stabilize package version ⚠️❗️‼️ⓘ
 # - name: divider
 #   # ~66 character max width for a single line, but the font is not a fixed-width font.
 #   displayName: ------------------------------------------------------------------

@@ -14,34 +14,6 @@ stages:
           logs: true
       steps:
       - template: /eng/pipelines/templates/steps/workload-checkout.yml@eng
-        # parameters:
-        #   sourceBranch: self
-        #   engBranch: eng
-      # # For checkout mechanics, see:
-      # # https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services
-      # # https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/steps-checkout?view=azure-pipelines
-      # # https://learn.microsoft.com/en-us/azure/devops/pipelines/repos/multi-repo-checkout?view=azure-devops#checkout-path
-      # - checkout: self
-      #   path: self-branch
-      #   workspaceRepo: true
-      #   displayName: 🟣 Checkout self branch
-      # # There is a warning when performing the second checkout, ##[warning]Unable move and reuse existing repository to required location.
-      # # This happens because both checkouts are of the same repository, thus have the same path of: D:\a\_work\1\s\workload-versions
-      # # The first checkout deletes this directory. To avoid the warning, simply create the directory beforehand.
-      # # See: https://developercommunity.visualstudio.com/t/warning-when-fetching-additional-repositories/1065143
-      # # Despite all the documentation about Build.Repository.Name, it does not simply give you the repository name. It gives: organization/repositoryName
-      # # To resolve this, we split on '/' and take the last element, which will always be the repository name only.
-      # - powershell: New-Item -Path "$(Agent.BuildDirectory)\s" -Name "$('$(Build.Repository.Name)' -Split '/' | Select-Object -Last 1)" -ItemType Directory
-      #   displayName: 🟣 (Workaround) Create checkout directory
-      # - checkout: eng
-      #   path: eng-branch
-      #   displayName: 🟣 Checkout eng branch
-      # # The \* is required for the Exclude to work properly.
-      # # See: https://stackoverflow.com/a/67407481/294804
-      # - powershell: Copy-Item -Path "$(Agent.BuildDirectory)\eng-branch\*" -Destination "$(Agent.BuildDirectory)\self-branch" -Exclude '.git','.gitignore' -Recurse -Force
-      #   displayName: 🟣 Copy eng-branch to self-branch
-      # - powershell: 'Get-ChildItem env:'
-      #   displayName: 🟣 List Environment Variables
       - powershell: >-
           eng/common/build.ps1
           -restore -build -pack -ci -msbuildEngine vs
