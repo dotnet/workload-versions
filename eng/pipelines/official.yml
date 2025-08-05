@@ -17,7 +17,7 @@ parameters:
   type: string
 
 - name: dividerAzDO
-  displayName: '[###### 💠 AZURE DEVOPS 💠 ######]'
+  displayName: '[ ######## AZURE DEVOPS ######## ]'
   type: boolean
   default: false
 - name: publishToAzDO
@@ -30,7 +30,7 @@ parameters:
   default: public/dotnet10-workloads
 
 - name: dividerVSInsertion
-  displayName: '[###### ♾️ VS INSERTION ♾️ ######]'
+  displayName: '[ ######## VS INSERTION ######## ]'
   type: boolean
   default: false
 - name: createVSInsertion
@@ -64,7 +64,7 @@ parameters:
   default: []
 
 - name: dividerOfficial
-  displayName: '[###### 🟣 OFFICIAL 🟣 ######]'
+  displayName: '[ ######## OFFICIAL ######## ]'
   type: boolean
   default: false
 - name: stabilizePackageVersion
@@ -77,7 +77,7 @@ parameters:
   default: false
 
 - name: dividerAdvanced
-  displayName: '[###### ⚠️ ADVANCED ⚠️ ######]'
+  displayName: '[ ######## ADVANCED ######## ]'
   type: boolean
   default: false
 - name: usePreComponentsForVSInsertion
