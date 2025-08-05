@@ -17,7 +17,7 @@ parameters:
   type: string
 
 - name: dividerAzDO
-  displayName: === 💠 AZURE DEVOPS 💠 ===
+  displayName: '[###### 💠 AZURE DEVOPS 💠 ######]'
   type: boolean
   default: false
 - name: publishToAzDO
@@ -30,7 +30,7 @@ parameters:
   default: public/dotnet10-workloads
 
 - name: dividerVSInsertion
-  displayName: === ♾️ VS INSERTION ♾️ ===
+  displayName: '[###### ♾️ VS INSERTION ♾️ ######]'
   type: boolean
   default: false
 - name: createVSInsertion
@@ -64,7 +64,7 @@ parameters:
   default: []
 
 - name: dividerOfficial
-  displayName: === 🟣 OFFICIAL 🟣 ===
+  displayName: '[###### 🟣 OFFICIAL 🟣 ######]'
   type: boolean
   default: false
 - name: stabilizePackageVersion
@@ -77,7 +77,7 @@ parameters:
   default: false
 
 - name: dividerAdvanced
-  displayName: === ⚠️ ADVANCED ⚠️ ===
+  displayName: '[###### ⚠️ ADVANCED ⚠️ ######]'
   type: boolean
   default: false
 - name: usePreComponentsForVSInsertion
@@ -136,11 +136,9 @@ resources:
     name: 1ESPipelineTemplates/1ESPipelineTemplates
     ref: refs/tags/release
   - repository: source
-    type: github
-    name: dotnet/workload-versions
+    type: git
+    name: internal/dotnet-workload-versions
     ref: ${{ format('refs/heads/{0}', parameters.sourceBranch) }}
-    # Service connection: https://dev.azure.com/dnceng-public/public/_settings/adminservices?resourceId=690f39b4-7746-42c2-be89-281bd7c78b9e
-    endpoint: public
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
