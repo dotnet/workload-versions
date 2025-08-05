@@ -103,7 +103,15 @@ parameters:
   type: stageList
   default: []
 - name: empty
-  displayName: ------------------------------------
+  displayName: ------------------------------------⚠️❗️‼️ⓘ------------------------------------
+  type: boolean
+  default: false
+- name: empty2
+  displayName: |
+    I've got a lovely
+    bunch of coconuts.
+    Here's they are
+    standing in a row.
   type: boolean
   default: false
 
