@@ -1,17 +1,25 @@
 # Pipeline: https://dev.azure.com/dnceng/internal/_build?definitionId=1298
 
-trigger:
-  batch: true
-  branches:
-    include:
-    - main
-    - release/*
+# trigger:
+#   batch: true
+#   branches:
+#     include:
+#     - main
+#     - release/*
 
+trigger: none
 pr: none
 
 parameters:
+- name: sourceBranchParam
+  displayName: Source Branch
+  type: string
+  value:
+  - main
+  - release/9
+  - release/10
 - name: stabilizePackageVersion
-  displayName: Stabilize package version
+  displayName: ⚠︎ OFFICIAL ⚠︎ 🚨 Stabilize package version
   type: boolean
   default: false
 - name: publishToAzDO
@@ -62,6 +70,43 @@ parameters:
   displayName: 'Secondary VS insertion branches [packs only]'
   type: object
   default: []
+- name: testStep
+  displayName: Test Step
+  type: step
+  default: []
+- name: testStepList
+  displayName: Test Step List
+  type: stepList
+  default: []
+- name: testJob
+  displayName: Test Job
+  type: job
+  default: []
+- name: testJobList
+  displayName: Test Job List
+  type: jobList
+  default: []
+- name: testDeployment
+  displayName: Test Deployment
+  type: deployment
+  default: []
+- name: testDeploymentList
+  displayName: Test Deployment List
+  type: deploymentList
+  default: []
+- name: testStage
+  displayName: Test Stage
+  type: stage
+  default: []
+- name: testStageList
+  displayName: Test Stage List
+  type: stageList
+  default: []
+- name: empty
+  displayName: ------------------------------------
+  type: boolean
+  default: false
+  enabled: false
 
 variables:
 # Variables used: DncEngInternalBuildPool
@@ -93,6 +138,12 @@ resources:
     type: git
     name: 1ESPipelineTemplates/1ESPipelineTemplates
     ref: refs/tags/release
+  - repository: source
+    type: github
+    name: dotnet/workload-versions
+    ref: ${{ variables['Build.SourceBranch'] }}
+    # https://dev.azure.com/dnceng-public/public/_settings/adminservices?resourceId=690f39b4-7746-42c2-be89-281bd7c78b9e
+    endpoint: public
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
