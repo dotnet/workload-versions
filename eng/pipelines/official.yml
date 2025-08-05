@@ -89,22 +89,6 @@ parameters:
   type: boolean
   default: false
 
-  # displayName: ⚠︎ OFFICIAL ⚠︎ 🚨 🟣 Stabilize package version ⚠️❗️‼️ⓘ
-# - name: divider
-#   # ~66 character max width for a single line, but the font is not a fixed-width font.
-#   displayName: ------------------------------------------------------------------
-#   type: boolean
-#   default: false
-# - name: empty2
-#   displayName: |
-#     I've got a lovely
-#     bunch of coconuts.
-#     Here's they are
-#     standing in a row.
-#   type: boolean
-#   default: false
-
-
 variables:
 # Variables used: DncEngInternalBuildPool
 - template: /eng/common/templates-official/variables/pool-providers.yml@source
