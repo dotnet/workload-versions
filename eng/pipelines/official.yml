@@ -11,15 +11,12 @@ trigger: none
 pr: none
 
 parameters:
-- name: sourceBranchParam
+- name: sourceBranch
   displayName: Source Branch
   type: string
-  values:
-  - main
-  - release/9
-  - release/10
+  default: main
 - name: stabilizePackageVersion
-  displayName: ⚠︎ OFFICIAL ⚠︎ 🚨 Stabilize package version
+  displayName: ⚠︎ OFFICIAL ⚠︎ 🚨 🟣 Stabilize package version ⚠️❗️‼️ⓘ
   type: boolean
   default: false
 - name: publishToAzDO
@@ -70,40 +67,41 @@ parameters:
   displayName: 'Secondary VS insertion branches [packs only]'
   type: object
   default: []
-- name: testStep
-  displayName: Test Step
-  type: step
-  default: []
-- name: testStepList
-  displayName: Test Step List
-  type: stepList
-  default: []
-- name: testJob
-  displayName: Test Job
-  type: job
-  default: []
-- name: testJobList
-  displayName: Test Job List
-  type: jobList
-  default: []
-- name: testDeployment
-  displayName: Test Deployment
-  type: deployment
-  default: []
-- name: testDeploymentList
-  displayName: Test Deployment List
-  type: deploymentList
-  default: []
-- name: testStage
-  displayName: Test Stage
-  type: stage
-  default: []
-- name: testStageList
-  displayName: Test Stage List
-  type: stageList
-  default: []
-- name: empty
-  displayName: ------------------------------------⚠️❗️‼️ⓘ------------------------------------
+# - name: testStep
+#   displayName: Test Step
+#   type: step
+#   default: []
+# - name: testStepList
+#   displayName: Test Step List
+#   type: stepList
+#   default: []
+# - name: testJob
+#   displayName: Test Job
+#   type: job
+#   default: []
+# - name: testJobList
+#   displayName: Test Job List
+#   type: jobList
+#   default: []
+# - name: testDeployment
+#   displayName: Test Deployment
+#   type: deployment
+#   default: []
+# - name: testDeploymentList
+#   displayName: Test Deployment List
+#   type: deploymentList
+#   default: []
+# - name: testStage
+#   displayName: Test Stage
+#   type: stage
+#   default: []
+# - name: testStageList
+#   displayName: Test Stage List
+#   type: stageList
+#   default: []
+- name: divider
+  # 66 character max width for a single line
+  displayName: ------------------------------------------------------------------
   type: boolean
   default: false
 - name: empty2
@@ -148,7 +146,7 @@ resources:
   - repository: source
     type: github
     name: dotnet/workload-versions
-    ref: ${{ variables['Build.SourceBranch'] }}
+    ref: ${{ format('refs/heads/{0}', parameters.sourceBranch) }}
     # https://dev.azure.com/dnceng-public/public/_settings/adminservices?resourceId=690f39b4-7746-42c2-be89-281bd7c78b9e
     endpoint: public
 
