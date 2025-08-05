@@ -107,7 +107,7 @@ parameters:
 
 variables:
 # Variables used: DncEngInternalBuildPool
-- template: /eng/common/templates-official/variables/pool-providers.yml@self
+- template: /eng/common/templates-official/variables/pool-providers.yml@source
 ############### ARCADE ###############
 # Both this (used in Arcade for the MicroBuildSigningPlugin) and DotNetSignType (used in Arcade in Sign.proj) are necessary to set the sign type.
 # https://github.com/dotnet/arcade/blob/ccae251ef033746eb0213329953f5e3c1687693b/Documentation/ArcadeSdk.md#common-steps-in-azure-devops-pipeline
