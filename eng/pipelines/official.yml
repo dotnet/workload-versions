@@ -128,6 +128,7 @@ extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
   parameters:
     sdl:
+      # Docs: https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/1es-pipeline-templates/features/sdlanalysis/sourceanalysisstage#my-pipeline-uses-multiple-repositories-how-to-ensure-that-sdl-sources-stage-is-injected-for-all-the-repositories
       sourceRepositoriesToScan:
         include:
         - repository: source
@@ -138,8 +139,11 @@ extends:
       policheck:
         enabled: true
       # Variables for TSA set within the DotNet-CLI-SDLValidation-Params variable group.
+      # Docs: https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/1es-pipeline-templates/features/sdlanalysis/tsasupport
       tsa:
         enabled: true
+        configFile: $(Build.Repository.LocalPath)\.config\tsaoptions.json
+      # Docs: https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/1es-pipeline-templates/features/sdlanalysis/credscan#customizations
       credscan:
         suppressionsFile: $(Build.Repository.LocalPath)\.config\CredScanSuppressions.json
     stages:
