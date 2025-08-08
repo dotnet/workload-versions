@@ -24,5 +24,7 @@ steps:
   displayName: 🟣 Checkout eng branch
 # The \* is required for the Exclude to work properly.
 # See: https://stackoverflow.com/a/67407481/294804
-- powershell: Copy-Item -Path "$(Agent.BuildDirectory)\eng-branch\*" -Destination "$(Agent.BuildDirectory)\source-branch" -Exclude '.git','.gitignore','.config\tsaoptions.json' -Recurse -Force
+- powershell: Copy-Item -Path "$(Agent.BuildDirectory)\eng-branch\*" -Destination "$(Agent.BuildDirectory)\source-branch" -Exclude '.git','.gitignore','.config' -Recurse -Force
   displayName: 🟣 Copy eng-branch to source-branch
+- powershell: 'Get-ChildItem env:'
+  displayName: 🟣 List Environment Variables
