@@ -1,12 +1,5 @@
 # Pipeline: https://dev.azure.com/dnceng/internal/_build?definitionId=1298
 
-# trigger:
-#   batch: true
-#   branches:
-#     include:
-#     - main
-#     - release/*
-
 # Note: This pipeline can never run automatically because the sourceBranch parameter is required.
 trigger: none
 pr: none
