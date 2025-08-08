@@ -8,38 +8,19 @@ pr:
 
 trigger: none
 
+resources:
+  repositories:
+  - repository: eng
+    type: github
+    name: dotnet/workload-versions
+    ref: refs/heads/eng
+    # https://dev.azure.com/dnceng-public/public/_settings/adminservices?resourceId=690f39b4-7746-42c2-be89-281bd7c78b9e
+    endpoint: public
+
 variables:
+- template: /eng/pipelines/templates/variables/workload-public.yml@eng
 # Variables used: DncEngPublicBuildPool
-- template: /eng/common/templates/variables/pool-providers.yml
-############### ARCADE ###############
-- name: _SignType
-  value: test
-- name: _TeamName
-  value: DotNet-Cli
-- name: _BuildConfig
-  value: Release
-- name: PostBuildSign
-  value: true
+- template: /eng/common/templates/variables/pool-providers.yml@self
 
 stages:
-- stage: Build
-  displayName: Build
-  jobs:
-  - template: /eng/common/templates/job/job.yml
-    parameters:
-      name: buildRepo
-      displayName: Build Repo
-      pool:
-        name: $(DncEngPublicBuildPool)
-        demands: ImageOverride -equals windows.vs2022.amd64.open
-      artifacts:
-        publish:
-          logs: true
-      steps:
-      - powershell: >-
-          eng/common/build.ps1
-          -restore -build -pack -ci -msbuildEngine vs
-          -configuration $(_BuildConfig)
-          /p:DotNetSignType=$(_SignType)
-          /p:TeamName=$(_TeamName)
-        displayName: 🟣 Build solution
+- template: /eng/pipelines/templates/stages/workload-public-build.yml@eng
