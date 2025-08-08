@@ -5,7 +5,8 @@ parameters:
   # Will be ignored if 'enableMicrobuild' is false or 'Agent.Os' is 'Windows_NT'
   enableMicrobuildForMacAndLinux: false
   # Location of the MicroBuild output folder
-  microBuildOutputFolder: '$(System.DefaultWorkingDirectory)'
+  # NOTE: There's something that relies on this being in the "default" source directory for tasks such as Signing to work properly.
+  microBuildOutputFolder: '$(Build.SourcesDirectory)'
   continueOnError: false
 
 steps:
