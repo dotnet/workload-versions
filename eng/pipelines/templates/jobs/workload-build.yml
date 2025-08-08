@@ -45,10 +45,10 @@ jobs:
           inputs:
             azureSubscription: DotNetStaging
             scriptType: pscore
-            scriptPath: $(Build.Repository.LocalPath)/eng/download-workloads.ps1
+            scriptPath: $(System.DefaultWorkingDirectory)/eng/download-workloads.ps1
             # Note: The second $ for usePreComponents and includeNonShipping allows the value to resolve as `$true` or `$false`.
             arguments: >-
-              -workloadPath '$(Build.Repository.LocalPath)/artifacts/workloads'
+              -workloadPath '$(System.DefaultWorkingDirectory)/artifacts/workloads'
               -gitHubPat (ConvertTo-SecureString -String '$(BotAccount-dotnet-bot-repo-PAT)' -AsPlainText -Force)
               -azDOPat (ConvertTo-SecureString -String '$(dn-bot-all-drop-rw-code-rw-release-all)' -AsPlainText -Force)
               -workloadListJson '${{ convertToJson(parameters.workloadDropNames) }}'
@@ -61,7 +61,7 @@ jobs:
           -restore -build -sign -pack -publish -ci -msbuildEngine vs
           -configuration $(_BuildConfig)
           /p:CreateVSInsertion=${{ parameters.createVSInsertion }}
-          /p:WorkloadDirectory=$(Build.Repository.LocalPath)/artifacts/workloads
+          /p:WorkloadDirectory=$(System.DefaultWorkingDirectory)/artifacts/workloads
           /p:DotNetSignType=$(_SignType)
           /p:TeamName=$(_TeamName)
           /p:DotNetPublishUsingPipelines=true
