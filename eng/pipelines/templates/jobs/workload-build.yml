@@ -18,6 +18,7 @@ jobs:
     enablePublishUsingPipelines: true
     publishAssetsImmediately: true
     enableSbom: true
+    repositoryAlias: source
     artifacts:
       publish:
         artifacts:
