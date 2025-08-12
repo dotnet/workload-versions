@@ -38,6 +38,10 @@ parameters:
   displayName: Include non-shipping workloads
   type: boolean
   default: false
+- name: testWorkloadVersion
+  displayName: creates a .0 workload set for prerelease testing
+  type: boolean
+  default: false
 - name: vsTopicBranch
   displayName: 'VS Topic Branch [default: temp/{team}/{target}/yyyy-MM]'
   type: string
@@ -121,6 +125,7 @@ extends:
           workloadDropNames: ${{ parameters.workloadDropNames }}
           primaryVsInsertionBranches: ${{ parameters.primaryVsInsertionBranches }}
           secondaryVsInsertionBranches: ${{ parameters.secondaryVsInsertionBranches }}
+          testWorkloadVersion: ${{ parameters.testWorkloadVersion }}
     - ${{ if or(eq(parameters.publishToAzDO, true), eq(parameters.publishToNuGet, true)) }}:
       - stage: Publish
         displayName: Publish
