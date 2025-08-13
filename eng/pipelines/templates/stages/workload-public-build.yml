@@ -18,6 +18,9 @@ stages:
           logs: true
       steps:
       - template: /eng/pipelines/templates/steps/workload-checkout.yml@${{ parameters.engBranch }}
+        parameters:
+          sourceBranch: ${{ parameters.sourceBranch }}
+          engBranch: ${{ parameters.engBranch }}
       - powershell: >-
           eng/common/build.ps1
           -restore -build -pack -ci -msbuildEngine vs
