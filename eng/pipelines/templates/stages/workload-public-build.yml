@@ -1,8 +1,12 @@
+parameters:
+  sourceBranch: self
+  engBranch: eng
+
 stages:
 - stage: Build
   displayName: Build
   jobs:
-  - template: /eng/common/templates/job/job.yml@self
+  - template: /eng/common/templates/job/job.yml@${{ parameters.sourceBranch }}
     parameters:
       name: buildRepo
       displayName: Build Repo
@@ -13,7 +17,7 @@ stages:
         publish:
           logs: true
       steps:
-      - template: /eng/pipelines/templates/steps/workload-checkout.yml@eng
+      - template: /eng/pipelines/templates/steps/workload-checkout.yml@${{ parameters.engBranch }}
       - powershell: >-
           eng/common/build.ps1
           -restore -build -pack -ci -msbuildEngine vs
