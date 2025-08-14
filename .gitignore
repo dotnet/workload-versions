@@ -42,3 +42,19 @@ cmake/
 
 # MSBuild Logs
 **/MSBuild_Logs/MSBuild_pid-*.failure.txt
+
+###############################################################################
+# Source branch specific files
+###############################################################################
+doc/
+eng/common/
+eng/pipelines/public.yml
+eng/Publishing.props
+eng/Signing.props
+eng/Version.Details.xml
+eng/Version.Details.json
+CODE-OF-CONDUCT.md
+global.json
+LICENSE.md
+NuGet.config
+README.md
