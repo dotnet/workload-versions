@@ -32,7 +32,7 @@ resources:
 variables:
 - template: /eng/pipelines/templates/variables/workload-public.yml@self
 # Variables used: DncEngPublicBuildPool
-- template: /eng/common/templates/variables/pool-providers.yml@source
+- template: /eng/common/templates/variables/pool-providers.yml@main
 
 stages:
 - template: /eng/pipelines/templates/stages/workload-public-build.yml@self
