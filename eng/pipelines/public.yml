@@ -10,10 +10,22 @@ trigger: none
 
 resources:
   repositories:
-  - repository: source
+  - repository: main
     type: github
     name: dotnet/workload-versions
     ref: refs/heads/main
+    # https://dev.azure.com/dnceng-public/public/_settings/adminservices?resourceId=690f39b4-7746-42c2-be89-281bd7c78b9e
+    endpoint: public
+  - repository: release-8
+    type: github
+    name: dotnet/workload-versions
+    ref: refs/heads/release/8.0.4xx
+    # https://dev.azure.com/dnceng-public/public/_settings/adminservices?resourceId=690f39b4-7746-42c2-be89-281bd7c78b9e
+    endpoint: public
+  - repository: release-9
+    type: github
+    name: dotnet/workload-versions
+    ref: refs/heads/release/9.0.3xx
     # https://dev.azure.com/dnceng-public/public/_settings/adminservices?resourceId=690f39b4-7746-42c2-be89-281bd7c78b9e
     endpoint: public
 
@@ -25,5 +37,13 @@ variables:
 stages:
 - template: /eng/pipelines/templates/stages/workload-public-build.yml@self
   parameters:
-    sourceBranch: source
+    sourceBranch: main
+    engBranch: self
+- template: /eng/pipelines/templates/stages/workload-public-build.yml@self
+  parameters:
+    sourceBranch: release-8
+    engBranch: self
+- template: /eng/pipelines/templates/stages/workload-public-build.yml@self
+  parameters:
+    sourceBranch: release-9
     engBranch: self

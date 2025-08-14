@@ -3,8 +3,8 @@ parameters:
   engBranch: eng
 
 stages:
-- stage: Build
-  displayName: Build
+- stage: Build_${{ parameters.sourceBranch }}
+  displayName: Build ${{ parameters.sourceBranch }}
   jobs:
   - template: /eng/common/templates/job/job.yml@${{ parameters.sourceBranch }}
     parameters:
