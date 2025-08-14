@@ -16,7 +16,8 @@ stages:
         demands: ImageOverride -equals windows.vs2022.amd64.open
       artifacts:
         publish:
-          logs: true
+          logs:
+            name: Logs_${{ parameters.sourceBranch }}
       steps:
       - template: /eng/pipelines/templates/steps/workload-checkout.yml@${{ parameters.engBranch }}
         parameters:
