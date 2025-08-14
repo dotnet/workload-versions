@@ -5,6 +5,7 @@ parameters:
 stages:
 - stage: Build_${{ parameters.sourceBranch }}
   displayName: Build ${{ parameters.sourceBranch }}
+  dependsOn: []
   jobs:
   - template: /eng/common/templates/job/job.yml@${{ parameters.sourceBranch }}
     parameters:

@@ -40,12 +40,10 @@ stages:
     sourceBranch: main
     engBranch: self
 - template: /eng/pipelines/templates/stages/workload-public-build.yml@self
-  dependsOn: []
   parameters:
     sourceBranch: release8
     engBranch: self
 - template: /eng/pipelines/templates/stages/workload-public-build.yml@self
-  dependsOn: []
   parameters:
     sourceBranch: release9
     engBranch: self
