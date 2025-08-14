@@ -52,7 +52,7 @@ eng/pipelines/public.yml
 eng/Publishing.props
 eng/Signing.props
 eng/Version.Details.xml
-eng/Version.Details.json
+eng/Versions.props
 CODE-OF-CONDUCT.md
 global.json
 LICENSE.md
