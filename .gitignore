@@ -50,7 +50,7 @@ eng/
 !eng/common/
 !eng/pipelines/public.yml
 !eng/Version.Details.xml
-!eng/Version.Details.json
+!eng/Versions.props
 src/
 tools/
 Directory.Build.props
