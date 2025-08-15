@@ -1,0 +1,9 @@
+variables:
+- name: _SignType
+  value: test
+- name: _TeamName
+  value: DotNet-Cli
+- name: _BuildConfig
+  value: Release
+- name: PostBuildSign
+  value: true

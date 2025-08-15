@@ -1,0 +1,32 @@
+parameters:
+  sourceBranch: self
+  engBranch: eng
+
+stages:
+- stage: Build_${{ parameters.sourceBranch }}
+  displayName: Build ${{ parameters.sourceBranch }}
+  dependsOn: []
+  jobs:
+  - template: /eng/common/templates/job/job.yml@${{ parameters.sourceBranch }}
+    parameters:
+      name: buildRepo
+      displayName: Build Repo
+      pool:
+        name: $(DncEngPublicBuildPool)
+        demands: ImageOverride -equals windows.vs2022.amd64.open
+      artifacts:
+        publish:
+          logs:
+            name: Logs_${{ parameters.sourceBranch }}
+      steps:
+      - template: /eng/pipelines/templates/steps/workload-checkout.yml@${{ parameters.engBranch }}
+        parameters:
+          sourceBranch: ${{ parameters.sourceBranch }}
+          engBranch: ${{ parameters.engBranch }}
+      - powershell: >-
+          eng/common/build.ps1
+          -restore -build -pack -ci -msbuildEngine vs
+          -configuration $(_BuildConfig)
+          /p:DotNetSignType=$(_SignType)
+          /p:TeamName=$(_TeamName)
+        displayName: 🟣 Build solution

@@ -10,7 +10,7 @@ parameters:
 
 jobs:
 # Note: jobs.yml automatically includes the Publish Assets job for pushing the artifacts to DARC.
-- template: /eng/common/templates-official/jobs/jobs.yml
+- template: /eng/common/templates-official/jobs/jobs.yml@source
   parameters:
     enableMicrobuild: true
     enablePublishBuildAssets: true
@@ -18,6 +18,7 @@ jobs:
     enablePublishUsingPipelines: true
     publishAssetsImmediately: true
     enableSbom: true
+    repositoryAlias: source
     artifacts:
       publish:
         artifacts:
@@ -34,16 +35,20 @@ jobs:
         image: 1es-windows-2022
         os: windows
       steps:
+      - template: /eng/pipelines/templates/steps/workload-checkout.yml@self
+        parameters:
+          sourceBranch: source
+          engBranch: self
       - ${{ if eq(parameters.createVSInsertion, true) }}:
         - task: AzureCLI@2
           displayName: 🟣 Download workloads for VS insertion
           inputs:
             azureSubscription: DotNetStaging
             scriptType: pscore
-            scriptPath: $(Build.SourcesDirectory)/eng/download-workloads.ps1
+            scriptPath: $(System.DefaultWorkingDirectory)/eng/download-workloads.ps1
             # Note: The second $ for usePreComponents and includeNonShipping allows the value to resolve as `$true` or `$false`.
             arguments: >-
-              -workloadPath '$(Build.SourcesDirectory)/artifacts/workloads'
+              -workloadPath '$(System.DefaultWorkingDirectory)/artifacts/workloads'
               -gitHubPat (ConvertTo-SecureString -String '$(BotAccount-dotnet-bot-repo-PAT)' -AsPlainText -Force)
               -azDOPat (ConvertTo-SecureString -String '$(dn-bot-all-drop-rw-code-rw-release-all)' -AsPlainText -Force)
               -workloadListJson '${{ convertToJson(parameters.workloadDropNames) }}'
@@ -56,7 +61,7 @@ jobs:
           -restore -build -sign -pack -publish -ci -msbuildEngine vs
           -configuration $(_BuildConfig)
           /p:CreateVSInsertion=${{ parameters.createVSInsertion }}
-          /p:WorkloadDirectory=$(Build.SourcesDirectory)/artifacts/workloads
+          /p:WorkloadDirectory=$(System.DefaultWorkingDirectory)/artifacts/workloads
           /p:DotNetSignType=$(_SignType)
           /p:TeamName=$(_TeamName)
           /p:DotNetPublishUsingPipelines=true
