@@ -39,7 +39,7 @@ parameters:
   type: boolean
   default: false
 - name: testWorkloadVersion
-  displayName: creates a .0 workload set for prerelease testing
+  displayName: Creates a .0 workload set for prerelease testing
   type: boolean
   default: false
 - name: vsTopicBranch

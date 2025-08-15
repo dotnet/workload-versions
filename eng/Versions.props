@@ -20,6 +20,8 @@
     <SdkFeatureBand>$(VersionMajor).$(VersionMinor).$(VersionSDKMinor)00</SdkFeatureBand>
     <DotNetFinalVersionKind Condition="'$(StabilizePackageVersion)' == 'true'">release</DotNetFinalVersionKind>
     <SDKFeatureBand Condition="'$(StabilizePackageVersion)' != 'true' and $(PreReleaseVersionLabel) != 'servicing'">$(SDKFeatureBand)-$(PreReleaseVersionLabel).$(PreReleaseVersionIteration)</SDKFeatureBand>
+    <PreReleaseVersionIteration Condition="'$(TestWorkloadVersion)' == 'true' and $(PreReleaseVersionLabel) != 'servicing'">$(PreReleaseVersionIteration).0</PreReleaseVersionIteration>
+    <PreReleaseVersionIteration Condition="'$(TestWorkloadVersion)' == 'true' and $(PreReleaseVersionLabel) == 'servicing'">0</PreReleaseVersionIteration>
     <!-- Use four part version if it's not a preview and not the .0 release-->
     <WorkloadsVersion Condition="'$(StabilizePackageVersion)' == 'true' and '$(VersionPatch)' != '0'">$(WorkloadsVersion).$(VersionPatch)</WorkloadsVersion>
   </PropertyGroup>
