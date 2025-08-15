@@ -42,6 +42,7 @@ Test workload sets allow teams to validate workload updates before they are incl
 ### 3. Queue Internal Build
 
 After merging your PR, queue an internal build using the Azure DevOps pipeline.
+https://dev.azure.com/dnceng/internal/_build?definitionId=1298
 
 ## Build Configuration Options
 
@@ -81,7 +82,7 @@ If you encounter issues during the process:
 
 1. **Build Failures**: Check the build logs in Azure DevOps for specific error messages
 2. **Permission Issues**: Ensure you have the necessary access rights for the repositories and pipelines
-4. **Workload Set Versioning**: The workload set created will match the SDK band specified in the `version.props` file.
+4. **Workload Set Versioning**: The workload set created will match the SDK band specified in the `Versions.props` file.
 
 ## Support
 
