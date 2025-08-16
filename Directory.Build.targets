@@ -1,9 +1,0 @@
-<Project>
-
-  <Import Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" />
-
-  <PropertyGroup>
-    <!-- Need to update the workloads version after the arcade targets have run -->
-    <WorkloadsVersion Condition="'$(VersionSuffix)' != ''">$(WorkloadsVersion)-$(VersionSuffix)</WorkloadsVersion>
-  </PropertyGroup>
-</Project>
