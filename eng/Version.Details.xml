@@ -10,29 +10,29 @@
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
       <Sha>5d8f001fa53f28ffefffe88addadfdac91deff78</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-9.0.100" Version="35.0.78">
+    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-9.0.100" Version="35.0.92">
       <Uri>https://github.com/dotnet/android</Uri>
-      <Sha>9abff7703206541fdb83ffa80fe2c2753ad1997b</Sha>
+      <Sha>be1cab92326783479054e72990da08008e5be819</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-9.0.100" Version="18.5.9214">
+    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-9.0.100" Version="18.5.9215">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>0e1a194f0d0e2c0bdd7f36857c87b89aa7c90f98</Sha>
+      <Sha>807153429630114a7186d246285c3a4a504f23c1</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-9.0.100" Version="18.5.9214">
+    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-9.0.100" Version="18.5.9215">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>0e1a194f0d0e2c0bdd7f36857c87b89aa7c90f98</Sha>
+      <Sha>807153429630114a7186d246285c3a4a504f23c1</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-9.0.100" Version="18.5.9214">
+    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-9.0.100" Version="18.5.9215">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>0e1a194f0d0e2c0bdd7f36857c87b89aa7c90f98</Sha>
+      <Sha>807153429630114a7186d246285c3a4a504f23c1</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-9.0.100" Version="15.5.9214">
+    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-9.0.100" Version="15.5.9215">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>0e1a194f0d0e2c0bdd7f36857c87b89aa7c90f98</Sha>
+      <Sha>807153429630114a7186d246285c3a4a504f23c1</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-9.0.100" Version="9.0.51">
+    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-9.0.100" Version="9.0.82">
       <Uri>https://github.com/dotnet/maui</Uri>
-      <Sha>dd13512d027bd88f1ecfe7ed92fcf96e7c2e48f6</Sha>
+      <Sha>beb35b1703cd0d204d0057039aaa3e19f49a2fef</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk" Version="9.0.110-servicing.25414.7">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
@@ -40,9 +40,9 @@
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="9.0.0-beta.25323.2">
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="9.0.0-beta.25415.3">
       <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>533b40ed3b73fcb6f4509e301db76203bd58f920</Sha>
+      <Sha>d87d66c43d0660e5c8e84e667c5c8a8140bce888</Sha>
       <SourceBuild RepoName="arcade" ManagedOnly="true" />
     </Dependency>
   </ToolsetDependencies>
