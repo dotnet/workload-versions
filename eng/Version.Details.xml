@@ -10,27 +10,27 @@
       <Uri>https://github.com/dotnet/dotnet</Uri>
       <Sha>8c49b059243665b9c1a4ce01c24bedb4f5641f15</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-10.0.100-preview.7" Version="36.0.0-preview.7.229">
+    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-10.0.100-rc.1" Version="36.0.0-preview.7.229">
       <Uri>https://github.com/dotnet/android</Uri>
       <Sha>903250b8a3be2c3bed89e7740049c73f41396a8a</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-10.0.100-preview.7" Version="18.5.10601-net10-p7">
+    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-10.0.100-rc.1" Version="18.5.10601-net10-p7">
       <Uri>https://github.com/dotnet/macios</Uri>
       <Sha>b7705312033433f3f4de8fcc314c49ef2954261a</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-10.0.100-preview.7" Version="18.5.10601-net10-p7">
+    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-10.0.100-rc.1" Version="18.5.10601-net10-p7">
       <Uri>https://github.com/dotnet/macios</Uri>
       <Sha>b7705312033433f3f4de8fcc314c49ef2954261a</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-10.0.100-preview.7" Version="18.5.10601-net10-p7">
+    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-10.0.100-rc.1" Version="18.5.10601-net10-p7">
       <Uri>https://github.com/dotnet/macios</Uri>
       <Sha>b7705312033433f3f4de8fcc314c49ef2954261a</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-10.0.100-preview.7" Version="15.5.10601-net10-p7">
+    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-10.0.100-rc.1" Version="15.5.10601-net10-p7">
       <Uri>https://github.com/dotnet/macios</Uri>
       <Sha>b7705312033433f3f4de8fcc314c49ef2954261a</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-10.0.100-preview.7" Version="10.0.0-preview.7.25406.3">
+    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-10.0.100-rc.1" Version="10.0.0-preview.7.25406.3">
       <Uri>https://github.com/dotnet/maui</Uri>
       <Sha>a7a8aa3d164b99d7193a78794b4c8a6490a2ccca</Sha>
     </Dependency>
