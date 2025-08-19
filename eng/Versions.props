@@ -10,8 +10,8 @@
     <VersionPatch>0</VersionPatch>
     <!-- Enable to remove prerelease label. -->
     <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">false</StabilizePackageVersion>
-    <PreReleaseVersionLabel>preview</PreReleaseVersionLabel>
-    <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'">7</PreReleaseVersionIteration>
+    <PreReleaseVersionLabel>rc</PreReleaseVersionLabel>
+    <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'">1</PreReleaseVersionIteration>
   </PropertyGroup>
   <PropertyGroup>
     <VersionPrefix>$(VersionMajor).$(VersionSDKMinor)$(VersionFeature).$(VersionPatch)</VersionPrefix>
