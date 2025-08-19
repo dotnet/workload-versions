@@ -36,8 +36,15 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
   $dropFiles = Get-ChildItem -Path $dropDir | Sort-Object
   foreach ($dropFile in $dropFiles)
   {
-    # Note: We're using ASCII because when testing between PS 5.1 and PS 7.5, this would result in the same hash. Other encodings arrived at different hashes.
-    $fileContent = Get-Content -Path $dropFile.FullName -Encoding ASCII -Raw
+    try {
+      # Note: We're using ASCII because when testing between PS 5.1 and PS 7.5, this would result in the same hash. Other encodings arrived at different hashes.
+      $fileContent = Get-Content -Path $dropFile.FullName -Encoding ASCII -Raw
+    } catch {
+      Write-Host "Error: $($_.Exception.Message)"
+      Write-Host "Type: $($_.Exception.GetType().FullName)"
+      Write-Host "File: $($dropFile.FullName)"
+      continue
+    }
     $null = $writer.Write($fileContent)
   }
   $writer.Flush()
