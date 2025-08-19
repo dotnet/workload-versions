@@ -34,8 +34,12 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
   # See: https://learn.microsoft.com/dotnet/api/system.io.streamwriter.autoflush
   $writer.AutoFlush = $true
   $dropFiles = Get-ChildItem -Path $dropDir | Sort-Object
-  # Note: We're using ASCII because when testing between PS 5.1 and PS 7.5, this would result in the same hash. Other encodings arrived at different hashes.
-  $null = $dropFiles | Get-Content -Encoding ASCII -Raw | ForEach-Object { $writer.Write($_) }
+  foreach ($dropFile in $dropFiles)
+  {
+    # Note: We're using ASCII because when testing between PS 5.1 and PS 7.5, this would result in the same hash. Other encodings arrived at different hashes.
+    $fileContent = Get-Content -Path $dropFile.FullName -Encoding ASCII -Raw
+    $null = $writer.Write($fileContent)
+  }
   $writer.Flush()
   $contentStream.Position = 0
   $dropHash = (Get-FileHash -InputStream $contentStream).Hash
