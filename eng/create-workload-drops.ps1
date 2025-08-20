@@ -38,7 +38,7 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
   {
     try {
       # Note: We're using ASCII because when testing between PS 5.1 and PS 7.5, this would result in the same hash. Other encodings arrived at different hashes.
-      $fileContent = Get-Content -Path $dropFile.FullName -Encoding ASCII -Raw
+      $fileContent = Get-Content -Path $dropFile.FullName -Encoding ASCII -Raw -ErrorAction Stop
     } catch {
       Write-Host "Error: $($_.Exception.Message)"
       Write-Host "Type: $($_.Exception.GetType().FullName)"
