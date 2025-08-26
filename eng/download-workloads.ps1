@@ -78,6 +78,7 @@ $versionDetails | ForEach-Object {
     $assetFilter
     '--repo'
     $_.Uri
+    '--id 280810'
     '--commit'
     $_.Sha
     '--output-dir'
