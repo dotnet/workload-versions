@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-10.0.100.Transport" Version="10.0.100-rc.1.25429.105">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-10.0.100.Transport" Version="10.0.100-rc.1.25451.107">
       <Uri>https://github.com/dotnet/dotnet</Uri>
-      <Sha>2a94fd498054bb0f789fbd050b715c4b3d88b340</Sha>
+      <Sha>2db1f5ee2bdda2e8d873769325fabede32e420e0</Sha>
       <SourceBuild RepoName="emsdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="10.0.0-rc.1.25429.105">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="10.0.0-rc.1.25451.107">
       <Uri>https://github.com/dotnet/dotnet</Uri>
-      <Sha>2a94fd498054bb0f789fbd050b715c4b3d88b340</Sha>
+      <Sha>2db1f5ee2bdda2e8d873769325fabede32e420e0</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-10.0.100-rc.1" Version="36.0.0-rc.1.285">
       <Uri>https://github.com/dotnet/android</Uri>
@@ -34,15 +34,15 @@
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-maui</Uri>
       <Sha>1ff256aa8357a1a4e1c63fa66ac9120bb23c3548</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="10.0.100-rc.1.25429.105">
+    <Dependency Name="Microsoft.NET.Sdk" Version="10.0.100-rc.1.25451.107">
       <Uri>https://github.com/dotnet/dotnet</Uri>
-      <Sha>2a94fd498054bb0f789fbd050b715c4b3d88b340</Sha>
+      <Sha>2db1f5ee2bdda2e8d873769325fabede32e420e0</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="10.0.0-beta.25429.105">
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="10.0.0-beta.25451.107">
       <Uri>https://github.com/dotnet/dotnet</Uri>
-      <Sha>2a94fd498054bb0f789fbd050b715c4b3d88b340</Sha>
+      <Sha>2db1f5ee2bdda2e8d873769325fabede32e420e0</Sha>
       <SourceBuild RepoName="arcade" ManagedOnly="true" />
     </Dependency>
   </ToolsetDependencies>
