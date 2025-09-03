@@ -62,6 +62,7 @@ jobs:
           /p:DotNetPublishUsingPipelines=true
           /p:OfficialBuildId=$(Build.BuildNumber)
           /p:StabilizePackageVersion=${{ parameters.stabilizePackageVersion }}
+          /p:TestWorkloadVersion=${{ parameters.testWorkloadVersion }}
         displayName: 🟣 Build solution
 
       - ${{ if eq(parameters.createVSInsertion, true) }}:
