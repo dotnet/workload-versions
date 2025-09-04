@@ -38,14 +38,17 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
   {
     try {
       # Note: We're using ASCII because when testing between PS 5.1 and PS 7.5, this would result in the same hash. Other encodings arrived at different hashes.
-      $fileContentLines = Get-Content -Path $dropFile.FullName -Encoding ASCII -ErrorAction Stop
+      # $fileContentLines = Get-Content -Path $dropFile.FullName -Encoding ASCII -ErrorAction Stop
+      # $null = $fileContentLines | ForEach-Object { $writer.WriteLine($_) }
+
+      $fileBytes = [System.IO.File]::ReadAllBytes($dropFile.FullName)
+      $null = $writer.BaseStream.Write($fileBytes, 0, $fileBytes.Length)
     } catch {
       Write-Host "Error: $($_.Exception.Message)"
       Write-Host "Type: $($_.Exception.GetType().FullName)"
       Write-Host "File: $($dropFile.FullName)"
       continue
     }
-    $null = $fileContentLines | ForEach-Object { $writer.WriteLine($_) }
   }
   $writer.Flush()
   $contentStream.Position = 0
@@ -85,7 +88,7 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
     }
   }
 
-  Write-Host '⚠︎ After upload, your workload drop will be available at:'
+  Write-Host '!!! After upload, your workload drop will be available at:'
   Write-Host "https://devdiv.visualstudio.com/_apps/hub/ms-vscs-artifact.build-tasks.drop-hub-group-explorer-hub?name=$vsDropName"
 }
 
