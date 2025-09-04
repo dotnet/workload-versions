@@ -28,8 +28,8 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
   # Hash the files within the drop folder to create a unique identifier that represents this workload drop.
   # Example: 1E3EA4FE202394037253F57436A6EAD5DE1359792B618B9072014A98563A30FB
   # See: https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/get-filehash#example-4-compute-the-hash-of-a-string
-  $contentStream = [System.IO.MemoryStream]::new()
-  $writer = [System.IO.StreamWriter]::new($contentStream)
+  # $contentStream = [System.IO.MemoryStream]::new()
+  # $writer = [System.IO.StreamWriter]::new($contentStream)
   # # Automatically flushes the buffer after every Write call (necessary for workloads such as MAUI with a large number of files).
   # # See: https://learn.microsoft.com/dotnet/api/system.io.streamwriter.autoflush
   # $writer.AutoFlush = $true
@@ -42,7 +42,8 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
       # $null = $fileContentLines | ForEach-Object { $writer.WriteLine($_) }
 
       $fileBytes = [System.IO.File]::ReadAllBytes($dropFile.FullName)
-      $null = $writer.BaseStream.Write($fileBytes, 0, $fileBytes.Length)
+      # $null = $writer.BaseStream.Write($fileBytes, 0, $fileBytes.Length)
+      $contentStream = [System.IO.MemoryStream]::new($fileBytes)
     } catch {
       Write-Host "Error: $($_.Exception.Message)"
       Write-Host "Type: $($_.Exception.GetType().FullName)"
@@ -50,10 +51,10 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
       continue
     }
   }
-  $writer.Flush()
+  # $writer.Flush()
   $contentStream.Position = 0
   $dropHash = (Get-FileHash -InputStream $contentStream).Hash
-  $writer.Close()
+  # $writer.Close()
 
   $vsDropName = "Products/dotnet/workloads/$assemblyName/$dropHash"
   # Reads the first line out of the .metadata file in the workload's output folder and sets it to the workload version.
