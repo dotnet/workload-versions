@@ -49,6 +49,8 @@ cmake/
 eng/
 !eng/common/
 !eng/pipelines/public.yml
+!eng/Publishing.props
+!eng/Signing.props
 !eng/Version.Details.xml
 !eng/Versions.props
 src/
