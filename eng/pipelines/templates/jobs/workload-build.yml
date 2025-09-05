@@ -39,6 +39,15 @@ jobs:
         parameters:
           sourceBranch: source
           engBranch: self
+          useSourceCommitMessageRunName: true
+      - bash: |
+          echo "name = $(name)"
+          echo "ref = $(ref)"
+          echo "id = $(id)"
+          echo "type = $(type)"
+          echo "url = $(url)"
+          echo "version = $(version)"
+        displayName: 🟣 Display repository variables
       - ${{ if eq(parameters.createVSInsertion, true) }}:
         - task: AzureCLI@2
           displayName: 🟣 Download workloads for VS insertion

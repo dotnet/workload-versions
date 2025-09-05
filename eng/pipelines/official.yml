@@ -4,6 +4,10 @@
 trigger: none
 pr: none
 
+# Required to set a custom run name within workload-checkout.yml.
+# See: https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/pipeline
+appendCommitMessageToRunName: false
+
 parameters:
 - name: sourceBranch
   displayName: 🚩 Source Branch 🚩
@@ -105,6 +109,18 @@ variables:
 # DotNet-DevDiv-Insertion-Workflow-Variables provides: dn-bot-devdiv-drop-rw-code-rw
 # https://dnceng.visualstudio.com/internal/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=33&path=DotNet-DevDiv-Insertion-Workflow-Variables
 - group: DotNet-DevDiv-Insertion-Workflow-Variables
+- name: ref
+  value: $[ resources.repositories.source.ref ]
+- name: name
+  value: $[ resources.repositories.source.name ]
+- name: id
+  value: $[ resources.repositories.source.id ]
+- name: type
+  value: $[ resources.repositories.source.type ]
+- name: url
+  value: $[ resources.repositories.source.url ]
+- name: version
+  value: $[ resources.repositories.source.version ]
 
 resources:
   repositories:
