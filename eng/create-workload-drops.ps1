@@ -30,30 +30,10 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
   # See: https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/get-filehash#example-4-compute-the-hash-of-a-string
   $contentStream = [System.IO.MemoryStream]::new()
   $writer = [System.IO.StreamWriter]::new($contentStream)
-  # # Automatically flushes the buffer after every Write call (necessary for workloads such as MAUI with a large number of files).
-  # # See: https://learn.microsoft.com/dotnet/api/system.io.streamwriter.autoflush
-  # $writer.AutoFlush = $true
-  $dropFilePaths = Get-ChildItem -Path $dropDir | Sort-Object | ForEach-Object { $_.FullName }
+  $dropFilePaths = (Get-ChildItem -Path $dropDir | Sort-Object).FullName
   # Hash each file individually, then write the hashes to the stream to create a combined hash.
   $dropFileHashes = (Get-FileHash -Path $dropFilePaths).Hash
   $null = $dropFileHashes | ForEach-Object { $writer.Write($_) }
-  # foreach ($dropFile in $dropFiles)
-  # {
-  #   try {
-  #     # Note: We're using ASCII because when testing between PS 5.1 and PS 7.5, this would result in the same hash. Other encodings arrived at different hashes.
-  #     # $fileContentLines = Get-Content -Path $dropFile.FullName -Encoding ASCII -ErrorAction Stop
-  #     # $null = $fileContentLines | ForEach-Object { $writer.WriteLine($_) }
-
-  #     $fileBytes = [System.IO.File]::ReadAllBytes($dropFile.FullName)
-  #     # $null = $writer.BaseStream.Write($fileBytes, 0, $fileBytes.Length)
-  #     $contentStream = [System.IO.MemoryStream]::new($fileBytes)
-  #   } catch {
-  #     Write-Host "Error: $($_.Exception.Message)"
-  #     Write-Host "Type: $($_.Exception.GetType().FullName)"
-  #     Write-Host "File: $($dropFile.FullName)"
-  #     continue
-  #   }
-  # }
   $writer.Flush()
   $contentStream.Position = 0
   $dropHash = (Get-FileHash -InputStream $contentStream).Hash
