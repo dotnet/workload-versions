@@ -42,3 +42,17 @@ cmake/
 
 # MSBuild Logs
 **/MSBuild_Logs/MSBuild_pid-*.failure.txt
+
+###############################################################################
+# Eng branch specific files
+###############################################################################
+eng/
+!eng/common/
+!eng/pipelines/public.yml
+!eng/Version.Details.xml
+!eng/Versions.props
+src/
+tools/
+Directory.Build.props
+Directory.Build.targets
+workload-versions.sln
