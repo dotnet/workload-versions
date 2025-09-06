@@ -5,6 +5,7 @@ pr:
     include:
     - main
     - release/*
+    - eng
 
 trigger: none
 
