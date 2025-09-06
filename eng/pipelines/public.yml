@@ -13,22 +13,19 @@ resources:
   - repository: main
     type: github
     name: dotnet/workload-versions
-    # TODO: Update when the changes are merged to the main branch.
-    ref: refs/heads/feature/centralized-ci
+    ref: refs/heads/main
     # https://dev.azure.com/dnceng-public/public/_settings/adminservices?resourceId=690f39b4-7746-42c2-be89-281bd7c78b9e
     endpoint: public
   - repository: release8
     type: github
     name: dotnet/workload-versions
-    # TODO: Update when the changes are merged to the appropriate release branch.
-    ref: refs/heads/feature/centralized-ci-8
+    ref: refs/heads/release/8.0.4xx
     # https://dev.azure.com/dnceng-public/public/_settings/adminservices?resourceId=690f39b4-7746-42c2-be89-281bd7c78b9e
     endpoint: public
   - repository: release9
     type: github
     name: dotnet/workload-versions
-    # TODO: Update when the changes are merged to the appropriate release branch.
-    ref: refs/heads/feature/centralized-ci-9
+    ref: refs/heads/release/9.0.1xx
     # https://dev.azure.com/dnceng-public/public/_settings/adminservices?resourceId=690f39b4-7746-42c2-be89-281bd7c78b9e
     endpoint: public
 
