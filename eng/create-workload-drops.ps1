@@ -30,9 +30,10 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
   # See: https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/get-filehash#example-4-compute-the-hash-of-a-string
   $contentStream = [System.IO.MemoryStream]::new()
   $writer = [System.IO.StreamWriter]::new($contentStream)
-  $dropFiles = Get-ChildItem -Path $dropDir | Sort-Object
-  # Note: We're using ASCII because when testing between PS 5.1 and PS 7.5, this would result in the same hash. Other encodings arrived at different hashes.
-  $null = $dropFiles | Get-Content -Encoding ASCII -Raw | ForEach-Object { $writer.Write($_) }
+  $dropFilePaths = (Get-ChildItem -Path $dropDir | Sort-Object).FullName
+  # Hash each file individually, then write the hashes to the stream to create a combined hash.
+  $dropFileHashes = (Get-FileHash -Path $dropFilePaths).Hash
+  $null = $dropFileHashes | ForEach-Object { $writer.Write($_) }
   $writer.Flush()
   $contentStream.Position = 0
   $dropHash = (Get-FileHash -InputStream $contentStream).Hash
@@ -71,7 +72,7 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
     }
   }
 
-  Write-Host '⚠︎ After upload, your workload drop will be available at:'
+  Write-Host '!!! After upload, your workload drop will be available at:'
   Write-Host "https://devdiv.visualstudio.com/_apps/hub/ms-vscs-artifact.build-tasks.drop-hub-group-explorer-hub?name=$vsDropName"
 }
 
