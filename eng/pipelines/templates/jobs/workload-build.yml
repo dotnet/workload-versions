@@ -48,6 +48,10 @@ jobs:
           echo "url = $(url)"
           echo "version = $(version)"
         displayName: 🟣 Display repository variables
+        condition: always()
+      - powershell: 'Get-ChildItem env:'
+        displayName: 🟣 List Environment Variables
+        condition: always()
       - ${{ if eq(parameters.createVSInsertion, true) }}:
         - task: AzureCLI@2
           displayName: 🟣 Download workloads for VS insertion
