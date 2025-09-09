@@ -1,7 +1,6 @@
 parameters:
   sourceBranch: self
   engBranch: eng
-  useSourceCommitMessageRunName: false
 
 steps:
 # For checkout mechanics, see:
@@ -12,14 +11,6 @@ steps:
   path: source-branch
   workspaceRepo: true
   displayName: 🟣 Checkout source branch
-# Sets the run name to use the source commit message.
-# See: https://learn.microsoft.com/en-us/azure/devops/pipelines/process/run-number
-- ${{ if eq(parameters.useSourceCommitMessageRunName, true) }}:
-  - powershell: |
-      # Keep only alphanumeric characters (and space) and truncate to 255 max characters (255 - 14 for build number and delimiter) to avoid run name issues.
-      $commitMessage = "$(git log -1 --pretty=%s)".Trim() -replace '[^a-zA-Z0-9 ]', '' | Select-Object -First 241
-      Write-Host "##vso[build.updatebuildnumber]$(Build.BuildNumber) - $commitMessage"
-    displayName: 🟣 Set run name from source commit message
 # There is a warning when performing the second checkout, ##[warning]Unable move and reuse existing repository to required location.
 # This happens because both checkouts are of the same repository, thus have the same path of: D:\a\_work\1\s\workload-versions
 # The first checkout deletes this directory. To avoid the warning, simply create the directory beforehand.

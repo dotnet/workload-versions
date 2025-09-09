@@ -39,19 +39,6 @@ jobs:
         parameters:
           sourceBranch: source
           engBranch: self
-          useSourceCommitMessageRunName: true
-      - bash: |
-          echo "name = $(name)"
-          echo "ref = $(ref)"
-          echo "id = $(id)"
-          echo "type = $(type)"
-          echo "url = $(url)"
-          echo "version = $(version)"
-        displayName: 🟣 Display repository variables
-        condition: always()
-      - powershell: 'Get-ChildItem env:'
-        displayName: 🟣 List Environment Variables
-        condition: always()
       - ${{ if eq(parameters.createVSInsertion, true) }}:
         - task: AzureCLI@2
           displayName: 🟣 Download workloads for VS insertion
@@ -81,6 +68,15 @@ jobs:
           /p:OfficialBuildId=$(Build.BuildNumber)
           /p:StabilizePackageVersion=${{ parameters.stabilizePackageVersion }}
         displayName: 🟣 Build solution
+      # Sets the run name to use the source commit message.
+      # See: https://learn.microsoft.com/en-us/azure/devops/pipelines/process/run-number
+      # Note: This must be performed AFTER the build, as Arcade requires the default run number for the OfficialBuildId property.
+      - powershell: |
+          # Keep only alphanumeric characters (and space) and truncate to 255 max characters (255 - 14 for build number and delimiter) to avoid run name issues.
+          $commitMessage = "$(git log -1 --pretty=%s)".Trim() -replace '[^a-zA-Z0-9 ]', '' | Select-Object -First 241
+          Write-Host "##vso[build.updatebuildnumber]$(Build.BuildNumber) • $commitMessage"
+        displayName: 🟣 Set run name from source commit message
+        condition: always()
 
       - ${{ if eq(parameters.createVSInsertion, true) }}:
         # The variables comprised of workloadShortName and workloadType are set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
