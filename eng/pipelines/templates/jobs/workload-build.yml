@@ -35,9 +35,10 @@ jobs:
         image: 1es-windows-2022
         os: windows
       variables:
-        # Build.BuildNumber is changed to set the run name to contain the source branch commit message.
-        # Therefore, Build.BuildNumber is stored to a variable since the original value is needed for Arcade as the OfficialBuildId property.
-        OfficialBuildId: $(Build.BuildNumber)
+      # Build.BuildNumber is changed to set the run name to contain the source branch commit message.
+      # Therefore, Build.BuildNumber is stored to a variable since the original value is needed for Arcade as the OfficialBuildId property.
+      - name: OfficialBuildId
+        value: $(Build.BuildNumber)
       steps:
       - template: /eng/pipelines/templates/steps/workload-checkout.yml@self
         parameters:
