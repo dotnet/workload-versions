@@ -34,11 +34,16 @@ jobs:
         name: $(DncEngInternalBuildPool)
         image: 1es-windows-2022
         os: windows
+      variables:
+        # Build.BuildNumber is changed to set the run name to contain the source branch commit message.
+        # Therefore, Build.BuildNumber is stored to a variable since the original value is needed for Arcade as the OfficialBuildId property.
+        OfficialBuildId: $(Build.BuildNumber)
       steps:
       - template: /eng/pipelines/templates/steps/workload-checkout.yml@self
         parameters:
           sourceBranch: source
           engBranch: self
+          useSourceCommitMessageRunName: true
       - ${{ if eq(parameters.createVSInsertion, true) }}:
         - task: AzureCLI@2
           displayName: 🟣 Download workloads for VS insertion
@@ -65,18 +70,9 @@ jobs:
           /p:DotNetSignType=$(_SignType)
           /p:TeamName=$(_TeamName)
           /p:DotNetPublishUsingPipelines=true
-          /p:OfficialBuildId=$(Build.BuildNumber)
+          /p:OfficialBuildId=$(OfficialBuildId)
           /p:StabilizePackageVersion=${{ parameters.stabilizePackageVersion }}
         displayName: 🟣 Build solution
-      # Sets the run name to use the source commit message.
-      # See: https://learn.microsoft.com/en-us/azure/devops/pipelines/process/run-number
-      # Note: This must be performed AFTER the build, as Arcade requires the default run number for the OfficialBuildId property.
-      - powershell: |
-          # Keep only alphanumeric characters (and space) and truncate to 255 max characters (255 - 14 for build number and delimiter) to avoid run name issues.
-          $commitMessage = "$(git log -1 --pretty=%s)".Trim() -replace '[^a-zA-Z0-9 ]', '' | Select-Object -First 241
-          Write-Host "##vso[build.updatebuildnumber]$(Build.BuildNumber) • $commitMessage"
-        displayName: 🟣 Set run name from source commit message
-        condition: always()
 
       - ${{ if eq(parameters.createVSInsertion, true) }}:
         # The variables comprised of workloadShortName and workloadType are set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
