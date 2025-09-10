@@ -37,6 +37,7 @@ jobs:
       variables:
       # Build.BuildNumber is changed to set the run name to contain the source branch commit message.
       # Therefore, Build.BuildNumber is stored to a variable since the original value is needed for Arcade as the OfficialBuildId property.
+      # Using a runtime expression $[] allows this to be resolved prior to being changed.
       - name: OfficialBuildId
         value: $[variables.Build.BuildNumber]
       steps:
