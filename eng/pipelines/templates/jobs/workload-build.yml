@@ -34,25 +34,23 @@ jobs:
         name: $(DncEngInternalBuildPool)
         image: 1es-windows-2022
         os: windows
-      variables:
-      # Build.BuildNumber is changed to set the run name to contain the source branch commit message.
-      # Therefore, Build.BuildNumber is stored to a variable since the original value is needed for Arcade as the OfficialBuildId property.
-      # Using a runtime expression $[] allows this to be resolved prior to being changed.
-      - name: OfficialBuildId
-        value: $[ variables.Build.BuildNumber ]
       steps:
       - template: /eng/pipelines/templates/steps/workload-checkout.yml@self
         parameters:
           sourceBranchAlias: source
           engBranchAlias: self
       # Sets the run name to use the source branch commit message.
+      # Also, sets the OfficialBuildId variable to the original Build.BuildNumber for use in Arcade.
       # See: https://learn.microsoft.com/en-us/azure/devops/pipelines/process/run-number
       - powershell: |
           # Keep only alphanumeric characters (and space) and truncate to 255 max characters (255 - 14 for build number and delimiter) to avoid run name issues.
-          Write-Host "OfficialBuildId: $(OfficialBuildId)"
+          Write-Host "##vso[task.setvariable variable=OfficialBuildId]$(Build.BuildNumber)"
           $commitMessage = "$(git log -1 --pretty=%s)".Trim() -replace '[^a-zA-Z0-9 ]', '' | Select-Object -First 241
           Write-Host "##vso[build.updatebuildnumber]$(Build.BuildNumber) • $commitMessage"
         displayName: 🟣 Set run name via source branch commit message
+      - powershell: |
+          Write-Host "OfficialBuildId: $(OfficialBuildId)"
+        displayName: 🟣 OfficialBuildId
       - ${{ if eq(parameters.createVSInsertion, true) }}:
         - task: AzureCLI@2
           displayName: 🟣 Download workloads for VS insertion
