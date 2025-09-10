@@ -43,9 +43,10 @@ jobs:
       steps:
       - template: /eng/pipelines/templates/steps/workload-checkout.yml@self
         parameters:
-          sourceBranch: source
-          engBranch: self
+          sourceBranchAlias: source
+          engBranchAlias: self
           useSourceCommitMessageRunName: true
+          sourceBranch: ${{ parameters.sourceBranch }}
       - ${{ if eq(parameters.createVSInsertion, true) }}:
         - task: AzureCLI@2
           displayName: 🟣 Download workloads for VS insertion
