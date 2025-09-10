@@ -18,6 +18,7 @@ steps:
 - ${{ if eq(parameters.useSourceCommitMessageRunName, true) }}:
   - powershell: |
       # Keep only alphanumeric characters (and space) and truncate to 255 max characters (255 - 14 for build number and delimiter) to avoid run name issues.
+      Write-Host "$(git branch --show-current)"
       $commitMessage = "$(git log ${{ parameters.sourceBranch }} -1 --pretty=%s)".Trim() -replace '[^a-zA-Z0-9 ]', '' | Select-Object -First 241
       Write-Host "##vso[build.updatebuildnumber]$(Build.BuildNumber) • $commitMessage"
     displayName: 🟣 Set run name via source branch commit message
