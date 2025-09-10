@@ -39,6 +39,10 @@ jobs:
         parameters:
           sourceBranch: source
           engBranch: self
+      - powershell: |
+          Write-Host 'workloadDropNames:'
+          Write-Host '${{ convertToJson(parameters.workloadDropNames) }}'
+        displayName: 🟣 workloadDropNames
       - ${{ if eq(parameters.createVSInsertion, true) }}:
         - task: AzureCLI@2
           displayName: 🟣 Download workloads for VS insertion
