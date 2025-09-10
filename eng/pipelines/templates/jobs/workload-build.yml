@@ -43,14 +43,11 @@ jobs:
       # Also, sets the OfficialBuildId variable to the original Build.BuildNumber for use in Arcade.
       # See: https://learn.microsoft.com/en-us/azure/devops/pipelines/process/run-number
       - powershell: |
-          # Keep only alphanumeric characters (and space) and truncate to 255 max characters (255 - 14 for build number and delimiter) to avoid run name issues.
           Write-Host "##vso[task.setvariable variable=OfficialBuildId]$(Build.BuildNumber)"
+          # Keep only alphanumeric characters (and space) and truncate to 255 max characters (255 - 14 for build number and delimiter) to avoid run name issues.
           $commitMessage = "$(git log -1 --pretty=%s)".Trim() -replace '[^a-zA-Z0-9 ]', '' | Select-Object -First 241
           Write-Host "##vso[build.updatebuildnumber]$(Build.BuildNumber) • $commitMessage"
         displayName: 🟣 Set run name via source branch commit message
-      - powershell: |
-          Write-Host "OfficialBuildId: $(OfficialBuildId)"
-        displayName: 🟣 OfficialBuildId
       - ${{ if eq(parameters.createVSInsertion, true) }}:
         - task: AzureCLI@2
           displayName: 🟣 Download workloads for VS insertion
