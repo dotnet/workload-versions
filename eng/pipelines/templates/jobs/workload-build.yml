@@ -39,14 +39,20 @@ jobs:
       # Therefore, Build.BuildNumber is stored to a variable since the original value is needed for Arcade as the OfficialBuildId property.
       # Using a runtime expression $[] allows this to be resolved prior to being changed.
       - name: OfficialBuildId
-        value: $[variables.Build.BuildNumber]
+        # value: $[variables.Build.BuildNumber]
+        value: ${{ variables.Build.BuildNumber }}
       steps:
       - template: /eng/pipelines/templates/steps/workload-checkout.yml@self
         parameters:
           sourceBranchAlias: source
           engBranchAlias: self
-          useSourceCommitMessageRunName: true
-          sourceBranch: ${{ parameters.sourceBranch }}
+      # Sets the run name to use the source branch commit message.
+      # See: https://learn.microsoft.com/en-us/azure/devops/pipelines/process/run-number
+      - powershell: |
+          # Keep only alphanumeric characters (and space) and truncate to 255 max characters (255 - 14 for build number and delimiter) to avoid run name issues.
+          $commitMessage = "$(git log -1 --pretty=%s)".Trim() -replace '[^a-zA-Z0-9 ]', '' | Select-Object -First 241
+          Write-Host "##vso[build.updatebuildnumber]$(Build.BuildNumber) • $commitMessage"
+        displayName: 🟣 Set run name via source branch commit message
       - ${{ if eq(parameters.createVSInsertion, true) }}:
         - task: AzureCLI@2
           displayName: 🟣 Download workloads for VS insertion

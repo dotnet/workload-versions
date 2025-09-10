@@ -157,7 +157,6 @@ extends:
           workloadDropNames: ${{ parameters.workloadDropNames }}
           primaryVsInsertionBranches: ${{ parameters.primaryVsInsertionBranches }}
           secondaryVsInsertionBranches: ${{ parameters.secondaryVsInsertionBranches }}
-          sourceBranch: ${{ parameters.sourceBranch }}
     - ${{ if or(eq(parameters.publishToAzDO, true), eq(parameters.publishToNuGet, true)) }}:
       - stage: Publish
         displayName: Publish
