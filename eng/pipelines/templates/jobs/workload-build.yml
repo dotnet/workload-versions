@@ -38,7 +38,7 @@ jobs:
       # Build.BuildNumber is changed to set the run name to contain the source branch commit message.
       # Therefore, Build.BuildNumber is stored to a variable since the original value is needed for Arcade as the OfficialBuildId property.
       - name: OfficialBuildId
-        value: $(Build.BuildNumber)
+        value: $[variables.Build.BuildNumber]
       steps:
       - template: /eng/pipelines/templates/steps/workload-checkout.yml@self
         parameters:
