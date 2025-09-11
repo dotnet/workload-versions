@@ -42,6 +42,13 @@ jobs:
       - powershell: |
           Write-Host 'workloadDropNames:'
           Write-Host '${{ convertToJson(parameters.workloadDropNames) }}'
+
+          $workloadDropNamesRaw = @'
+          ${{ convertToJson(parameters.workloadDropNames) }}
+          '@
+          $workloadDropNames = $workloadDropNamesRaw -replace '\r?\n', ''
+          Write-Host "workloadDropNames: $workloadDropNames"
+          Write-Host "##vso[task.setvariable variable=WorkloadDropNames]$workloadDropNames"
         displayName: 🟣 workloadDropNames
       - ${{ if eq(parameters.createVSInsertion, true) }}:
         - task: AzureCLI@2
