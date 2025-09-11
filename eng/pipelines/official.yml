@@ -10,7 +10,7 @@ appendCommitMessageToRunName: false
 
 parameters:
 - name: sourceBranch
-  displayName: 🚩 Source Branch 🚩
+  displayName: 🚩 Source branch 🚩
   type: string
 
 - name: dividerAzDO
@@ -35,7 +35,7 @@ parameters:
   type: boolean
   default: false
 - name: vsTopicBranch
-  displayName: 'VS Topic Branch [default: temp/{team}/{target}/yyyy-MM]'
+  displayName: 'VS topic branch [default: temp/{team}/{target}/yyyy-MM]'
   type: string
   default: '|default|'
 # TODO: This needs fixed for single-entry values.
@@ -78,7 +78,7 @@ parameters:
   type: boolean
   default: false
 - name: usePreComponentsForVSInsertion
-  displayName: Use Preview Components for VS insertion
+  displayName: Use preview components for VS insertion
   type: boolean
   default: false
 - name: includeNonShippingWorkloads
