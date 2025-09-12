@@ -73,7 +73,7 @@ jobs:
 
   - ${{ each primaryInsertionBranch in parameters.primaryVsInsertionBranches }}:
     # One PR is created per branch defined at the top of official.yml in the primaryVsInsertionBranches parameter.
-    - template: /eng/pipelines/templates/steps/workload-insertion.yml@self
+    - template: /eng/pipelines/templates/steps/workload-insertion-steps.yml@self
       parameters:
         targetBranch: ${{ primaryInsertionBranch }}
         topicBranch: ${{ parameters.vsTopicBranch }}
@@ -81,7 +81,7 @@ jobs:
         componentJsonValues: $(PrimaryVSComponentJsonValues)
   - ${{ each secondaryInsertionBranch in parameters.secondaryVsInsertionBranches }}:
     # One PR is created per branch defined at the top of official.yml in the secondaryVsInsertionBranches parameter.
-    - template: /eng/pipelines/templates/steps/workload-insertion.yml@self
+    - template: /eng/pipelines/templates/steps/workload-insertion-steps.yml@self
       parameters:
         targetBranch: ${{ secondaryInsertionBranch }}
         topicBranch: ${{ parameters.vsTopicBranch }}
