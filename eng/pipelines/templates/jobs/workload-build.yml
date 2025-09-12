@@ -58,3 +58,12 @@ jobs:
           /p:OfficialBuildId=$(Build.BuildNumber)
           /p:StabilizePackageVersion=${{ parameters.stabilizePackageVersion }}
         displayName: 🟣 Build solution
+        # Name is required to reference the variables created within this build step in other stages.
+        name: BuildSolution
+
+      - ${{ if eq(parameters.createVSInsertion, true) }}:
+        - task: 1ES.PublishPipelineArtifact@1
+          displayName: 🟣 Publish workload artifacts
+          inputs:
+            artifact: Workloads
+            path: $(System.DefaultWorkingDirectory)/artifacts/workloads

@@ -20,12 +20,12 @@ jobs:
     type: buildJob
   steps:
   # This task, without the '1ES.' prefix, is not blocked on a buildJob type context.
-  # 1ES docs: https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/1es-pipeline-templates/features/inputs
+  # 1ES docs: https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/1es-pipeline-templates/features/inputs/pipeline-artifact
   - task: DownloadPipelineArtifact@2
-    displayName: 🟣 Download build artifacts
+    displayName: 🟣 Download workload artifacts
     inputs:
-      artifactName: Artifacts
-      targetPath: $(System.DefaultWorkingDirectory)/artifacts
+      artifactName: Workloads
+      targetPath: $(System.DefaultWorkingDirectory)/artifacts/workloads
   # The variables comprised of workloadShortName and workloadType are set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
   - ${{ each workloadShortName in parameters.workloadDropNames }}:
     - ${{ each workloadType in parameters.workloadDropTypes }}:
@@ -33,7 +33,8 @@ jobs:
       # Sets the PublishWorkloadDrop variable. See: https://stackoverflow.com/a/60630739/294804
       - pwsh: |
           # If the drop folder doesn't exist (not downloaded via DARC), the drop cannot be published.
-          if (-not (Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')) {
+          $workloadDirectory = "$[ stageDependencies.Build.BuildRepo.outputs['BuildSolution.${{ workloadShortName }}_${{ workloadType }}_dir'] ]"
+          if (-not (Test-Path -Path $workloadDirectory)) {
             Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]False"
             Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" was not downloaded via DARC. Skipping VS drop publish...'
             return
@@ -47,8 +48,8 @@ jobs:
       - task: 1ES.MicroBuildVstsDrop@1
         displayName: '🟣 Publish VS insertion drop: ${{ workloadShortName }}_${{ workloadType }}'
         inputs:
-          dropFolder: $(${{ workloadShortName }}_${{ workloadType }}_dir)
-          dropName: $(${{ workloadShortName }}_${{ workloadType }}_name)
+          dropFolder: $[ stageDependencies.Build.BuildRepo.outputs['BuildSolution.${{ workloadShortName }}_${{ workloadType }}_dir'] ]
+          dropName: $[ stageDependencies.Build.BuildRepo.outputs['BuildSolution.${{ workloadShortName }}_${{ workloadType }}_name'] ]
           # See: https://dev.azure.com/devdiv/DevDiv/_wiki/wikis/DevDiv.wiki/35351/Retain-Drops
           dropRetentionDays: 183
           accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
@@ -56,18 +57,18 @@ jobs:
         condition: eq(variables['PublishWorkloadDrop'], 'True')
 
   - ${{ each primaryInsertionBranch in parameters.primaryVsInsertionBranches }}:
-    # One PR is created per branch defined at the top of this file in the primaryVsInsertionBranches parameter.
+    # One PR is created per branch defined at the top of official.yml in the primaryVsInsertionBranches parameter.
     - template: /eng/pipelines/templates/steps/workload-insertion.yml@self
       parameters:
         targetBranch: ${{ primaryInsertionBranch }}
         topicBranch: ${{ parameters.vsTopicBranch }}
         # PrimaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
-        componentJsonValues: $(PrimaryVSComponentJsonValues)
+        componentJsonValues: $[ stageDependencies.Build.BuildRepo.outputs['BuildSolution.PrimaryVSComponentJsonValues'] ]
   - ${{ each secondaryInsertionBranch in parameters.secondaryVsInsertionBranches }}:
-    # One PR is created per branch defined at the top of this file in the secondaryVsInsertionBranches parameter.
+    # One PR is created per branch defined at the top of official.yml in the secondaryVsInsertionBranches parameter.
     - template: /eng/pipelines/templates/steps/workload-insertion.yml@self
       parameters:
         targetBranch: ${{ secondaryInsertionBranch }}
         topicBranch: ${{ parameters.vsTopicBranch }}
         # SecondaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
-        componentJsonValues: $(SecondaryVSComponentJsonValues)
+        componentJsonValues: $[ stageDependencies.Build.BuildRepo.outputs['BuildSolution.SecondaryVSComponentJsonValues'] ]

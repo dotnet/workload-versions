@@ -57,9 +57,9 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
     $dropType = $Matches.type.Replace('.', '')
     $dropUrl = "https://vsdrop.microsoft.com/file/v1/$vsDropName;$assemblyName.vsman"
 
-    Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_name]$vsDropName"
-    Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_dir]$dropDir"
-    Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_url]$dropUrl"
+    Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_name;isoutput=true]$vsDropName"
+    Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_dir;isoutput=true]$dropDir"
+    Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_url;isoutput=true]$dropUrl"
 
     # Each vsman file is comma-separated. First .vsman is destination and the second is source.
     $vsComponentValue = "$assemblyName.vsman{$workloadVersion}=$dropUrl,"
@@ -83,10 +83,10 @@ $null = Get-ChildItem -Path $workloadDropPath -Include *.json, *.vsmand, files.t
 if ($primaryVSComponentJsonValues) {
   # Remove the trailing comma.
   $primaryVSComponentJsonValues = $primaryVSComponentJsonValues -replace '.$'
-  Write-Host "##vso[task.setvariable variable=PrimaryVSComponentJsonValues]$primaryVSComponentJsonValues"
+  Write-Host "##vso[task.setvariable variable=PrimaryVSComponentJsonValues;isoutput=true]$primaryVSComponentJsonValues"
 }
 if ($secondaryVSComponentJsonValues) {
   # Remove the trailing comma.
   $secondaryVSComponentJsonValues = $secondaryVSComponentJsonValues -replace '.$'
-  Write-Host "##vso[task.setvariable variable=SecondaryVSComponentJsonValues]$secondaryVSComponentJsonValues"
+  Write-Host "##vso[task.setvariable variable=SecondaryVSComponentJsonValues;isoutput=true]$secondaryVSComponentJsonValues"
 }
