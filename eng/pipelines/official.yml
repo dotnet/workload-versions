@@ -34,7 +34,6 @@ parameters:
   displayName: 'VS Topic Branch [default: temp/{team}/{target}/yyyy-MM]'
   type: string
   default: '|default|'
-# TODO: This needs fixed for single-entry values.
 - name: workloadDropNames
   displayName: Workload drop names
   type: object

@@ -8,7 +8,7 @@
 # $azDOPat: The Azure DevOps PAT to use for DARC (CI build only). See workload-build.yml for converting the PAT to SecureString.
 # $workloadListJson: The JSON string of the list of workload drop names to download. If not provided, all workloads found in Version.Details.xml will be downloaded.
 # - See the workloadDropNames parameter in official.yml for the list generally passed to this script.
-# - Example Value: '{["emsdk","mono"]}'
+# - Example Value: '["emsdk","mono"]'
 # $usePreComponents:
 # - If $true, includes *pre.components.zip drops and excludes *components.zip drops.
 # - If $false, excludes *pre.components.zip drops and includes *components.zip drops.
@@ -51,7 +51,8 @@ $versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency
 $workloadFilter = ''
 if ($workloadListJson) {
   $workloadList = ConvertFrom-Json -InputObject $workloadListJson
-  if ($workloadList.Count -ne 0) {
+  # Using Length accounts for arrays (multiple workloads provided) and strings (single workload provided).
+  if ($workloadList.Length -ne 0) {
     $workloadFilter = "($($workloadList | Join-String -Separator '|'))"
   }
 }

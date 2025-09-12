@@ -30,6 +30,15 @@ jobs:
           sourceBranch: source
           engBranch: self
       - ${{ if eq(parameters.createVSInsertion, true) }}:
+        # The convertToJson expression in AzDO creates "pretty" JSON with line breaks and indentation.
+        # To simplify passing this JSON to scripts, we collapse it to a single line.
+        - powershell: |
+            $workloadDropNames = @'
+            ${{ convertToJson(parameters.workloadDropNames) }}
+            '@
+            $workloadListJson = $workloadDropNames -replace '\r?\n\s*', ''
+            Write-Host "##vso[task.setvariable variable=WorkloadListJson]$workloadListJson"
+          displayName: 🟣 Set WorkloadListJson variable
         - task: AzureCLI@2
           displayName: 🟣 Download workloads for VS insertion
           inputs:
@@ -41,7 +50,7 @@ jobs:
               -workloadPath '$(System.DefaultWorkingDirectory)/artifacts/workloads'
               -gitHubPat (ConvertTo-SecureString -String '$(BotAccount-dotnet-bot-repo-PAT)' -AsPlainText -Force)
               -azDOPat (ConvertTo-SecureString -String '$(dn-bot-all-drop-rw-code-rw-release-all)' -AsPlainText -Force)
-              -workloadListJson '${{ convertToJson(parameters.workloadDropNames) }}'
+              -workloadListJson '$(WorkloadListJson)'
               -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }}
               -includeNonShipping:$${{ parameters.includeNonShippingWorkloads }}
 
