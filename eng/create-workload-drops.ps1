@@ -55,12 +55,11 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
     $shortName = "$($Matches.short)"
     # Remove the '.' from 'pre.components'
     $dropType = $Matches.type.Replace('.', '')
+
+    Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_name;isoutput=true]$vsDropName"
+    Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_dir;isoutput=true]$dropDir"
+
     $dropUrl = "https://vsdrop.microsoft.com/file/v1/$vsDropName;$assemblyName.vsman"
-
-    Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_name]$vsDropName"
-    Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_dir]$dropDir"
-    Write-Host "##vso[task.setvariable variable=$($shortName)_$($dropType)_url]$dropUrl"
-
     # Each vsman file is comma-separated. First .vsman is destination and the second is source.
     $vsComponentValue = "$assemblyName.vsman{$workloadVersion}=$dropUrl,"
     # All VS components are added to the primary VS component JSON string.
@@ -71,9 +70,6 @@ Get-ChildItem -Path $workloadDropPath -Directory | ForEach-Object {
       $secondaryVSComponentJsonValues += $vsComponentValue
     }
   }
-
-  Write-Host '!!! After upload, your workload drop will be available at:'
-  Write-Host "https://devdiv.visualstudio.com/_apps/hub/ms-vscs-artifact.build-tasks.drop-hub-group-explorer-hub?name=$vsDropName"
 }
 
 # Clean up intermediate build files in the workload drop folders.
@@ -83,10 +79,10 @@ $null = Get-ChildItem -Path $workloadDropPath -Include *.json, *.vsmand, files.t
 if ($primaryVSComponentJsonValues) {
   # Remove the trailing comma.
   $primaryVSComponentJsonValues = $primaryVSComponentJsonValues -replace '.$'
-  Write-Host "##vso[task.setvariable variable=PrimaryVSComponentJsonValues]$primaryVSComponentJsonValues"
+  Write-Host "##vso[task.setvariable variable=PrimaryVSComponentJsonValues;isoutput=true]$primaryVSComponentJsonValues"
 }
 if ($secondaryVSComponentJsonValues) {
   # Remove the trailing comma.
   $secondaryVSComponentJsonValues = $secondaryVSComponentJsonValues -replace '.$'
-  Write-Host "##vso[task.setvariable variable=SecondaryVSComponentJsonValues]$secondaryVSComponentJsonValues"
+  Write-Host "##vso[task.setvariable variable=SecondaryVSComponentJsonValues;isoutput=true]$secondaryVSComponentJsonValues"
 }
