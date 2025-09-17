@@ -71,4 +71,5 @@
   <PropertyGroup>
     <MicrosoftDeploymentDotNetReleasesVersion>2.0.0-preview.1.24406.1</MicrosoftDeploymentDotNetReleasesVersion>
   </PropertyGroup>
+  <Import Project="Version.Overrides.props" Condition="Exists('Version.Overrides.props')" />
 </Project>
