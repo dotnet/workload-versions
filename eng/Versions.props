@@ -80,4 +80,5 @@
     <MicrosoftNETSdkAspireManifest80100PackageVersion>8.2.2</MicrosoftNETSdkAspireManifest80100PackageVersion>
     <AspireWorkloadManifestVersion>$(MicrosoftNETSdkAspireManifest80100PackageVersion)</AspireWorkloadManifestVersion>
   </PropertyGroup>
+  <Import Project="Version.Overrides.props" Condition="Exists('Version.Overrides.props')" />
 </Project>
