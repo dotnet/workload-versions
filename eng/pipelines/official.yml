@@ -81,6 +81,27 @@ parameters:
   type: boolean
   default: false
 
+- name: dividerSetVersion
+  displayName: '[ ######## SET VERSION ######## ]'
+  type: boolean
+  default: false
+- name: setVersionMajor
+  displayName: Set version major
+  type: string
+  default: '|default|'
+- name: setVersionMinor
+  displayName: Set version minor (one digit)
+  type: string
+  default: '|default|'
+- name: setVersionFeature
+  displayName: Set version feature (two digits)
+  type: string
+  default: '|default|'
+- name: setVersionPatch
+  displayName: Set version patch
+  type: string
+  default: '|default|'
+
 variables:
 # Variables used: DncEngInternalBuildPool
 - template: /eng/common/templates-official/variables/pool-providers.yml@source
