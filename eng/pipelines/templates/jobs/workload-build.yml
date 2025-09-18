@@ -53,7 +53,7 @@ jobs:
               -workloadListJson '$(WorkloadListJson)'
               -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }}
               -includeNonShipping:$${{ parameters.includeNonShippingWorkloads }}
-
+      - powershell: 'Insert script here'
       # https://github.com/dotnet/arcade/blob/ccae251ef033746eb0213329953f5e3c1687693b/Documentation/CorePackages/Publishing.md#basic-onboarding-scenario-for-new-repositories-to-the-current-publishing-version-v3
       - powershell: >-
           eng/common/build.ps1
@@ -69,7 +69,6 @@ jobs:
         displayName: 🟣 Build solution
         # Name is required to reference the variables created within this build step in other stages.
         name: BuildSolution
-
       - ${{ if eq(parameters.createVSInsertion, true) }}:
         - task: 1ES.PublishPipelineArtifact@1
           displayName: 🟣 Publish workload artifacts

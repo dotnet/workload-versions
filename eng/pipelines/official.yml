@@ -85,12 +85,16 @@ parameters:
   displayName: '[ ######## SET VERSION ######## ]'
   type: boolean
   default: false
-- name: setVersionMajor
-  displayName: Set version major
-  type: string
-  default: '|default|'
-- name: setVersionMinor
-  displayName: Set version minor (one digit)
+# - name: setVersionMajor
+#   displayName: Set version major
+#   type: string
+#   default: '|default|'
+# - name: setVersionMinor
+#   displayName: Set version minor
+#   type: string
+#   default: '|default|'
+- name: setSdkVersionMinor
+  displayName: Set SDK version minor (one digit)
   type: string
   default: '|default|'
 - name: setVersionFeature
@@ -101,6 +105,25 @@ parameters:
   displayName: Set version patch
   type: string
   default: '|default|'
+- name: setPreReleaseVersionLabel
+  displayName: Set pre-release version label
+  type: string
+  default: '|default|'
+  values:
+  - '|default|'
+  - servicing
+  - preview
+  - rc
+  - alpha
+  - rtm
+- name: setPreReleaseVersionIteration
+  displayName: Set pre-release version iteration
+  type: string
+  default: '|default|'
+- name: createTestWorkloadSet
+  displayName: Create a test workload set
+  type: boolean
+  default: false
 
 variables:
 # Variables used: DncEngInternalBuildPool
