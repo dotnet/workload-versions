@@ -93,8 +93,8 @@ parameters:
 #   displayName: Set version minor
 #   type: string
 #   default: '|default|'
-- name: setSdkVersionMinor
-  displayName: Set SDK version minor (one digit)
+- name: setVersionSdkMinor
+  displayName: Set version SDK minor (one digit)
   type: string
   default: '|default|'
 - name: setVersionFeature
