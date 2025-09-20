@@ -85,14 +85,6 @@ parameters:
   displayName: '[ ######## SET VERSION ######## ]'
   type: boolean
   default: false
-# - name: setVersionMajor
-#   displayName: Set version major
-#   type: string
-#   default: '|default|'
-# - name: setVersionMinor
-#   displayName: Set version minor
-#   type: string
-#   default: '|default|'
 - name: setVersionSdkMinor
   displayName: Set version SDK minor (one digit)
   type: string
@@ -193,6 +185,12 @@ extends:
           usePreComponentsForVSInsertion: ${{ parameters.usePreComponentsForVSInsertion }}
           includeNonShippingWorkloads: ${{ parameters.includeNonShippingWorkloads }}
           workloadDropNames: ${{ parameters.workloadDropNames }}
+          createTestWorkloadSet: ${{ parameters.createTestWorkloadSet }}
+          setVersionSdkMinor: ${{ parameters.setVersionSdkMinor }}
+          setVersionFeature: ${{ parameters.setVersionFeature }}
+          setVersionPatch: ${{ parameters.setVersionPatch }}
+          setPreReleaseVersionLabel: ${{ parameters.setPreReleaseVersionLabel }}
+          setPreReleaseVersionIteration: ${{ parameters.setPreReleaseVersionIteration }}
 
     - ${{ if eq(parameters.createVSInsertion, true) }}:
       - stage: Insertion

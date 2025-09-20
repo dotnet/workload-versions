@@ -53,7 +53,14 @@ jobs:
               -workloadListJson '$(WorkloadListJson)'
               -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }}
               -includeNonShipping:$${{ parameters.includeNonShippingWorkloads }}
-      - powershell: 'Insert script here'
+      - powershell: eng/create-version-override.ps1
+          -createTestWorkloadSet:$${{ parameters.createTestWorkloadSet }}
+          -versionSdkMinor '${{ parameters.setVersionSdkMinor }}'
+          -versionFeature '${{ parameters.setVersionFeature }}'
+          -versionPatch '${{ parameters.setVersionPatch }}'
+          -preReleaseVersionLabel '${{ parameters.setPreReleaseVersionLabel }}'
+          -preReleaseVersionIteration '${{ parameters.setPreReleaseVersionIteration }}'
+        displayName: 🟣 Create Version.Overrides.props
       # https://github.com/dotnet/arcade/blob/ccae251ef033746eb0213329953f5e3c1687693b/Documentation/CorePackages/Publishing.md#basic-onboarding-scenario-for-new-repositories-to-the-current-publishing-version-v3
       - powershell: >-
           eng/common/build.ps1
