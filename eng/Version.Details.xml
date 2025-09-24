@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.20" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.21" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
-      <Sha>574100b692e71fa3426931adf4c1ba42e4ee5213</Sha>
+      <Sha>2913e6f9d1553be07d0f82f05f617b52a77078e5</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100" Version="8.0.20" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100" Version="8.0.21" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>222749b48ecb0fe78f236ca9c61f6ff3b09cdc99</Sha>
+      <Sha>ea366a7a40bc588c70ef59376040130baf864c85</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-8.0.100" Version="34.0.154">
       <Uri>https://github.com/dotnet/android</Uri>
@@ -33,9 +33,9 @@
       <Uri>https://github.com/dotnet/maui</Uri>
       <Sha>f4dbb744f19d479c9dc0582e97ba7753df149638</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.415-servicing.25466.5">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.415-servicing.25474.2">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-installer</Uri>
-      <Sha>0f2426ab4c9b0b8b9bdc979d088abb0c083fc315</Sha>
+      <Sha>58d05bb0a2aa8fb1c38f7cf46f4dabf970f452d0</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
