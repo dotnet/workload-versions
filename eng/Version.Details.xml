@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-10.0.100.Transport" Version="10.0.100-rc.1.25451.107">
-      <Uri>https://github.com/dotnet/dotnet</Uri>
-      <Sha>2db1f5ee2bdda2e8d873769325fabede32e420e0</Sha>
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-10.0.100.Transport" Version="10.0.100-rc.2.25476.107">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet</Uri>
+      <Sha>145a4df71b88cc2e88a4facaab145e21558a902c</Sha>
       <SourceBuild RepoName="emsdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="10.0.0-rc.1.25451.107">
-      <Uri>https://github.com/dotnet/dotnet</Uri>
-      <Sha>2db1f5ee2bdda2e8d873769325fabede32e420e0</Sha>
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="10.0.0-rc.2.25476.107">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet</Uri>
+      <Sha>145a4df71b88cc2e88a4facaab145e21558a902c</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-10.0.100-rc.2" Version="36.0.0-rc.2.331">
       <Uri>https://github.com/dotnet/android</Uri>
@@ -34,15 +34,15 @@
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-maui</Uri>
       <Sha>069f29330bb13355e34fd6d38f05e207ac1551c5</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="10.0.100-rc.1.25451.107">
-      <Uri>https://github.com/dotnet/dotnet</Uri>
-      <Sha>2db1f5ee2bdda2e8d873769325fabede32e420e0</Sha>
+    <Dependency Name="Microsoft.NET.Sdk" Version="10.0.100-rc.2.25476.107">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet</Uri>
+      <Sha>145a4df71b88cc2e88a4facaab145e21558a902c</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="10.0.0-beta.25451.107">
-      <Uri>https://github.com/dotnet/dotnet</Uri>
-      <Sha>2db1f5ee2bdda2e8d873769325fabede32e420e0</Sha>
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="10.0.0-beta.25476.2">
+      <Uri>https://github.com/dotnet/arcade</Uri>
+      <Sha>a4c9a07d978c070ef5c19d2ec9f811d6a5b20914</Sha>
       <SourceBuild RepoName="arcade" ManagedOnly="true" />
     </Dependency>
   </ToolsetDependencies>
