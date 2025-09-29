@@ -1,13 +1,13 @@
 parameters:
-  sourceBranch: self
-  engBranch: eng
+  sourceBranchAlias: self
+  engBranchAlias: eng
 
 stages:
-- stage: Build_${{ parameters.sourceBranch }}
-  displayName: Build ${{ parameters.sourceBranch }}
+- stage: Build_${{ parameters.sourceBranchAlias }}
+  displayName: Build ${{ parameters.sourceBranchAlias }}
   dependsOn: []
   jobs:
-  - template: /eng/common/templates/job/job.yml@${{ parameters.sourceBranch }}
+  - template: /eng/common/templates/job/job.yml@${{ parameters.sourceBranchAlias }}
     parameters:
       name: buildRepo
       displayName: Build Repo
@@ -17,12 +17,12 @@ stages:
       artifacts:
         publish:
           logs:
-            name: Logs_${{ parameters.sourceBranch }}
+            name: Logs_${{ parameters.sourceBranchAlias }}
       steps:
-      - template: /eng/pipelines/templates/steps/workload-checkout.yml@${{ parameters.engBranch }}
+      - template: /eng/pipelines/templates/steps/workload-checkout.yml@${{ parameters.engBranchAlias }}
         parameters:
-          sourceBranch: ${{ parameters.sourceBranch }}
-          engBranch: ${{ parameters.engBranch }}
+          sourceBranchAlias: ${{ parameters.sourceBranchAlias }}
+          engBranchAlias: ${{ parameters.engBranchAlias }}
       - powershell: >-
           eng/common/build.ps1
           -restore -build -pack -ci -msbuildEngine vs
