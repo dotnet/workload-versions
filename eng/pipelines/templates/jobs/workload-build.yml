@@ -1,13 +1,3 @@
-parameters:
-  # These types match the types handled in create-workload-drops.ps1. There is a RegEx in that script that parses the workload type out of the workload path.
-  # If this list needs to be updated, the RegEx in the script also needs to be updated.
-  # The hardcoded list here is necessary as these types need to be available during compilation of the pipeline.
-  # The workload types become separate variables in the create-workload-drops.ps1 and this list is looped over to create multiple drop tasks.
-  workloadDropTypes:
-  - components
-  - packs
-  - precomponents
-
 jobs:
 # Note: jobs.yml automatically includes the Publish Assets job for pushing the artifacts to DARC.
 - template: /eng/common/templates-official/jobs/jobs.yml@source
@@ -27,7 +17,7 @@ jobs:
           name: Logs
         manifests: true
     jobs:
-    - job: buildRepo
+    - job: BuildRepo
       displayName: Build Repo
       timeoutInMinutes: 120
       pool:
@@ -51,6 +41,15 @@ jobs:
           Write-Host "##vso[build.updatebuildnumber]$(Build.BuildNumber) • $commitMessage"
         displayName: 🟣 Set run name via source branch commit message
       - ${{ if eq(parameters.createVSInsertion, true) }}:
+        # The convertToJson expression in AzDO creates "pretty" JSON with line breaks and indentation.
+        # To simplify passing this JSON to scripts, we collapse it to a single line.
+        - powershell: |
+            $workloadDropNames = @'
+            ${{ convertToJson(parameters.workloadDropNames) }}
+            '@
+            $workloadListJson = $workloadDropNames -replace '\r?\n\s*', ''
+            Write-Host "##vso[task.setvariable variable=WorkloadListJson]$workloadListJson"
+          displayName: 🟣 Set WorkloadListJson variable
         - task: AzureCLI@2
           displayName: 🟣 Download workloads for VS insertion
           inputs:
@@ -62,7 +61,7 @@ jobs:
               -workloadPath '$(System.DefaultWorkingDirectory)/artifacts/workloads'
               -gitHubPat (ConvertTo-SecureString -String '$(BotAccount-dotnet-bot-repo-PAT)' -AsPlainText -Force)
               -azDOPat (ConvertTo-SecureString -String '$(dn-bot-all-drop-rw-code-rw-release-all)' -AsPlainText -Force)
-              -workloadListJson '${{ convertToJson(parameters.workloadDropNames) }}'
+              -workloadListJson '$(WorkloadListJson)'
               -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }}
               -includeNonShipping:$${{ parameters.includeNonShippingWorkloads }}
 
@@ -79,50 +78,12 @@ jobs:
           /p:OfficialBuildId=$(OfficialBuildId)
           /p:StabilizePackageVersion=${{ parameters.stabilizePackageVersion }}
         displayName: 🟣 Build solution
+        # Name is required to reference the variables created within this build step in other stages.
+        name: BuildSolution
 
       - ${{ if eq(parameters.createVSInsertion, true) }}:
-        # The variables comprised of workloadShortName and workloadType are set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
-        - ${{ each workloadShortName in parameters.workloadDropNames }}:
-          - ${{ each workloadType in parameters.workloadDropTypes }}:
-            # Only create the drop if the workload drop directory exists.
-            # Sets the PublishWorkloadDrop variable. See: https://stackoverflow.com/a/60630739/294804
-            - pwsh: |
-                # If the drop folder doesn't exist (not downloaded via DARC), the drop cannot be published.
-                if (-not (Test-Path -Path '$(${{ workloadShortName }}_${{ workloadType }}_dir)')) {
-                  Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]False"
-                  Write-Host 'Drop "${{ workloadShortName }}_${{ workloadType }}" was not downloaded via DARC. Skipping VS drop publish...'
-                  return
-                }
-                Write-Host "PublishWorkloadDrop: True"
-                Write-Host "##vso[task.setvariable variable=PublishWorkloadDrop]True"
-              displayName: 🟣 Check if ${{ workloadShortName }}_${{ workloadType }} needs published
-
-            # Docs: https://eng.ms/docs/cloud-ai-platform/devdiv/one-engineering-system-1es/1es-docs/1es-pipeline-templates/features/outputs/microbuild-vsts-drop
-            # YAML reference (original task): https://dev.azure.com/devdiv/Engineering/_git/MicroBuild?path=/src/Tasks/UploadDrop/task.json
-            - task: 1ES.MicroBuildVstsDrop@1
-              displayName: '🟣 Publish VS insertion drop: ${{ workloadShortName }}_${{ workloadType }}'
-              inputs:
-                dropFolder: $(${{ workloadShortName }}_${{ workloadType }}_dir)
-                dropName: $(${{ workloadShortName }}_${{ workloadType }}_name)
-                # See: https://dev.azure.com/devdiv/DevDiv/_wiki/wikis/DevDiv.wiki/35351/Retain-Drops
-                dropRetentionDays: 183
-                accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
-                skipUploadIfExists: true
-              condition: eq(variables['PublishWorkloadDrop'], 'True')
-
-        - ${{ each primaryInsertionBranch in parameters.primaryVsInsertionBranches }}:
-          # One PR is created per branch defined at the top of this file in the primaryVsInsertionBranches parameter.
-          - template: /eng/pipelines/templates/steps/workload-insertion.yml@self
-            parameters:
-              targetBranch: ${{ primaryInsertionBranch }}
-              topicBranch: ${{ parameters.vsTopicBranch }}
-              # PrimaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
-              componentJsonValues: $(PrimaryVSComponentJsonValues)
-        - ${{ each secondaryInsertionBranch in parameters.secondaryVsInsertionBranches }}:
-          # One PR is created per branch defined at the top of this file in the secondaryVsInsertionBranches parameter.
-          - template: /eng/pipelines/templates/steps/workload-insertion.yml@self
-            parameters:
-              targetBranch: ${{ secondaryInsertionBranch }}
-              topicBranch: ${{ parameters.vsTopicBranch }}
-              # SecondaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
-              componentJsonValues: $(SecondaryVSComponentJsonValues)
+        - task: 1ES.PublishPipelineArtifact@1
+          displayName: 🟣 Publish workload artifacts
+          inputs:
+            artifact: Workloads
+            path: $(System.DefaultWorkingDirectory)/artifacts/workloads
