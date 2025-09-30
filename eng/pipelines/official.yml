@@ -12,6 +12,10 @@ parameters:
 - name: sourceBranch
   displayName: 🚩 Source branch 🚩
   type: string
+- name: createTestWorkloadSet
+  displayName: ⭐ Create a test workload set
+  type: boolean
+  default: false
 
 - name: dividerAzDO
   displayName: '[ ######## AZURE DEVOPS ######## ]'
@@ -116,10 +120,6 @@ parameters:
   displayName: Set pre-release version iteration
   type: string
   default: '|default|'
-- name: createTestWorkloadSet
-  displayName: Create a test workload set
-  type: boolean
-  default: false
 
 variables:
 # Variables used: DncEngInternalBuildPool
