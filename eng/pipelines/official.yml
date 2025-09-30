@@ -128,7 +128,8 @@ extends:
       sourceRepositoriesToScan:
         include:
         - repository: source
-        - repository: self
+        # Temporary workaround for SDL scanning issue with multiple repositories.
+        - repository: eng
       sourceAnalysisPool:
         name: $(DncEngInternalBuildPool)
         image: 1es-windows-2022
