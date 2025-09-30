@@ -128,6 +128,7 @@ extends:
       sourceRepositoriesToScan:
         include:
         - repository: source
+        - repository: self
       sourceAnalysisPool:
         name: $(DncEngInternalBuildPool)
         image: 1es-windows-2022
