@@ -25,4 +25,7 @@
     <WorkloadManifest Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(VersionMajor)', '10'))" Include="Microsoft.NET.Workload.Mono.ToolChain.net9"    FeatureBand="$(MonoWorkloadFeatureBand)" Version="$(MonoWorkloadManifestVersion)" />
   </ItemGroup>
 
+  <ItemGroup Label="Aspire" Condition="$([MSBuild]::VersionLessThanOrEquals('$(VersionMajor)', '9'))">
+    <WorkloadManifest Include="Microsoft.NET.Sdk.Aspire" FeatureBand="$(AspireFeatureBand)" Version="$(AspireWorkloadManifestVersion)" />
+  </ItemGroup>
 </Project>
