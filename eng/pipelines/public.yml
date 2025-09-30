@@ -38,13 +38,13 @@ variables:
 stages:
 - template: /eng/pipelines/templates/stages/workload-public-build.yml@self
   parameters:
-    sourceBranch: main
-    engBranch: self
+    sourceBranchAlias: main
+    engBranchAlias: self
 - template: /eng/pipelines/templates/stages/workload-public-build.yml@self
   parameters:
-    sourceBranch: release8
-    engBranch: self
+    sourceBranchAlias: release8
+    engBranchAlias: self
 - template: /eng/pipelines/templates/stages/workload-public-build.yml@self
   parameters:
-    sourceBranch: release9
-    engBranch: self
+    sourceBranchAlias: release9
+    engBranchAlias: self

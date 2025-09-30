@@ -1,13 +1,13 @@
 parameters:
-  sourceBranch: self
-  engBranch: eng
+  sourceBranchAlias: self
+  engBranchAlias: eng
 
 steps:
 # For checkout mechanics, see:
 # https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables?view=azure-devops&tabs=yaml#build-variables-devops-services
 # https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/steps-checkout?view=azure-pipelines
 # https://learn.microsoft.com/en-us/azure/devops/pipelines/repos/multi-repo-checkout?view=azure-devops#checkout-path
-- checkout: ${{ parameters.sourceBranch }}
+- checkout: ${{ parameters.sourceBranchAlias }}
   path: source-branch
   workspaceRepo: true
   displayName: 🟣 Checkout source branch
@@ -19,7 +19,7 @@ steps:
 # To resolve this, we split on '/' and take the last element, which will always be the repository name only.
 - powershell: New-Item -Path "$(Agent.BuildDirectory)\s" -Name "$('$(Build.Repository.Name)' -Split '/' | Select-Object -Last 1)" -ItemType Directory
   displayName: 🟣 [Workaround] Create checkout directory
-- checkout: ${{ parameters.engBranch }}
+- checkout: ${{ parameters.engBranchAlias }}
   path: eng-branch
   displayName: 🟣 Checkout eng branch
 # The \* is required for the Exclude to work properly.
