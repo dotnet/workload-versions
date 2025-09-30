@@ -36,8 +36,9 @@ jobs:
           Write-Host "##vso[task.setvariable variable=OfficialBuildId]$(Build.BuildNumber)"
           # Keep only valid characters. Invalid characters include: " / : < > \ | ? @ *
           # Also, strip any trailing '.' characters as those are invalid too.
+          $commitMessage = "$(git log -1 --pretty=%s)".Trim() -replace '["\/:<>\\|?@*]|\.{1,}$', ''
           # Lastly, truncate to 255 max characters: 241 = 255 - 14 (for build number and delimiter, ex: 20250910.13 • )
-          $commitMessage = ("$(git log -1 --pretty=%s)".Trim() -replace '["\/:<>\\|?@*]|\.{1,}$', '').Substring(0, 241)
+          $commitMessage = $commitMessage.Substring(0, [Math]::Min($commitMessage.Length, 241))
           Write-Host "##vso[build.updatebuildnumber]$(Build.BuildNumber) • $commitMessage"
         displayName: 🟣 Set run name via source branch commit message
       - ${{ if eq(parameters.createVSInsertion, true) }}:
