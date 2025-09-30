@@ -9,7 +9,7 @@ jobs:
     publishAssetsImmediately: true
     enableSbom: true
     repositoryAlias: source
-    officialBuildId: $(Build.BuildNumber)
+    officialBuildId: $(Date:yyyyMMdd).$(Rev:r)
     artifacts:
       publish:
         artifacts:
