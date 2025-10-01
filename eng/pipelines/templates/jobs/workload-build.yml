@@ -9,9 +9,9 @@ jobs:
     publishAssetsImmediately: true
     enableSbom: true
     repositoryAlias: source
-    # This variable is evaluated when this job template is executed.
-    # Therefore, the value will not be affected by the updatebuildnumber script below.
-    officialBuildId: $[variables['Build.BuildNumber']]
+    # # This variable is evaluated when this job template is executed.
+    # # Therefore, the value will not be affected by the updatebuildnumber script below.
+    # officialBuildId: $[variables['Build.BuildNumber']]
     artifacts:
       publish:
         artifacts:
@@ -32,18 +32,18 @@ jobs:
         parameters:
           sourceBranchAlias: source
           engBranchAlias: self
-      # Sets the run name to use the source branch commit message.
-      # Also, sets the OfficialBuildId variable to the original Build.BuildNumber for use in Arcade.
-      # See: https://learn.microsoft.com/en-us/azure/devops/pipelines/process/run-number
-      - powershell: |
-          Write-Host "##vso[task.setvariable variable=OfficialBuildId]$(Build.BuildNumber)"
-          # Keep only valid characters. Invalid characters include: " / : < > \ | ? @ *
-          # Also, strip any trailing '.' characters as those are invalid too.
-          $commitMessage = "$(git log -1 --pretty=%s)".Trim() -replace '["\/:<>\\|?@*]|\.{1,}$', ''
-          # Lastly, truncate to 255 max characters: 241 = 255 - 14 (for build number and delimiter, ex: 20250910.13 • )
-          $commitMessage = $commitMessage.Substring(0, [Math]::Min($commitMessage.Length, 241))
-          Write-Host "##vso[build.updatebuildnumber]$(Build.BuildNumber) • $commitMessage"
-        displayName: 🟣 Set run name via source branch commit message
+      # # Sets the run name to use the source branch commit message.
+      # # Also, sets the OfficialBuildId variable to the original Build.BuildNumber for use in Arcade.
+      # # See: https://learn.microsoft.com/en-us/azure/devops/pipelines/process/run-number
+      # - powershell: |
+      #     Write-Host "##vso[task.setvariable variable=OfficialBuildId]$(Build.BuildNumber)"
+      #     # Keep only valid characters. Invalid characters include: " / : < > \ | ? @ *
+      #     # Also, strip any trailing '.' characters as those are invalid too.
+      #     $commitMessage = "$(git log -1 --pretty=%s)".Trim() -replace '["\/:<>\\|?@*]|\.{1,}$', ''
+      #     # Lastly, truncate to 255 max characters: 241 = 255 - 14 (for build number and delimiter, ex: 20250910.13 • )
+      #     $commitMessage = $commitMessage.Substring(0, [Math]::Min($commitMessage.Length, 241))
+      #     Write-Host "##vso[build.updatebuildnumber]$(Build.BuildNumber) • $commitMessage"
+      #   displayName: 🟣 Set run name via source branch commit message
       - ${{ if eq(parameters.createVSInsertion, true) }}:
         # The convertToJson expression in AzDO creates "pretty" JSON with line breaks and indentation.
         # To simplify passing this JSON to scripts, we collapse it to a single line.
@@ -79,7 +79,7 @@ jobs:
           /p:DotNetSignType=$(_SignType)
           /p:TeamName=$(_TeamName)
           /p:DotNetPublishUsingPipelines=true
-          /p:OfficialBuildId=$(OfficialBuildId)
+          /p:OfficialBuildId=$(Build.BuildNumber)
           /p:StabilizePackageVersion=${{ parameters.stabilizePackageVersion }}
         displayName: 🟣 Build solution
         # Name is required to reference the variables created within this build step in other stages.
