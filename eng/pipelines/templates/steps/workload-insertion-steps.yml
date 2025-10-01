@@ -2,6 +2,7 @@ parameters:
   targetBranch: main
   topicBranch: ''
   componentJsonValues: ''
+  officialBuildId: ''
 
 steps:
 # This allows setting the InsertionTopicBranch variable dynamically.
@@ -16,7 +17,7 @@ steps:
     # Loosely based on:
     # https://devdiv.visualstudio.com/Engineering/_git/MicroBuild?path=/src/Tasks/InsertVsPayload/plugin.ps1&version=GCf10314b240d5f3d0899e80eb2feb5dc33b5f8c20&line=276&lineEnd=280&lineStartColumn=1&lineEndColumn=1&lineStyle=plain&_a=contents
     if ($topicBranch -eq '|temp|') {
-      $topicBranch = 'temp/$(_TeamName)/${{ parameters.targetBranch }}/$(Build.BuildNumber)-$(System.JobAttempt)'
+      $topicBranch = 'temp/$(_TeamName)/${{ parameters.targetBranch }}/${{ parameters.officialBuildId }}-$(System.JobAttempt)'
     }
     Write-Host "InsertionTopicBranch: $topicBranch"
     Write-Host "##vso[task.setvariable variable=InsertionTopicBranch]$topicBranch"
@@ -34,7 +35,7 @@ steps:
     InsertionTopicBranch: $(InsertionTopicBranch)
     TeamName: $(_TeamName)
     TeamEmail: dotnetdevexcli@microsoft.com
-    InsertionPayloadName: 'DotNet-SDK-Workloads ($(Build.SourceBranchName):$(Build.BuildNumber))'
+    InsertionPayloadName: 'DotNet-SDK-Workloads ($(Build.SourceBranchName):${{ parameters.officialBuildId }})'
     ComponentJsonValues: ${{ parameters.componentJsonValues }}
     AllowTopicBranchUpdate: true
     # This is the name of our DevDiv alias.

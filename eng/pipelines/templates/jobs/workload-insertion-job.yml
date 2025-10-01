@@ -19,6 +19,8 @@ jobs:
   templateContext:
     type: buildJob
   variables:
+  - name: OfficialBuildIdFromJob
+    value: $[stageDependencies.Build.BuildRepo.outputs['SetRunName.OfficialBuildIdFromJob']]
   - name: PrimaryVSComponentJsonValues
     value: $[stageDependencies.Build.BuildRepo.outputs['BuildSolution.PrimaryVSComponentJsonValues']]
   - name: SecondaryVSComponentJsonValues
@@ -90,6 +92,7 @@ jobs:
         topicBranch: ${{ parameters.vsTopicBranch }}
         # PrimaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
         componentJsonValues: $(PrimaryVSComponentJsonValues)
+        officialBuildId: $(OfficialBuildIdFromJob)
   - ${{ each secondaryInsertionBranch in parameters.secondaryVsInsertionBranches }}:
     # One PR is created per branch defined at the top of official.yml in the secondaryVsInsertionBranches parameter.
     - template: /eng/pipelines/templates/steps/workload-insertion-steps.yml@self
@@ -98,3 +101,4 @@ jobs:
         topicBranch: ${{ parameters.vsTopicBranch }}
         # SecondaryVSComponentJsonValues variable is set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
         componentJsonValues: $(SecondaryVSComponentJsonValues)
+        officialBuildId: $(OfficialBuildIdFromJob)
