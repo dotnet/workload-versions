@@ -9,7 +9,7 @@ jobs:
     publishAssetsImmediately: true
     enableSbom: true
     repositoryAlias: source
-    officialBuildId: $[variables['OfficialBuildId']]
+    officialBuildId: $[stageDependencies.Build.BuildRepo.outputs['SetRunName.OfficialBuildIdFromJob']]
     artifacts:
       publish:
         artifacts:
@@ -35,6 +35,7 @@ jobs:
       # See: https://learn.microsoft.com/en-us/azure/devops/pipelines/process/run-number
       - powershell: |
           Write-Host "##vso[task.setvariable variable=OfficialBuildId]$(Build.BuildNumber)"
+          Write-Host "##vso[task.setvariable variable=OfficialBuildIdFromJob;isoutput=true]$(Build.BuildNumber)"
           # Keep only valid characters. Invalid characters include: " / : < > \ | ? @ *
           # Also, strip any trailing '.' characters as those are invalid too.
           $commitMessage = "$(git log -1 --pretty=%s)".Trim() -replace '["\/:<>\\|?@*]|\.{1,}$', ''
@@ -42,6 +43,8 @@ jobs:
           $commitMessage = $commitMessage.Substring(0, [Math]::Min($commitMessage.Length, 241))
           Write-Host "##vso[build.updatebuildnumber]$(Build.BuildNumber) • $commitMessage"
         displayName: 🟣 Set run name via source branch commit message
+        # Name is required to reference the variables created within this build step in other stages.
+        name: SetRunName
       - ${{ if eq(parameters.createVSInsertion, true) }}:
         # The convertToJson expression in AzDO creates "pretty" JSON with line breaks and indentation.
         # To simplify passing this JSON to scripts, we collapse it to a single line.
