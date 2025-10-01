@@ -9,6 +9,9 @@ jobs:
     publishAssetsImmediately: true
     enableSbom: true
     repositoryAlias: source
+    # This variable is evaluated when this job template is executed.
+    # Therefore, the value will not be affected by the updatebuildnumber script below.
+    officialBuildId: $[variables['Build.BuildNumber']]
     artifacts:
       publish:
         artifacts:
