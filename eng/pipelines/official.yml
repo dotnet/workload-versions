@@ -6,7 +6,9 @@ pr: none
 
 # Required to set a custom run name within workload-build.yml.
 # See: https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/pipeline
-appendCommitMessageToRunName: false
+# ==========================
+# TODO: Temporarily commenting out updating the build number.
+# appendCommitMessageToRunName: false
 
 parameters:
 - name: sourceBranch
