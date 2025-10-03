@@ -116,6 +116,7 @@ parameters:
   - rc
   - alpha
   - rtm
+  - test
 - name: setPreReleaseVersionIteration
   displayName: Set pre-release version iteration
   type: string
