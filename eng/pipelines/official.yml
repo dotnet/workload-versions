@@ -14,6 +14,10 @@ parameters:
 - name: sourceBranch
   displayName: 🚩 Source branch 🚩
   type: string
+- name: createTestWorkloadSet
+  displayName: ⭐ Create a test workload set
+  type: boolean
+  default: false
 
 - name: dividerAzDO
   displayName: '[ ######## AZURE DEVOPS ######## ]'
@@ -87,6 +91,39 @@ parameters:
   type: boolean
   default: false
 
+- name: dividerSetVersion
+  displayName: '[ ######## SET VERSION ######## ]'
+  type: boolean
+  default: false
+- name: setVersionSdkMinor
+  displayName: Set version SDK minor (one digit)
+  type: string
+  default: '|default|'
+- name: setVersionFeature
+  displayName: Set version feature (two digits)
+  type: string
+  default: '|default|'
+- name: setVersionPatch
+  displayName: Set version patch
+  type: string
+  default: '|default|'
+- name: setPreReleaseVersionLabel
+  displayName: Set pre-release version label
+  type: string
+  default: '|default|'
+  values:
+  - '|default|'
+  - servicing
+  - preview
+  - rc
+  - alpha
+  - rtm
+  - test
+- name: setPreReleaseVersionIteration
+  displayName: Set pre-release version iteration
+  type: string
+  default: '|default|'
+
 variables:
 # Variables used: DncEngInternalBuildPool
 - template: /eng/common/templates-official/variables/pool-providers.yml@source
@@ -155,6 +192,12 @@ extends:
           usePreComponentsForVSInsertion: ${{ parameters.usePreComponentsForVSInsertion }}
           includeNonShippingWorkloads: ${{ parameters.includeNonShippingWorkloads }}
           workloadDropNames: ${{ parameters.workloadDropNames }}
+          createTestWorkloadSet: ${{ parameters.createTestWorkloadSet }}
+          setVersionSdkMinor: ${{ parameters.setVersionSdkMinor }}
+          setVersionFeature: ${{ parameters.setVersionFeature }}
+          setVersionPatch: ${{ parameters.setVersionPatch }}
+          setPreReleaseVersionLabel: ${{ parameters.setPreReleaseVersionLabel }}
+          setPreReleaseVersionIteration: ${{ parameters.setPreReleaseVersionIteration }}
 
     - ${{ if eq(parameters.createVSInsertion, true) }}:
       - stage: Insertion
