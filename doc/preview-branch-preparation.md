@@ -66,6 +66,77 @@ Depending on the preview and SDK version you're preparing for, you may need to:
    - For .NET 10: `dotnet10-workloads` feed
    - Feed URL: `https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet10-workloads/nuget/v3/index.json`
 
+### 3. Update Package IDs for MAUI Packages
+
+When transitioning to a new preview, you need to update the package ID suffixes for all MAUI-related packages in `eng/Versions.props`.
+
+#### Steps to Update MAUI Package IDs:
+
+1. **Locate the MauiWorkloads property group**
+   - Open `eng/Versions.props`
+   - Find the `<PropertyGroup Label="MauiWorkloads">` section
+
+2. **Update the MauiFeatureBand property**
+   - Change to match the new preview version
+   - Example: `<MauiFeatureBand>10.0.100-rc.3</MauiFeatureBand>`
+
+3. **Update all MAUI manifest package property names**
+   - The property names encode the SDK band and preview in their suffix
+   - For example, when moving from RC 2 to RC 3:
+     - `MicrosoftNETSdkAndroidManifest100100rc2PackageVersion` → `MicrosoftNETSdkAndroidManifest100100rc3PackageVersion`
+     - `MicrosoftNETSdkiOSManifest100100rc2PackageVersion` → `MicrosoftNETSdkiOSManifest100100rc3PackageVersion`
+     - `MicrosoftNETSdktvOSManifest100100rc2PackageVersion` → `MicrosoftNETSdktvOSManifest100100rc3PackageVersion`
+     - `MicrosoftNETSdkMacCatalystManifest100100rc2PackageVersion` → `MicrosoftNETSdkMacCatalystManifest100100rc3PackageVersion`
+     - `MicrosoftNETSdkmacOSManifest100100rc2PackageVersion` → `MicrosoftNETSdkmacOSManifest100100rc3PackageVersion`
+     - `MicrosoftNETSdkMauiManifest100100rc2PackageVersion` → `MicrosoftNETSdkMauiManifest100100rc3PackageVersion`
+
+4. **Update the references to these properties**
+   - Update property references in the assignment statements:
+     ```xml
+     <MauiWorkloadManifestVersion>$(MicrosoftNETSdkMauiManifest100100rc3PackageVersion)</MauiWorkloadManifestVersion>
+     <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest100100rc3PackageVersion)</XamarinAndroidWorkloadManifestVersion>
+     <!-- And so on for all workloads -->
+     ```
+
+5. **Verify all package property names are updated consistently**
+   - Ensure the suffix pattern matches across all MAUI workload packages
+   - The pattern should be: `{Major}{Minor}{Band}{PreviewLabel}{PreviewNumber}`
+   - Example: `100100rc3` represents 10.0.100-rc.3
+
+### 4. Update VS Manifest IDs for Mono and Emsdk Workloads
+
+Visual Studio integration requires updating the VSMAN (Visual Studio Manifest) IDs and external.vsmanproj references for mono and emsdk workloads when preparing for a new preview.
+
+#### Steps to Update VS Manifest Configuration:
+
+1. **Update VSMAN IDs**
+   - The VSMAN IDs need to be updated to match the new preview version
+   - These IDs are typically referenced in Visual Studio insertion configuration
+   - Coordinate with the VS insertion team to ensure the correct VSMAN ID format for the preview
+
+2. **Update external.vsmanproj for mono workload**
+   - Locate or create the external.vsmanproj file for the mono workload
+   - Update any version-specific identifiers to match the new preview
+   - Ensure the ComponentId reflects the correct preview version
+
+3. **Update external.vsmanproj for emsdk workload**
+   - Similarly, update the external.vsmanproj file for the emsdk (Emscripten) workload
+   - Update version identifiers and component references
+   - Verify the ComponentId aligns with the new preview numbering
+
+4. **Verify VSMAN SDK version**
+   - Check `global.json` for the `Microsoft.VisualStudio.Internal.MicroBuild.Vsman` version
+   - Ensure it's compatible with the preview release
+   - Update if necessary to the latest version
+
+5. **Coordinate with VS insertion process**
+   - The VS insertion pipeline may need configuration updates for the new preview
+   - Ensure the VSMAN package generation is set up for the correct preview channel
+   - Test the insertion process with a test build before the official preview release
+
+> [!NOTE]
+> The exact location and format of VSMAN configuration files may vary based on the repository structure and VS insertion setup. Coordinate with the Visual Studio integration team for specific requirements for your preview release.
+
 ## Reference Information
 
 ### Workloads Feeds by .NET Version
