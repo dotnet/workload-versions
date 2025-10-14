@@ -50,11 +50,11 @@ The workload-versions repository receives dependencies from the `dotnet/dotnet` 
 
 ### 2. Update Branch Configuration
 
-Depending on the preview and SDK version you're preparing for, you may need to:
+For major version previews shipped from the main branch:
 
-1. **Create or update the appropriate branch**
-   - For example: `release/10.0.1xx-preview2` for .NET 10 Preview 2 SDK band 100
-   - Ensure the branch is created from the correct starting point
+1. **Work from the main branch**
+   - Major version previews (e.g., .NET 10 RC 1, RC 2) are typically shipped from the main branch
+   - No separate preview branch is needed for these releases
 
 2. **Update Version.props**
    - Set the appropriate version features and patch levels for the preview
