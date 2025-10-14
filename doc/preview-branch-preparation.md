@@ -22,7 +22,7 @@ The workload-versions repository receives dependencies from the `dotnet/dotnet` 
 2. **Find the current subscription**
    - List all subscriptions for the repository:
      ```bash
-     darc get-subscriptions --target-repo workload-versions
+     darc get-subscriptions --target-repo workload-versions --source-repo dotnet/dotnet --target-branch main
      ```
    - Identify the subscription from `dotnet/dotnet` (the VMR)
 
