@@ -78,30 +78,30 @@ When transitioning to a new preview, you need to update the package ID suffixes 
 
 2. **Update the MauiFeatureBand property**
    - Change to match the new preview version
-   - Example: `<MauiFeatureBand>10.0.100-rc.3</MauiFeatureBand>`
+   - Example: `<MauiFeatureBand>10.0.100-rc.2</MauiFeatureBand>`
 
 3. **Update all MAUI manifest package property names**
    - The property names encode the SDK band and preview in their suffix
-   - For example, when moving from RC 2 to RC 3:
-     - `MicrosoftNETSdkAndroidManifest100100rc2PackageVersion` → `MicrosoftNETSdkAndroidManifest100100rc3PackageVersion`
-     - `MicrosoftNETSdkiOSManifest100100rc2PackageVersion` → `MicrosoftNETSdkiOSManifest100100rc3PackageVersion`
-     - `MicrosoftNETSdktvOSManifest100100rc2PackageVersion` → `MicrosoftNETSdktvOSManifest100100rc3PackageVersion`
-     - `MicrosoftNETSdkMacCatalystManifest100100rc2PackageVersion` → `MicrosoftNETSdkMacCatalystManifest100100rc3PackageVersion`
-     - `MicrosoftNETSdkmacOSManifest100100rc2PackageVersion` → `MicrosoftNETSdkmacOSManifest100100rc3PackageVersion`
-     - `MicrosoftNETSdkMauiManifest100100rc2PackageVersion` → `MicrosoftNETSdkMauiManifest100100rc3PackageVersion`
+   - For example, when moving from RC 1 to RC 2:
+     - `MicrosoftNETSdkAndroidManifest100100rc1PackageVersion` → `MicrosoftNETSdkAndroidManifest100100rc2PackageVersion`
+     - `MicrosoftNETSdkiOSManifest100100rc1PackageVersion` → `MicrosoftNETSdkiOSManifest100100rc2PackageVersion`
+     - `MicrosoftNETSdktvOSManifest100100rc1PackageVersion` → `MicrosoftNETSdktvOSManifest100100rc2PackageVersion`
+     - `MicrosoftNETSdkMacCatalystManifest100100rc1PackageVersion` → `MicrosoftNETSdkMacCatalystManifest100100rc2PackageVersion`
+     - `MicrosoftNETSdkmacOSManifest100100rc1PackageVersion` → `MicrosoftNETSdkmacOSManifest100100rc2PackageVersion`
+     - `MicrosoftNETSdkMauiManifest100100rc1PackageVersion` → `MicrosoftNETSdkMauiManifest100100rc2PackageVersion`
 
 4. **Update the references to these properties**
    - Update property references in the assignment statements:
      ```xml
-     <MauiWorkloadManifestVersion>$(MicrosoftNETSdkMauiManifest100100rc3PackageVersion)</MauiWorkloadManifestVersion>
-     <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest100100rc3PackageVersion)</XamarinAndroidWorkloadManifestVersion>
+     <MauiWorkloadManifestVersion>$(MicrosoftNETSdkMauiManifest100100rc2PackageVersion)</MauiWorkloadManifestVersion>
+     <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest100100rc2PackageVersion)</XamarinAndroidWorkloadManifestVersion>
      <!-- And so on for all workloads -->
      ```
 
 5. **Verify all package property names are updated consistently**
    - Ensure the suffix pattern matches across all MAUI workload packages
    - The pattern should be: `{Major}{Minor}{Band}{PreviewLabel}{PreviewNumber}`
-   - Example: `100100rc3` represents 10.0.100-rc.3
+   - Example: `100100rc2` represents 10.0.100-rc.2
 
 ### 4. Update VS Manifest IDs for Mono and Emsdk Workloads
 
