@@ -109,18 +109,19 @@ Visual Studio integration requires updating the VSMAN (Visual Studio Manifest) I
 
 #### Steps to Update VS Manifest Configuration:
 
-1. **Update VSMAN IDs**
+1. **Update VSMAN IDs in dotnet-workloads-components.json**
    - The VSMAN IDs need to be updated to match the new preview version
-   - These IDs are typically referenced in Visual Studio insertion configuration
+   - These IDs are referenced in `dotnet-workloads-components.json`
+   - Update the VSMAN references for mono and emsdk workloads in this configuration file
    - Coordinate with the VS insertion team to ensure the correct VSMAN ID format for the preview
 
-2. **Update external.vsmanproj for mono workload**
-   - Locate or create the external.vsmanproj file for the mono workload
+2. **Update VisualStudio.External.vsmanproj for mono workload**
+   - Locate the `VisualStudio.External.vsmanproj` file for the mono workload
    - Update any version-specific identifiers to match the new preview
    - Ensure the ComponentId reflects the correct preview version
 
-3. **Update external.vsmanproj for emsdk workload**
-   - Similarly, update the external.vsmanproj file for the emsdk (Emscripten) workload
+3. **Update VisualStudio.External.vsmanproj for emsdk workload**
+   - Similarly, update the `VisualStudio.External.vsmanproj` file for the emsdk (Emscripten) workload
    - Update version identifiers and component references
    - Verify the ComponentId aligns with the new preview numbering
 
