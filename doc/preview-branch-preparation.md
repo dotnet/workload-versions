@@ -25,6 +25,9 @@ The workload-versions repository receives dependencies from the `dotnet/dotnet` 
      darc get-subscriptions --target-repo workload-versions --source-repo dotnet/dotnet --target-branch main
      ```
    - Identify the subscription from `dotnet/dotnet` (the VMR)
+   
+   > [!NOTE]
+   > For RC1, RC2, and servicing releases, the subscription source is from `dotnet-dotnet` (the internal Azure DevOps URI: `https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet`).
 
 3. **Update the subscription to the new preview channel**
    - Use the DARC tool to update the subscription:
