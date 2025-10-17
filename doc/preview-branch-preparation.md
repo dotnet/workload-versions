@@ -15,8 +15,9 @@ The workload-versions repository receives dependencies from the `dotnet/dotnet` 
 #### Steps to Update the Subscription:
 
 1. **Identify the target preview channel**
-   - Preview channels typically follow the pattern: `.NET <version> Preview <number>`
-   - Example: `.NET 10 Preview 1`, `.NET 10 Preview 2`, etc.
+   - Preview channels typically follow the pattern: `.NET <version>.0.1xx SDK Preview <number>`
+   - Example: `.NET 10.0.1xx SDK Preview 1`, `.NET 10.0.1xx SDK Preview 2`, etc.
+   - For RC1, RC2, and servicing releases, the channel form is: `.NET <version>.0.1xx SDK Internal` (for MSRC releases)
    - You can list available channels using: `darc get-channels`
 
 2. **Find the current subscription**
@@ -36,7 +37,7 @@ The workload-versions repository receives dependencies from the `dotnet/dotnet` 
      ```
    - Example:
      ```bash
-     darc update-subscription --id 12345 --channel ".NET 10 Preview 2"
+     darc update-subscription --id 12345 --channel ".NET 10.0.1xx SDK Preview 2"
      ```
 
 4. **Verify the subscription update**
