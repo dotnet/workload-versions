@@ -117,7 +117,6 @@ Visual Studio integration requires updating the VSMAN (Visual Studio Manifest) I
    - The VSMAN IDs need to be updated to match the new preview version
    - These IDs are referenced in `dotnet-workloads-components.json`
    - Update the VSMAN references for mono and emsdk workloads in this configuration file
-   - Coordinate with the VS insertion team to ensure the correct VSMAN ID format for the preview
 
 2. **Update VisualStudio.External.vsmanproj for mono workload**
    - Locate the `VisualStudio.External.vsmanproj` file for the mono workload
@@ -129,18 +128,13 @@ Visual Studio integration requires updating the VSMAN (Visual Studio Manifest) I
    - Update version identifiers and component references
    - Verify the ComponentId aligns with the new preview numbering
 
-4. **Verify VSMAN SDK version**
-   - Check `global.json` for the `Microsoft.VisualStudio.Internal.MicroBuild.Vsman` version
-   - Ensure it's compatible with the preview release
-   - Update if necessary to the latest version
-
-5. **Coordinate with VS insertion process**
+4. **Coordinate with VS insertion process**
    - The VS insertion pipeline may need configuration updates for the new preview
    - Ensure the VSMAN package generation is set up for the correct preview channel
    - Test the insertion process with a test build before the official preview release
 
 > [!NOTE]
-> The exact location and format of VSMAN configuration files may vary based on the repository structure and VS insertion setup. Coordinate with the Visual Studio integration team for specific requirements for your preview release.
+> The exact location and format of VSMAN configuration files may vary based on the repository structure and VS insertion setup.
 
 ## Reference Information
 
