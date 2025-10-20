@@ -10,25 +10,25 @@
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet</Uri>
       <Sha>89c8f6a112d37d2ea8b77821e56d170a1bccdc5a</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-10.0.100" Version="36.0.0-rc.2.332">
+    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-10.0.100" Version="36.0.14">
       <Uri>https://github.com/dotnet/android</Uri>
-      <Sha>971bf7e0a40b44ec0fccdcc77836f827138ecc37</Sha>
+      <Sha>f90e889aa8ed2ef666bf58badf601163be0e501a</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-10.0.100" Version="26.0.10970-net10-rc.2">
+    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-10.0.100" Version="26.0.11008">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>042ba3e24d9c81be1f2a19e84cebc17d672080b2</Sha>
+      <Sha>14876a743c764dc678c7e8022cd501bda2bab48c</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-10.0.100" Version="26.0.10970-net10-rc.2">
+    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-10.0.100" Version="26.0.11008">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>042ba3e24d9c81be1f2a19e84cebc17d672080b2</Sha>
+      <Sha>14876a743c764dc678c7e8022cd501bda2bab48c</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-10.0.100" Version="26.0.10970-net10-rc.2">
+    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-10.0.100" Version="26.0.11008">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>042ba3e24d9c81be1f2a19e84cebc17d672080b2</Sha>
+      <Sha>14876a743c764dc678c7e8022cd501bda2bab48c</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-10.0.100" Version="26.0.10970-net10-rc.2">
+    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-10.0.100" Version="26.0.11008">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>042ba3e24d9c81be1f2a19e84cebc17d672080b2</Sha>
+      <Sha>14876a743c764dc678c7e8022cd501bda2bab48c</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-10.0.100" Version="10.0.0-rc.2.25504.7">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-maui</Uri>
