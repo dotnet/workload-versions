@@ -61,8 +61,8 @@
     <XamarinTvOSWorkloadManifestVersion>$(MicrosoftNETSdktvOSManifest100100PackageVersion)</XamarinTvOSWorkloadManifestVersion>
   </PropertyGroup>
   <PropertyGroup Label="MonoWorkloads">
-    <MicrosoftNETWorkloadMonoToolChainCurrentManifest100100PackageVersion>10.0.100</MicrosoftNETWorkloadMonoToolChainCurrentManifest100100PackageVersion>
-    <MicrosoftNETSdkPackageVersion>10.0.100-rtm.25523.112</MicrosoftNETSdkPackageVersion>
+    <MicrosoftNETWorkloadMonoToolChainCurrentManifest100100PackageVersion>10.0.0</MicrosoftNETWorkloadMonoToolChainCurrentManifest100100PackageVersion>
+    <MicrosoftNETSdkPackageVersion>10.0.100-rtm.25529.104</MicrosoftNETSdkPackageVersion>
     <!-- Workloads from dotnet/sdk use MicrosoftNETSdkPackageVersion as the manifests are now built from the dotnet/sdk repo -->
     <MonoWorkloadManifestVersion>$(MicrosoftNETWorkloadMonoToolChainCurrentManifest100100PackageVersion)</MonoWorkloadManifestVersion>
     <!-- mono workload prerelease version band must match the runtime feature band -->
