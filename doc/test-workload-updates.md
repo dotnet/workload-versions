@@ -52,19 +52,21 @@ When queuing the pipeline, you have several configuration options depending on y
 
 If you only need to create a test workload set:
 
-1. ✅ **Select "Publish to AzDO"** when queuing the pipeline
-2. ✅ **Check the box for "Create MAUI test workload set"**
-   - This will generate the test workload set for validation
+1. ✅ **Select pipeline version by branch/tag** set to **eng**
+2. ✅ **🚩 Source branch 🚩** set to your branch
+3. ✅ **Select "Publish to AzDO"** when queuing the pipeline
+4. ✅ **AzDO publish feed** is the feed it'll publish the workload set to. Default should be _dotnet-workloads_.
+5. ✅ **⭐ Create a test workload set** enabled
+   - This will generate the test workload set for validation that is of the form
    - The workload set will be published to Azure DevOps for testing
 
 ### For Visual Studio Insertion Testing
 
 If you need to test a Visual Studio insertion:
 
-1. ✅ **Update the workload drop names** in your branch
+1. ✅ **Update the workload drop names** for the workloads you want to update in VS
 2. ✅ **Update the primary VS insertion branch** configuration
 3. ✅ **Check the box for "Create VS insertion"**
-4. ✅ **Select "Publish to AzDO"** when queuing the pipeline
 
 This configuration will:
 - Create the test workload set
