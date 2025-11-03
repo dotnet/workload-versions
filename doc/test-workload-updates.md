@@ -20,7 +20,7 @@ Test workload sets allow teams to validate workload updates before they are incl
 
 1. **Branch from a release branch**: Start by creating a test branch from one of the existing release branches
    ```
-   Example branch name: release/9.0.3xx/mauitest
+   Example branch name: release/9.0.3xx-mauitest
    ```
    
    **Branch naming convention:**
