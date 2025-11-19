@@ -77,10 +77,8 @@ $versionDetails | ForEach-Object {
     'gather-drop'
     '--asset-filter'
     $assetFilter
-    '--repo'
-    $_.Uri
-    '--commit'
-    $_.Sha
+    '--id'
+    '290790'
     '--output-dir'
     $workloadPath
     '--include-released'
