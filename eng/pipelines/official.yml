@@ -6,9 +6,7 @@ pr: none
 
 # Required to set a custom run name within workload-build.yml.
 # See: https://learn.microsoft.com/en-us/azure/devops/pipelines/yaml-schema/pipeline
-# ==========================
-# TODO: Temporarily commenting out updating the build number.
-# appendCommitMessageToRunName: false
+appendCommitMessageToRunName: false
 
 parameters:
 - name: sourceBranch
@@ -30,7 +28,7 @@ parameters:
 - name: azDOPublishFeed
   displayName: AzDO publish feed
   type: string
-  default: public/dotnet10-workloads
+  default: public/dotnet-workloads
 
 - name: dividerVSInsertion
   displayName: '[ ######## VS INSERTION ######## ]'

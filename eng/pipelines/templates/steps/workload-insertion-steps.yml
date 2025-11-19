@@ -31,6 +31,8 @@ steps:
     # Connection: https://dnceng.visualstudio.com/internal/_settings/adminservices?resourceId=5708f1c1-8fb7-4722-a643-020cf89ee26f
     # Docs: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/40477/Insert-with-a-WIF-Service-Connection
     ConnectedServiceName: MicroBuildInsertionVS
+    # Connection: https://dnceng.visualstudio.com/internal/_settings/adminservices?resourceId=fd289dd6-7de6-4a3b-b33f-eaf786770fa2
+    ConnectedVSDropServiceName: VSEng-VSDrop-MI
     TargetBranch: ${{ parameters.targetBranch }}
     InsertionTopicBranch: $(InsertionTopicBranch)
     TeamName: $(_TeamName)

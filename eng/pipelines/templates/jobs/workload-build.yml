@@ -43,9 +43,10 @@ jobs:
           $commitMessage = "$(git log -1 --pretty=%s)".Trim() -replace '["\/:<>\\|?@*]|\.{1,}$', ''
           # Lastly, truncate to 255 max characters: 241 = 255 - 14 (for build number and delimiter, ex: 20250910.13 • )
           $commitMessage = $commitMessage.Substring(0, [Math]::Min($commitMessage.Length, 241))
-          # ==========================
-          # TODO: Temporarily commenting out updating the build number.
-          # Write-Host "##vso[build.updatebuildnumber]$(Build.BuildNumber) • $commitMessage"
+          # If the build does not succeed, the run name will contain to what is set below.
+          # If the build does succeed, Workloads.NET.Workloads.csproj will recreate the run name using OfficialBuildId, WorkloadsVersion, and SourceBranchCommitMessage.
+          Write-Host "##vso[task.setvariable variable=SourceBranchCommitMessage]$commitMessage"
+          Write-Host "##vso[build.updatebuildnumber]$(Build.BuildNumber) • $commitMessage"
         displayName: 🟣 Set run name via source branch commit message
         # Name is required to reference the variables created within this build step in other stages.
         name: SetRunName
@@ -93,6 +94,7 @@ jobs:
           /p:DotNetPublishUsingPipelines=true
           /p:OfficialBuildId=$(OfficialBuildId)
           /p:StabilizePackageVersion=${{ parameters.stabilizePackageVersion }}
+          /p:SourceBranchCommitMessage=$(SourceBranchCommitMessage)
         displayName: 🟣 Build solution
         # Name is required to reference the variables created within this build step in other stages.
         name: BuildSolution
