@@ -94,7 +94,6 @@ jobs:
           /p:DotNetPublishUsingPipelines=true
           /p:OfficialBuildId=$(OfficialBuildId)
           /p:StabilizePackageVersion=${{ parameters.stabilizePackageVersion }}
-          /p:SourceBranchCommitMessage=$(SourceBranchCommitMessage)
         displayName: 🟣 Build solution
         # Name is required to reference the variables created within this build step in other stages.
         name: BuildSolution

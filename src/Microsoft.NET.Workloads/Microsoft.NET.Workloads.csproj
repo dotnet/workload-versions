@@ -160,9 +160,13 @@
   </Target>
 
   <Target Name="UpdateRunNameWithWorkloadsVersion" AfterTargets="Build" Condition="'$(TF_BUILD)' != ''">
-    <!-- From the SetRunName step, we truncate from the 241 chars for the commit message down to 212 to include the workloads version. -->
-    <!-- Workloads version can be long. This is 29 chars including the delimiter. Eg. 10.0.101-servicing.25563.1 • -->
-    <Message Text="##vso[build.updatebuildnumber]$(OfficialBuildId) • $(WorkloadsVersion) • $(SourceBranchCommitMessage.Substring(0, 212))" Importance="high" />
+    <!--
+      From the SetRunName step, we truncate from the 241 chars for the commit message down to 212 to include the workloads version.
+      Workloads version can be long. This is 29 chars including the delimiter. Eg. 10.0.101-servicing.25563.1 • 
+      SOURCEBRANCHCOMMITMESSAGE is set to the Azure Pipelines environment within the SetRunName step.
+      We simply pull it out of the environment variables because trying to set it to an MSBuild property can cause issues in the YAML if the message contains special characters.
+    -->
+    <Message Text="##vso[build.updatebuildnumber]$(OfficialBuildId) • $(WorkloadsVersion) • $(SOURCEBRANCHCOMMITMESSAGE.Substring(0, 212))" Importance="high" />
   </Target>
 
 </Project>
