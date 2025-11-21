@@ -41,10 +41,11 @@ jobs:
           # Keep only valid characters. Invalid characters include: " / : < > \ | ? @ *
           # Also, strip any trailing '.' characters as those are invalid too.
           $commitMessage = "$(git log -1 --pretty=%s)".Trim() -replace '["\/:<>\\|?@*]|\.{1,}$', ''
-          # Lastly, truncate to 255 max characters: 255 - 29 - 14 = 212
-          # 29: for (potential) workloads version and delimiters, ex: 10.0.101-servicing.25563.1 • 
+          # Lastly, truncate to 255 max characters: 255 - 32 - 14 - 9 = 200
+          # 32: for (potential) workloads version and delimiters (last numeric value can be 2 digits long), ex: 10.0.101-servicing.0.25571.3 • 
           # 14: for build number and delimiter, ex: 20250910.13 • 
-          $commitMessage = $commitMessage.Substring(0, [Math]::Min($commitMessage.Length, 212))
+          # 9: just a fudge factor to be safe (and make the result an even 200).
+          $commitMessage = $commitMessage.Substring(0, [Math]::Min($commitMessage.Length, 200))
           # If the build does not succeed, the run name will contain to what is set below.
           # If the build does succeed, Workloads.NET.Workloads.csproj will recreate the run name using OfficialBuildId, WorkloadsVersion, and SourceBranchCommitMessage.
           Write-Host "##vso[task.setvariable variable=SourceBranchCommitMessage]$commitMessage"
