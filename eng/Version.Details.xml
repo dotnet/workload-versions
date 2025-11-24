@@ -32,7 +32,7 @@
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-10.0.100" Version="10.0.1">
       <Uri>https://github.com/dotnet/maui</Uri>
-      <Sha>6af87b206145ba4f47b6c1207945dff147100a33</Sha>
+      <Sha>c1c069ac0957d8241f5714c4700855728eeb6216</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk" Version="10.0.101-servicing.25567.113">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet</Uri>
