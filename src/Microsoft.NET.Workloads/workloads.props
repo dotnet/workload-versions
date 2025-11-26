@@ -28,4 +28,5 @@
   <ItemGroup Label="Aspire" Condition="$([MSBuild]::VersionLessThanOrEquals('$(VersionMajor)', '9'))">
     <WorkloadManifest Include="Microsoft.NET.Sdk.Aspire" FeatureBand="$(AspireFeatureBand)" Version="$(AspireWorkloadManifestVersion)" />
   </ItemGroup>
+
 </Project>
