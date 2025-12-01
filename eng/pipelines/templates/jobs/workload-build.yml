@@ -41,11 +41,18 @@ jobs:
           # Keep only valid characters. Invalid characters include: " / : < > \ | ? @ *
           # Also, strip any trailing '.' characters as those are invalid too.
           $commitMessage = "$(git log -1 --pretty=%s)".Trim() -replace '["\/:<>\\|?@*]|\.{1,}$', ''
-          # Lastly, truncate to 255 max characters: 241 = 255 - 14 (for build number and delimiter, ex: 20250910.13 • )
-          $commitMessage = $commitMessage.Substring(0, [Math]::Min($commitMessage.Length, 241))
-          # ==========================
-          # TODO: Temporarily commenting out updating the build number.
-          # Write-Host "##vso[build.updatebuildnumber]$(Build.BuildNumber) • $commitMessage"
+          # AzDO only allows 255 characters for the run name. But, the run name is used in PublishAssets to create a path to the assets for DARC.
+          # The max length for this asset path is 250 characters. An example path is: assets/symbols/dotnet-workload-versions/{RunName}/Microsoft.NET.Workloads.10.0.100.Msi.arm64.10.101.0-servicing.0.25571.5.symbols.nupkg
+          # To truncate the commit message, let's keep these counts in mind:
+          # ~130: approximate length for the asset path parts that are not the run name
+          # 32: for (potential) workloads version and delimiters (last numeric value can be 2 digits long), ex: 10.0.101-servicing.0.25571.3 • 
+          # 14: for build number and delimiter, ex: 20250910.13 • 
+          # Therefore, 250 - 130 - 32 - 14 = 74 characters. To be extra safe, let's make it 65 characters.
+          $commitMessage = $commitMessage.Substring(0, [Math]::Min($commitMessage.Length, 65))
+          # If the build does not succeed, the run name will contain to what is set below.
+          # If the build does succeed, Workloads.NET.Workloads.csproj will recreate the run name using OfficialBuildId, WorkloadsVersion, and SourceBranchCommitMessage.
+          Write-Host "##vso[task.setvariable variable=SourceBranchCommitMessage]$commitMessage"
+          Write-Host "##vso[build.updatebuildnumber]$(Build.BuildNumber) • $commitMessage"
         displayName: 🟣 Set run name via source branch commit message
         # Name is required to reference the variables created within this build step in other stages.
         name: SetRunName
