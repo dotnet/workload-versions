@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-10.0.100.Transport" Version="10.0.100-rtm.25521.108">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-10.0.100" Version="10.0.101">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet</Uri>
-      <Sha>641b407a46641d35d7ddb96b8a6df74f76c8429f</Sha>
+      <Sha>5426032943ac0fa8c62e975d599d93fc56e91214</Sha>
       <SourceBuild RepoName="emsdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="10.0.0">
+    <Dependency Name="Microsoft.NET.Workload.Mono.Toolchain.Current.Manifest-10.0.100" Version="10.0.101">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet</Uri>
-      <Sha>641b407a46641d35d7ddb96b8a6df74f76c8429f</Sha>
+      <Sha>5426032943ac0fa8c62e975d599d93fc56e91214</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-10.0.100" Version="36.0.14">
+    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-10.0.100" Version="36.1.2">
       <Uri>https://github.com/dotnet/android</Uri>
-      <Sha>f90e889aa8ed2ef666bf58badf601163be0e501a</Sha>
+      <Sha>01024bb616e7b80417a2c6d320885bfdb956f20a</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-10.0.100" Version="26.0.11010">
+    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-10.0.100" Version="26.1.10502">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>6d121e9ddabc40b5ba5de2fc4c195fa772736210</Sha>
+      <Sha>29d3d81f416abddb44209f488673afe56077cd27</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-10.0.100" Version="26.0.11010">
+    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-10.0.100" Version="26.1.10502">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>6d121e9ddabc40b5ba5de2fc4c195fa772736210</Sha>
+      <Sha>29d3d81f416abddb44209f488673afe56077cd27</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-10.0.100" Version="26.0.11010">
+    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-10.0.100" Version="26.1.10502">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>6d121e9ddabc40b5ba5de2fc4c195fa772736210</Sha>
+      <Sha>29d3d81f416abddb44209f488673afe56077cd27</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-10.0.100" Version="26.0.11010">
+    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-10.0.100" Version="26.1.10502">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>6d121e9ddabc40b5ba5de2fc4c195fa772736210</Sha>
+      <Sha>29d3d81f416abddb44209f488673afe56077cd27</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-10.0.100" Version="10.0.0">
+    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-10.0.100" Version="10.0.1">
       <Uri>https://github.com/dotnet/maui</Uri>
-      <Sha>d9f2e2f6ef58af3d580242dfcac2fbe1b242e484</Sha>
+      <Sha>c1c069ac0957d8241f5714c4700855728eeb6216</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="10.0.100-rtm.25521.108">
+    <Dependency Name="Microsoft.NET.Sdk" Version="10.0.101-servicing.25567.113">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet</Uri>
-      <Sha>641b407a46641d35d7ddb96b8a6df74f76c8429f</Sha>
+      <Sha>5426032943ac0fa8c62e975d599d93fc56e91214</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="10.0.0-beta.25555.6">
-      <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>987d1a73ea67d323c0fc7537bce8ec65d87eb43f</Sha>
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="10.0.0-beta.25567.113">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet</Uri>
+      <Sha>5426032943ac0fa8c62e975d599d93fc56e91214</Sha>
       <SourceBuild RepoName="arcade" ManagedOnly="true" />
     </Dependency>
   </ToolsetDependencies>
