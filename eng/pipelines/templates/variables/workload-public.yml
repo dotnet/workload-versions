@@ -1,6 +1,6 @@
 variables:
 - name: AgentImagePublic
-  value: windows.amd64.vs2026.pre.scout.open
+  value: windows.vs2026preview.scout.amd64.open
 - name: _SignType
   value: test
 - name: _TeamName
