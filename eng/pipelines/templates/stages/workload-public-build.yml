@@ -13,7 +13,7 @@ stages:
       displayName: Build Repo
       pool:
         name: $(DncEngPublicBuildPool)
-        demands: ImageOverride -equals windows.vs2022.amd64.open
+        demands: ImageOverride -equals $(AgentImagePublic)
       artifacts:
         publish:
           logs:

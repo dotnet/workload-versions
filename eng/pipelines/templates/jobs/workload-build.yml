@@ -25,7 +25,7 @@ jobs:
       timeoutInMinutes: 120
       pool:
         name: $(DncEngInternalBuildPool)
-        image: 1es-windows-2022
+        image: $(AgentImageInternal)
         os: windows
       steps:
       - template: /eng/pipelines/templates/steps/workload-checkout.yml@self

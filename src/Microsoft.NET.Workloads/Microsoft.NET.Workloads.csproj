@@ -159,7 +159,7 @@
     </CreateLightCommandPackageDrop>
   </Target>
 
-  <Target Name="UpdateRunNameWithWorkloadsVersion" AfterTargets="Build" Condition="'$(TF_BUILD)' != ''">
+  <Target Name="UpdateRunNameWithWorkloadsVersion" AfterTargets="Build" Condition="'$(TF_BUILD)' != '' and '$(SYSTEM_TEAMPROJECT)' == 'internal'">
     <!-- SOURCEBRANCHCOMMITMESSAGE is set to the Azure Pipelines environment within the SetRunName step. -->
     <!-- We simply pull it out of the environment variables because trying to set it to an MSBuild property can cause issues in the YAML if the message contains special characters. -->
     <Message Text="##vso[build.updatebuildnumber]$(OfficialBuildId) • $(WorkloadsVersion) • $(SOURCEBRANCHCOMMITMESSAGE)" Importance="high" />
