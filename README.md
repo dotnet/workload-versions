@@ -2,6 +2,11 @@
 
 This repository contains the version information for .NET SDK Workloads.
 
+### Documentation
+
+- [Release Process](doc/release-process.md) - Current and ideal release process for workloads
+- [Preview Branch Preparation](doc/preview-branch-preparation.md) - Process for preparing branches during preview releases
+
 ### Pre-requisites for local VS insertion build
 
 1. Install the latest [Visual Studio](https://visualstudio.microsoft.com/downloads/) with the .NET Desktop workload
