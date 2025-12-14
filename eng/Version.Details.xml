@@ -3,12 +3,12 @@
   <ProductDependencies>
     <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-10.0.100" Version="10.0.102">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet</Uri>
-      <Sha>44525024595742ebe09023abe709df51de65009b</Sha>
+      <Sha>e27ee8bde3e034fb36b9b99dc8aa33e97749b342</Sha>
       <SourceBuild RepoName="emsdk" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.NET.Workload.Mono.Toolchain.Current.Manifest-10.0.100" Version="10.0.102">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet</Uri>
-      <Sha>44525024595742ebe09023abe709df51de65009b</Sha>
+      <Sha>e27ee8bde3e034fb36b9b99dc8aa33e97749b342</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-10.0.100" Version="36.1.2">
       <Uri>https://github.com/dotnet/android</Uri>
@@ -34,9 +34,9 @@
       <Uri>https://github.com/dotnet/maui</Uri>
       <Sha>c1c069ac0957d8241f5714c4700855728eeb6216</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="10.0.102-servicing.25612.105">
+    <Dependency Name="Microsoft.NET.Sdk" Version="10.0.102-servicing.25612.113">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet</Uri>
-      <Sha>44525024595742ebe09023abe709df51de65009b</Sha>
+      <Sha>e27ee8bde3e034fb36b9b99dc8aa33e97749b342</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
