@@ -10,25 +10,25 @@
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet</Uri>
       <Sha>44525024595742ebe09023abe709df51de65009b</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-10.0.100" Version="36.1.2">
+    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-10.0.100" Version="36.1.12">
       <Uri>https://github.com/dotnet/android</Uri>
-      <Sha>01024bb616e7b80417a2c6d320885bfdb956f20a</Sha>
+      <Sha>d611c1210ffde26280ee0faddd04e7621af41f1e</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-10.0.100" Version="26.1.10502">
+    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-10.0.100" Version="26.2.10191">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>29d3d81f416abddb44209f488673afe56077cd27</Sha>
+      <Sha>c60d1ae6ba4fd32ef99ccf94aca56e03c51eab86</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-10.0.100" Version="26.1.10502">
+    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-10.0.100" Version="26.2.10191">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>29d3d81f416abddb44209f488673afe56077cd27</Sha>
+      <Sha>c60d1ae6ba4fd32ef99ccf94aca56e03c51eab86</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-10.0.100" Version="26.1.10502">
+    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-10.0.100" Version="26.2.10191">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>29d3d81f416abddb44209f488673afe56077cd27</Sha>
+      <Sha>c60d1ae6ba4fd32ef99ccf94aca56e03c51eab86</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-10.0.100" Version="26.1.10502">
+    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-10.0.100" Version="26.2.10191">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>29d3d81f416abddb44209f488673afe56077cd27</Sha>
+      <Sha>c60d1ae6ba4fd32ef99ccf94aca56e03c51eab86</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-10.0.100" Version="10.0.1">
       <Uri>https://github.com/dotnet/maui</Uri>
