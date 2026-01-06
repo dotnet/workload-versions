@@ -20,7 +20,12 @@ This section details the current process for releasing workloads.
     - Only select both the checkbox for a stable version and publish to the feed if you have high confidence that the branding and versions are correct.
       - Without the stable box selected, you will get a -servicing version of the stable ID workload which can be used for testing and saved on the feed
       - You can select stable and not publish to the feed and download the package artifacts locally for testing
-8. **Test the build**
+8. **Verify the versions**
+    - Go to the release-tracker (an internal website)
+    - Compare the version in the `release/8.0.4xx`, `release/9.0.1xx`, and `release/10.0.1xx` branches to the manifest for each of the versions listed in the release tracker
+    - A shorthand is to check the SDK version in the branch as that should be sufficient, but comparing the commit SHA to the manifest is an exact match
+    - Note that release tracker will show the latest staging which in rare instances may not be correct
+9. **Test the build**
     - start a sandbox
     - install the SDK band you intend to test
     - create a test folder
@@ -36,7 +41,7 @@ This section details the current process for releasing workloads.
     - dotnet workload update --version <version>
       - note that if you are testing before release day, you may have to find and add additional feeds for the various manifest.
     - testing the manifests is typically enough 
-9. **Approve the 'publish on NuGet.org' stage in the AzDO pipeline**
+10. **Approve the 'publish on NuGet.org' stage in the AzDO pipeline**
 
 ## Ideal Process
 
