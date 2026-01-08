@@ -24,7 +24,7 @@ This section details the current process for releasing workloads.
     - Go to the release-tracker (an internal website)
     - Compare the version in the `release/8.0.4xx`, `release/9.0.1xx`, and `release/10.0.1xx` branches to the manifest for each of the versions listed in the release tracker
     - A shorthand is to check the SDK version in the branch as that should be sufficient, but comparing the commit SHA to the manifest is an exact match
-    - Note that release tracker will show the latest staging which in rare instances may not be correct
+    - Note that release tracker will show the latest staging which in rare instances may not be correct. You can click the builds node in the release tracker tool to see all staged builds for a release if you aren't sure.
 9. **Test the build**
     - start a sandbox
     - install the SDK band you intend to test
