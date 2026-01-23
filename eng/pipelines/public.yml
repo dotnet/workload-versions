@@ -29,6 +29,12 @@ resources:
     ref: refs/heads/release/9.0.1xx
     # https://dev.azure.com/dnceng-public/public/_settings/adminservices?resourceId=690f39b4-7746-42c2-be89-281bd7c78b9e
     endpoint: public
+  - repository: release10
+    type: github
+    name: dotnet/workload-versions
+    ref: refs/heads/release/10
+    # https://dev.azure.com/dnceng-public/public/_settings/adminservices?resourceId=690f39b4-7746-42c2-be89-281bd7c78b9e
+    endpoint: public
 
 variables:
 - template: /eng/pipelines/templates/variables/workload-public.yml@self
@@ -47,4 +53,8 @@ stages:
 - template: /eng/pipelines/templates/stages/workload-public-build.yml@self
   parameters:
     sourceBranchAlias: release9
+    engBranchAlias: self
+- template: /eng/pipelines/templates/stages/workload-public-build.yml@self
+  parameters:
+    sourceBranchAlias: release10
     engBranchAlias: self
