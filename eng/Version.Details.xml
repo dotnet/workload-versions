@@ -14,21 +14,21 @@
       <Uri>https://github.com/dotnet/android</Uri>
       <Sha>1dcfb6f8779c33b6f768c996495cb90ecd729329</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-9.0.100" Version="26.0.9783">
+    <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-9.0.100" Version="26.0.9785">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>69e5712550c0fb2f678c048fe74475bfe07f5bb3</Sha>
+      <Sha>640645001f1e0d0a311ce8f4f5976c3095e0c793</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-9.0.100" Version="26.0.9783">
+    <Dependency Name="Microsoft.NET.Sdk.tvOS.Manifest-9.0.100" Version="26.0.9785">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>69e5712550c0fb2f678c048fe74475bfe07f5bb3</Sha>
+      <Sha>640645001f1e0d0a311ce8f4f5976c3095e0c793</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-9.0.100" Version="26.0.9783">
+    <Dependency Name="Microsoft.NET.Sdk.MacCatalyst.Manifest-9.0.100" Version="26.0.9785">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>69e5712550c0fb2f678c048fe74475bfe07f5bb3</Sha>
+      <Sha>640645001f1e0d0a311ce8f4f5976c3095e0c793</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-9.0.100" Version="26.0.9783">
+    <Dependency Name="Microsoft.NET.Sdk.macOS.Manifest-9.0.100" Version="26.0.9785">
       <Uri>https://github.com/dotnet/macios</Uri>
-      <Sha>69e5712550c0fb2f678c048fe74475bfe07f5bb3</Sha>
+      <Sha>640645001f1e0d0a311ce8f4f5976c3095e0c793</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-9.0.100" Version="9.0.120">
       <Uri>https://github.com/dotnet/maui</Uri>
