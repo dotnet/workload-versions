@@ -61,7 +61,7 @@
   </PropertyGroup>
   <PropertyGroup Label="MonoWorkloads">
     <MicrosoftNETWorkloadMonoToolchainCurrentManifest110100PackageVersion>11.0.100-preview.1.26065.113</MicrosoftNETWorkloadMonoToolchainCurrentManifest110100PackageVersion>
-    <MicrosoftNETSdkPackageVersion>11.0.100-preview.1.26065.113</MicrosoftNETSdkPackageVersion>
+    <MicrosoftNETSdkPackageVersion>11.0.100-preview.1.26081.107</MicrosoftNETSdkPackageVersion>
     <!-- Workloads from dotnet/sdk use MicrosoftNETSdkPackageVersion as the manifests are now built from the dotnet/sdk repo -->
     <MonoWorkloadManifestVersion>$(MicrosoftNETWorkloadMonoToolChainCurrentManifest110100PackageVersion)</MonoWorkloadManifestVersion>
     <!-- mono workload prerelease version band must match the runtime feature band -->
