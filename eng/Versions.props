@@ -39,31 +39,31 @@
   </PropertyGroup>
   <PropertyGroup Label="EmscriptenWorkloads">
     <!-- Workloads from dotnet/sdk -->
-    <MicrosoftNETWorkloadEmscriptenCurrentManifest110100PackageVersion>11.0.100-preview.1.26065.113</MicrosoftNETWorkloadEmscriptenCurrentManifest110100PackageVersion>
-    <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest110100PackageVersion)</EmscriptenWorkloadManifestVersion>
+    <MicrosoftNETWorkloadEmscriptenCurrentManifest110100preview1PackageVersion>11.0.100-preview.1.26081.107</MicrosoftNETWorkloadEmscriptenCurrentManifest110100preview1PackageVersion>
+    <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest110100preview1PackageVersion)</EmscriptenWorkloadManifestVersion>
     <!-- emsdk workload prerelease version band must match the emsdk feature band -->
     <EmscriptenWorkloadFeatureBand>11.0.100$([System.Text.RegularExpressions.Regex]::Match($(EmscriptenWorkloadManifestVersion), `-[A-z]*[\.]*\d*`))</EmscriptenWorkloadFeatureBand>
   </PropertyGroup>
   <PropertyGroup Label="MauiWorkloads">
     <MauiFeatureBand>11.0.100-preview.1</MauiFeatureBand>
-    <MicrosoftNETSdkAndroidManifest110100PackageVersion>36.1.12</MicrosoftNETSdkAndroidManifest110100PackageVersion>
-    <MicrosoftNETSdkiOSManifest110100PackageVersion>26.2.10191</MicrosoftNETSdkiOSManifest110100PackageVersion>
-    <MicrosoftNETSdktvOSManifest110100PackageVersion>26.2.10191</MicrosoftNETSdktvOSManifest110100PackageVersion>
-    <MicrosoftNETSdkMacCatalystManifest110100PackageVersion>26.2.10191</MicrosoftNETSdkMacCatalystManifest110100PackageVersion>
-    <MicrosoftNETSdkmacOSManifest110100PackageVersion>26.2.10191</MicrosoftNETSdkmacOSManifest110100PackageVersion>
-    <MicrosoftNETSdkMauiManifest110100PackageVersion>10.0.30</MicrosoftNETSdkMauiManifest110100PackageVersion>
-    <MauiWorkloadManifestVersion>$(MicrosoftNETSdkMauiManifest110100PackageVersion)</MauiWorkloadManifestVersion>
-    <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest110100PackageVersion)</XamarinAndroidWorkloadManifestVersion>
-    <XamarinIOSWorkloadManifestVersion>$(MicrosoftNETSdkiOSManifest110100PackageVersion)</XamarinIOSWorkloadManifestVersion>
-    <XamarinMacCatalystWorkloadManifestVersion>$(MicrosoftNETSdkMacCatalystManifest110100PackageVersion)</XamarinMacCatalystWorkloadManifestVersion>
-    <XamarinMacOSWorkloadManifestVersion>$(MicrosoftNETSdkmacOSManifest110100PackageVersion)</XamarinMacOSWorkloadManifestVersion>
-    <XamarinTvOSWorkloadManifestVersion>$(MicrosoftNETSdktvOSManifest110100PackageVersion)</XamarinTvOSWorkloadManifestVersion>
+    <MicrosoftNETSdkAndroidManifest110100preview1PackageVersion>36.1.99-preview.1.115</MicrosoftNETSdkAndroidManifest110100preview1PackageVersion>
+    <MicrosoftNETSdkiOSManifest110100preview1PackageVersion>26.2.11310-net11-p1</MicrosoftNETSdkiOSManifest110100preview1PackageVersion>
+    <MicrosoftNETSdktvOSManifest110100preview1PackageVersion>26.2.11310-net11-p1</MicrosoftNETSdktvOSManifest110100preview1PackageVersion>
+    <MicrosoftNETSdkMacCatalystManifest110100preview1PackageVersion>26.2.11310-net11-p1</MicrosoftNETSdkMacCatalystManifest110100preview1PackageVersion>
+    <MicrosoftNETSdkmacOSManifest110100preview1PackageVersion>26.2.11310-net11-p1</MicrosoftNETSdkmacOSManifest110100preview1PackageVersion>
+    <MicrosoftNETSdkMauiManifest110100preview1PackageVersion>11.0.0-preview.1.26102.3</MicrosoftNETSdkMauiManifest110100preview1PackageVersion>
+    <MauiWorkloadManifestVersion>$(MicrosoftNETSdkMauiManifest110100preview1PackageVersion)</MauiWorkloadManifestVersion>
+    <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest110100preview1PackageVersion)</XamarinAndroidWorkloadManifestVersion>
+    <XamarinIOSWorkloadManifestVersion>$(MicrosoftNETSdkiOSManifest110100preview1PackageVersion)</XamarinIOSWorkloadManifestVersion>
+    <XamarinMacCatalystWorkloadManifestVersion>$(MicrosoftNETSdkMacCatalystManifest110100preview1PackageVersion)</XamarinMacCatalystWorkloadManifestVersion>
+    <XamarinMacOSWorkloadManifestVersion>$(MicrosoftNETSdkmacOSManifest110100preview1PackageVersion)</XamarinMacOSWorkloadManifestVersion>
+    <XamarinTvOSWorkloadManifestVersion>$(MicrosoftNETSdktvOSManifest110100preview1PackageVersion)</XamarinTvOSWorkloadManifestVersion>
   </PropertyGroup>
   <PropertyGroup Label="MonoWorkloads">
-    <MicrosoftNETWorkloadMonoToolchainCurrentManifest110100PackageVersion>11.0.100-preview.1.26065.113</MicrosoftNETWorkloadMonoToolchainCurrentManifest110100PackageVersion>
+    <MicrosoftNETWorkloadMonoToolchainCurrentManifest110100preview1PackageVersion>11.0.100-preview.1.26081.107</MicrosoftNETWorkloadMonoToolchainCurrentManifest110100preview1PackageVersion>
     <MicrosoftNETSdkPackageVersion>11.0.100-preview.1.26081.107</MicrosoftNETSdkPackageVersion>
     <!-- Workloads from dotnet/sdk use MicrosoftNETSdkPackageVersion as the manifests are now built from the dotnet/sdk repo -->
-    <MonoWorkloadManifestVersion>$(MicrosoftNETWorkloadMonoToolChainCurrentManifest110100PackageVersion)</MonoWorkloadManifestVersion>
+    <MonoWorkloadManifestVersion>$(MicrosoftNETWorkloadMonoToolchainCurrentManifest110100preview1PackageVersion)</MonoWorkloadManifestVersion>
     <!-- mono workload prerelease version band must match the runtime feature band -->
     <MonoWorkloadFeatureBand>11.0.100$([System.Text.RegularExpressions.Regex]::Match($(MonoWorkloadManifestVersion), `-[A-z]*[\.]*\d*`))</MonoWorkloadFeatureBand>
   </PropertyGroup>
