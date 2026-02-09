@@ -1,9 +1,11 @@
 ---
 name: vs-workloads-trigger-pipeline
-description: Triggers the dotnet-workload-versions-official-ci pipeline with correct parameters. Use to start a VS workloads insertion build.
+description: Triggers the dotnet-workload-versions-official-ci pipeline for VS insertion. Use to start a VS workloads insertion build. For release day (NuGet publishing), use workload-release-day skill instead.
 ---
 
-# Trigger VS Workloads Pipeline
+# Trigger VS Workloads Pipeline (VS Insertion)
+
+> **Note**: This skill is for **VS insertion** workflows. For Patch Tuesday release day workload sets that publish to NuGet.org (without VS insertion), use the `workload-release-day` skill instead.
 
 ## Inputs
 - **sourceBranch**: Workload-versions branch (e.g., `release/10`)
