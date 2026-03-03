@@ -6,6 +6,7 @@
     <WorkloadManifest Include="Microsoft.NET.Workload.Emscripten.net7"    FeatureBand="$(EmscriptenWorkloadFeatureBand)" Version="$(EmscriptenWorkloadManifestVersion)" />
     <WorkloadManifest Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(VersionMajor)', '9'))" Include="Microsoft.NET.Workload.Emscripten.net8"    FeatureBand="$(EmscriptenWorkloadFeatureBand)" Version="$(EmscriptenWorkloadManifestVersion)" />
     <WorkloadManifest Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(VersionMajor)', '10'))" Include="Microsoft.NET.Workload.Emscripten.net9"    FeatureBand="$(EmscriptenWorkloadFeatureBand)" Version="$(EmscriptenWorkloadManifestVersion)" />
+    <WorkloadManifest Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(VersionMajor)', '11'))" Include="Microsoft.NET.Workload.Emscripten.net10"    FeatureBand="$(EmscriptenWorkloadFeatureBand)" Version="$(EmscriptenWorkloadManifestVersion)" />
   </ItemGroup>
 
   <ItemGroup Label="Maui">
@@ -23,6 +24,7 @@
     <WorkloadManifest Include="Microsoft.NET.Workload.Mono.ToolChain.net7"    FeatureBand="$(MonoWorkloadFeatureBand)" Version="$(MonoWorkloadManifestVersion)" />
     <WorkloadManifest Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(VersionMajor)', '9'))" Include="Microsoft.NET.Workload.Mono.ToolChain.net8"    FeatureBand="$(MonoWorkloadFeatureBand)" Version="$(MonoWorkloadManifestVersion)" />
     <WorkloadManifest Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(VersionMajor)', '10'))" Include="Microsoft.NET.Workload.Mono.ToolChain.net9"    FeatureBand="$(MonoWorkloadFeatureBand)" Version="$(MonoWorkloadManifestVersion)" />
+    <WorkloadManifest Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(VersionMajor)', '11'))" Include="Microsoft.NET.Workload.Mono.ToolChain.net10"    FeatureBand="$(MonoWorkloadFeatureBand)" Version="$(MonoWorkloadManifestVersion)" />
   </ItemGroup>
 
   <ItemGroup Label="Aspire" Condition="$([MSBuild]::VersionLessThanOrEquals('$(VersionMajor)', '9'))">
