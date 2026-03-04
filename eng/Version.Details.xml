@@ -6,7 +6,7 @@
       <Sha>e1a0fb23745648b7c69c990564b6db2d28abd473</Sha>
       <SourceBuild RepoName="emsdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Mono.ToolChain.Current.Manifest-11.0.100-preview.2" Version="11.0.0-preview.2.26122.107">
+    <Dependency Name="Microsoft.NET.Workload.Mono.Toolchain.Current.Manifest-11.0.100-preview.2" Version="11.0.100-preview.2.26122.107">
       <Uri>https://github.com/dotnet/dotnet</Uri>
       <Sha>e1a0fb23745648b7c69c990564b6db2d28abd473</Sha>
     </Dependency>
