@@ -4,15 +4,18 @@
     <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-11.0.100-preview.2" Version="11.0.100-preview.2.26154.117">
       <Uri>https://github.com/dotnet/dotnet</Uri>
       <Sha>6dbf4ee311820b91535cc405fb9f72f3e1ec85fc</Sha>
+      <BarId>304630</BarId>
       <SourceBuild RepoName="emsdk" ManagedOnly="true" />
     </Dependency>
     <Dependency Name="Microsoft.NET.Workload.Mono.ToolChain.Current.Manifest-11.0.100-preview.2" Version="11.0.100-preview.2.26154.117">
       <Uri>https://github.com/dotnet/dotnet</Uri>
       <Sha>6dbf4ee311820b91535cc405fb9f72f3e1ec85fc</Sha>
+      <BarId>304630</BarId>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-11.0.100-preview.2" Version="36.1.99-preview.2.154">
       <Uri>https://github.com/dotnet/android</Uri>
       <Sha>5fef5759f882be9c5668f1f72eec8cadd55075a4</Sha>
+      <BarId>303729</BarId>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-11.0.100-preview.2" Version="26.2.11425-net11-p2">
       <Uri>https://github.com/dotnet/macios</Uri>
