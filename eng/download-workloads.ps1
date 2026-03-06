@@ -45,7 +45,7 @@ if ($ci) {
 # Reads the Version.Details.xml file to get the workload builds.
 $versionDetailsPath = (Get-Item "$PSScriptRoot\Version.Details.xml").FullName
 $versionDetailsXml = [Xml.XmlDocument](Get-Content $versionDetailsPath)
-$versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Uri, Sha -Unique
+$versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Uri, Sha, BarId -Unique
 
 # Construct the asset filter to only download the required workload drops.
 $workloadFilter = ''
@@ -90,7 +90,21 @@ $versionDetails | ForEach-Object {
     $nonShippingFlag
   )
 
-  & $darc ($darcArguments + $ciArguments)
+  $buildDropArguments = @(
+    '--repo'
+    $_.Uri
+    '--commit'
+    $_.Sha
+  )
+
+  if ($_.BarId) {
+    $buildDropArguments = @(
+      '--id'
+      $_.BarId
+    )
+  }
+
+  & $darc ($darcArguments + $buildDropArguments + $ciArguments)
 }
 
 Write-Host 'Workload drops downloaded:'
