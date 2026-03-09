@@ -40,6 +40,7 @@
     <Dependency Name="Microsoft.NET.Sdk" Version="11.0.100-preview.2.26154.117">
       <Uri>https://github.com/dotnet/dotnet</Uri>
       <Sha>6dbf4ee311820b91535cc405fb9f72f3e1ec85fc</Sha>
+      <BarId>304630</BarId>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
