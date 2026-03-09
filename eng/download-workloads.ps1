@@ -28,7 +28,7 @@ $ci = $gitHubPat -and $azDOPat
 if ($ci) {
   # Darc access copied from: eng/common/post-build/publish-using-darc.ps1
   $disableConfigureToolsetImport = $true
-  $null = . $PSScriptRoot\common\tools.ps1
+  . $PSScriptRoot\common\tools.ps1
 
   $darc = Get-Darc
   $gitHubPatPlain = ConvertFrom-SecureString -SecureString $gitHubPat -AsPlainText
