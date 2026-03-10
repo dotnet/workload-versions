@@ -34,10 +34,6 @@
       <Uri>https://github.com/dotnet/maui</Uri>
       <Sha>8151668ee5299645694a934cc0f706d403bd64b0</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="11.0.100-preview.2.26159.112">
-      <Uri>https://github.com/dotnet/dotnet</Uri>
-      <Sha>17d11de66cf75b962995c81dd1235fae9aa5ece0</Sha>
-    </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
     <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="11.0.0-beta.26159.112">
