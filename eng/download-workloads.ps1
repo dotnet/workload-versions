@@ -45,7 +45,7 @@ if ($ci) {
 # Reads the Version.Details.xml file to get the workload builds.
 $versionDetailsPath = (Get-Item "$PSScriptRoot\Version.Details.xml").FullName
 $versionDetailsXml = [Xml.XmlDocument](Get-Content $versionDetailsPath)
-$versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Uri, Sha -Unique
+$versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Name, Version, Uri, Sha, BarId -Unique
 
 # Construct the asset filter to only download the required workload drops.
 $workloadFilter = ''
@@ -73,14 +73,12 @@ if ($includeNonShipping) {
 
 # Runs DARC against each workload build to download the drops (if applicable based on the filter).
 $versionDetails | ForEach-Object {
+  Write-Host "Dependency name: $($_.Name)"
+  Write-Host "Dependency version: $($_.Version)"
   $darcArguments = @(
     'gather-drop'
     '--asset-filter'
     $assetFilter
-    '--repo'
-    $_.Uri
-    '--commit'
-    $_.Sha
     '--output-dir'
     $workloadPath
     '--include-released'
@@ -90,7 +88,24 @@ $versionDetails | ForEach-Object {
     $nonShippingFlag
   )
 
-  & $darc ($darcArguments + $ciArguments)
+  $buildDropArguments = @(
+    '--repo'
+    $_.Uri
+    '--commit'
+    $_.Sha
+  )
+
+  if ($_.BarId) {
+    $buildDropArguments = @(
+      '--id'
+      $_.BarId
+    )
+  }
+
+  Write-Host "darcArguments: $($darcArguments | Join-String -Separator ' ')"
+  Write-Host "buildDropArguments: $($buildDropArguments | Join-String -Separator ' ')"
+
+  & $darc ($darcArguments + $buildDropArguments + $ciArguments)
 }
 
 Write-Host 'Workload drops downloaded:'
