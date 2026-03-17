@@ -49,7 +49,7 @@ if ($workloadListJson) {
   if ($workloadList.Length -ne 0) {
     $versionDetails = $versionDetails | Where-Object {
       $depName = $_.Name
-      ($workloadList | Where-Object { $depName -imatch $_ }).Count -gt 0
+      (@($workloadList | Where-Object { $depName -imatch $_ })).Count -gt 0
     }
   }
 }
