@@ -10,9 +10,9 @@
       <Uri>https://github.com/dotnet/dotnet</Uri>
       <Sha>eb05a35ed9180ccd6f969489c0b0b42a1eb94c93</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-11.0.100-preview.3" Version="36.1.99-preview.2.154">
+    <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-11.0.100-preview.3" Version="36.99.0-preview.3.6">
       <Uri>https://github.com/dotnet/android</Uri>
-      <Sha>5fef5759f882be9c5668f1f72eec8cadd55075a4</Sha>
+      <Sha>fb0a06f001cd830190795ab9dea136a0eaefb053</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.iOS.Manifest-11.0.100-preview.3" Version="26.2.11425-net11-p2">
       <Uri>https://github.com/dotnet/macios</Uri>
