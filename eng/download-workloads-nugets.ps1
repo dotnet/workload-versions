@@ -55,7 +55,7 @@ if ($workloadListJson) {
 }
 
 # Asset filter for .nupkg files.
-$assetFilter = '^[^/]+'
+$assetFilter = '^Microsoft\.'
 Write-Host "assetFilter: $assetFilter"
 
 # Runs DARC against each workload build to download the NuGet packages (if applicable based on the filter).
