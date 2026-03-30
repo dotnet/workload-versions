@@ -2,7 +2,7 @@
 # In CI, we need to pass PATs to this, so it runs in Azure Pipelines only (not through MSBuild).
 # For local builds, some preconfiguration is necessary. Check the README.md for details.
 
-# $workloadPath: The path to the directory as output for the workload ZIPs. This is --output-dir in the DARC command.
+# $workloadPath: The path to the directory as output for the workload ZIPs or NuGet packages. This is --output-dir in the DARC command.
 # - Example Value: "$(RepoRoot)artifacts\workloads"
 # $gitHubPat: The GitHub PAT to use for DARC (CI build only). See workload-build.yml for converting the PAT to SecureString.
 # $azDOPat: The Azure DevOps PAT to use for DARC (CI build only). See workload-build.yml for converting the PAT to SecureString.
@@ -15,8 +15,12 @@
 # $includeNonShipping:
 # - If $true, includes workloads that are in the 'non-shipping' folder.
 # - If $false, excludes workloads that are in the 'non-shipping' folder.
+# $downloadNugets:
+# - If set, downloads .nupkg files (Microsoft.* packages) for the workloads matched by $workloadListJson instead of VSDrop ZIPs.
+# - $workloadListJson filters which dependencies to process (case-insensitive name match). Example Value: '["maui","android","iOS"]'
+# - $usePreComponents and $includeNonShipping are ignored when $downloadNugets is set.
 
-param ([Parameter(Mandatory=$true)] [string] $workloadPath, [SecureString] $gitHubPat, [SecureString] $azDOPat, [string] $workloadListJson = '', [bool] $usePreComponents = $false, [bool] $includeNonShipping = $false)
+param ([Parameter(Mandatory=$true)] [string] $workloadPath, [SecureString] $gitHubPat, [SecureString] $azDOPat, [string] $workloadListJson = '', [bool] $usePreComponents = $false, [bool] $includeNonShipping = $false, [switch] $downloadNugets)
 
 ### Local Build ###
 # Local build requires the installation of DARC. See: https://github.com/dotnet/arcade/blob/main/Documentation/Darc.md#setting-up-your-darc-client
@@ -47,27 +51,43 @@ $versionDetailsPath = (Get-Item "$PSScriptRoot\Version.Details.xml").FullName
 $versionDetailsXml = [Xml.XmlDocument](Get-Content $versionDetailsPath)
 $versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Name, Version, Uri, Sha, BarId -Unique
 
-# Construct the asset filter to only download the required workload drops.
+# Construct the asset filter and filter the dependencies based on mode.
 $workloadFilter = ''
-if ($workloadListJson) {
-  $workloadList = ConvertFrom-Json -InputObject $workloadListJson
-  # Using Length accounts for arrays (multiple workloads provided) and strings (single workload provided).
-  if ($workloadList.Length -ne 0) {
-    $workloadFilter = "($($workloadList | Join-String -Separator '|'))"
+if ($downloadNugets) {
+  # When downloading NuGet packages, filter the dependencies by name so only matching repos are queried.
+  if ($workloadListJson) {
+    $workloadList = ConvertFrom-Json -InputObject $workloadListJson
+    # Using Length accounts for arrays (multiple workloads provided) and strings (single workload provided).
+    if ($workloadList.Length -ne 0) {
+      $versionDetails = $versionDetails | Where-Object {
+        $depName = $_.Name
+        (@($workloadList | Where-Object { $depName -imatch $_ })).Count -gt 0
+      }
+    }
   }
+  $assetFilter = '^Microsoft\.'
+} else {
+  # When downloading VSDrop ZIPs, embed the workload names into the asset filter regex.
+  if ($workloadListJson) {
+    $workloadList = ConvertFrom-Json -InputObject $workloadListJson
+    # Using Length accounts for arrays (multiple workloads provided) and strings (single workload provided).
+    if ($workloadList.Length -ne 0) {
+      $workloadFilter = "($($workloadList | Join-String -Separator '|'))"
+    }
+  }
+  # Note: The $ at the end of these filters are required for the positive/negative lookbehinds to function.
+  # Exclude pre.components.zip.
+  $componentFilter = '(?<!pre\.components\.zip)$'
+  if ($usePreComponents) {
+    # Exclude .components.zip but include pre.components.zip.
+    $componentFilter = '((?<!\.components\.zip)|(?<=pre\.components\.zip))$'
+  }
+  $assetFilter = "Workload\.VSDrop\.$workloadFilter.*$componentFilter"
 }
-# Note: The $ at the end of these filters are required for the positive/negative lookbehinds to function.
-# Exclude pre.components.zip.
-$componentFilter = '(?<!pre\.components\.zip)$'
-if ($usePreComponents) {
-  # Exclude .components.zip but include pre.components.zip.
-  $componentFilter = '((?<!\.components\.zip)|(?<=pre\.components\.zip))$'
-}
-$assetFilter = "Workload\.VSDrop\.$workloadFilter.*$componentFilter"
 Write-Host "assetFilter: $assetFilter"
 
 $nonShippingFlag = ''
-if ($includeNonShipping) {
+if ($includeNonShipping -and -not $downloadNugets) {
   $nonShippingFlag = '--non-shipping'
 }
 
@@ -108,6 +128,12 @@ $versionDetails | ForEach-Object {
   & $darc ($darcArguments + $buildDropArguments + $ciArguments)
 }
 
-Write-Host 'Workload drops downloaded:'
-# https://stackoverflow.com/a/9570030/294804
-Get-ChildItem $workloadPath -File -Include 'Workload.VSDrop.*.zip' -Recurse | Select-Object -Expand FullName
+if ($downloadNugets) {
+  Write-Host 'Workload NuGet packages downloaded:'
+  # https://stackoverflow.com/a/9570030/294804
+  Get-ChildItem $workloadPath -File -Include '*.nupkg' -Recurse | Select-Object -Expand FullName
+} else {
+  Write-Host 'Workload drops downloaded:'
+  # https://stackoverflow.com/a/9570030/294804
+  Get-ChildItem $workloadPath -File -Include 'Workload.VSDrop.*.zip' -Recurse | Select-Object -Expand FullName
+}

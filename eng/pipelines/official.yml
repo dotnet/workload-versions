@@ -197,6 +197,7 @@ extends:
           includeNonShippingWorkloads: ${{ parameters.includeNonShippingWorkloads }}
           workloadDropNames: ${{ parameters.workloadDropNames }}
           createTestWorkloadSet: ${{ parameters.createTestWorkloadSet }}
+          publishToAzDO: ${{ parameters.publishToAzDO }}
           setVersionSdkMinor: ${{ parameters.setVersionSdkMinor }}
           setVersionFeature: ${{ parameters.setVersionFeature }}
           setVersionPatch: ${{ parameters.setVersionPatch }}
@@ -251,6 +252,20 @@ extends:
                       useDotNetTask: true
                       packagesToPush: $(System.DefaultWorkingDirectory)/artifacts/packages/**/*.nupkg
                       packageParentPath: $(System.DefaultWorkingDirectory)/artifacts
+                      publishVstsFeed: ${{ parameters.azDOPublishFeed }}
+                  - task: 1ES.DownloadPipelineArtifact@1
+                    displayName: 🟣 Download workload nuget artifacts
+                    continueOnError: true
+                    inputs:
+                      artifactName: WorkloadNugets
+                      targetPath: $(System.DefaultWorkingDirectory)/artifacts/workload-nugets
+                  - task: 1ES.PublishNuget@1
+                    displayName: 🟣 Publish workload packages to AzDO
+                    continueOnError: true
+                    inputs:
+                      useDotNetTask: true
+                      packagesToPush: $(System.DefaultWorkingDirectory)/artifacts/workload-nugets/**/*.nupkg
+                      packageParentPath: $(System.DefaultWorkingDirectory)/artifacts/workload-nugets
                       publishVstsFeed: ${{ parameters.azDOPublishFeed }}
                 - ${{ if eq(parameters.publishToNuGet, true) }}:
                   - task: 1ES.PublishNuget@1
