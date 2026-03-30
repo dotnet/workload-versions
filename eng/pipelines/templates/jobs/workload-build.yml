@@ -115,12 +115,13 @@ jobs:
           inputs:
             azureSubscription: DotNetStaging
             scriptType: pscore
-            scriptPath: $(System.DefaultWorkingDirectory)/eng/download-workloads-nugets.ps1
+            scriptPath: $(System.DefaultWorkingDirectory)/eng/download-workloads.ps1
             arguments: >-
-              -workloadNugetPath '$(System.DefaultWorkingDirectory)/artifacts/workload-nugets'
+              -workloadPath '$(System.DefaultWorkingDirectory)/artifacts/workload-nugets'
               -gitHubPat (ConvertTo-SecureString -String '$(BotAccount-dotnet-bot-repo-PAT)' -AsPlainText -Force)
               -azDOPat (ConvertTo-SecureString -String '$(dn-bot-all-drop-rw-code-rw-release-all)' -AsPlainText -Force)
               -workloadListJson '["maui","android","iOS"]'
+              -downloadNugets
         - task: 1ES.PublishPipelineArtifact@1
           displayName: 🟣 Publish workload nuget artifacts
           inputs:
