@@ -44,9 +44,10 @@ Use `dnceng-azure-devop-pipelines_run_pipeline`:
 ## Critical Notes
 
 1. **Pipeline branch**: MUST use `refs/heads/eng` in resources
-2. **Branch format**: YAML array with `- ` prefix and `\n` separators
-3. **Empty arrays**: Use `"[]"`
-4. **Build duration**: ~100-110 minutes
+2. **Resources structure**: `resources` must include both `"pipelines": {}` and `"repositories"` keys — omitting `pipelines` may cause the API call to fail
+3. **Branch format**: YAML array with `- ` prefix and `\n` separators
+4. **Empty arrays**: Use `"[]"`
+5. **Build duration**: ~100-110 minutes
 
 ## Output
 
