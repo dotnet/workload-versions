@@ -20,7 +20,7 @@ description: Triggers the dotnet-workload-versions-official-ci pipeline for VS i
 
 ## Execute
 
-Use `dnceng-azure-devop-pipelines_run_pipeline`:
+Use `dnceng-azure-devops-pipelines_run_pipeline`:
 
 ```json
 {

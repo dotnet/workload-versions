@@ -36,7 +36,7 @@ Use `github-mcp-server-list_pull_requests`:
 
 ## Verify Mirror Sync
 
-Use `dnceng-azure-devop-repo_search_commits`:
+Use `dnceng-azure-devops-repo_search_commits`:
 ```json
 {
   "project": "internal",

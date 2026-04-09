@@ -19,7 +19,7 @@ description: Monitors a running workloads pipeline build and finds resulting VS 
 
 ## Check Build Status
 
-Use `dnceng-azure-devop-pipelines_get_build_status`:
+Use `dnceng-azure-devops-pipelines_get_build_status`:
 ```json
 {
   "project": "internal",

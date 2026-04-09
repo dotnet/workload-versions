@@ -52,12 +52,14 @@ Use `azure-devops-devdiv-repo_update_pull_request`:
 
 ## Output
 
+```markdown
 | PR ID | Target | Action | Status |
 |-------|--------|--------|--------|
 | 704945 | 18.3-staging | Autocomplete | ✅ |
 | 704926 | rel/insiders | Skip | ⏸️ User |
 
 Link: `https://dev.azure.com/devdiv/DevDiv/_git/VS/pullrequest/<prId>`
+```
 
 ## Key IDs
 - **VS Repo**: `a290117c-5a8a-40f7-bc2c-f14dbe3acf6d`

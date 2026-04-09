@@ -45,7 +45,7 @@ Parse each `releases.json` to get current SDK versions per feature band.
 
 ## Pipeline Execution
 
-Use `dnceng-azure-devop-pipelines_run_pipeline`:
+Use `dnceng-azure-devops-pipelines_run_pipeline`:
 
 ### Base Parameters (All Runs)
 

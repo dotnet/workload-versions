@@ -4,7 +4,7 @@ Guide the user through preparing and executing a workloads insertion into Visual
 
 ## Related Skills
 
-This workflow can be executed using these focused skills in `skills/`:
+This workflow can be executed using these focused skills in `.github/skills/`:
 
 | Skill | Purpose |
 |-------|---------|
@@ -20,6 +20,16 @@ This prompt helps automate the process of inserting .NET workloads (maui, iOS, A
 2. Running the workloads CI pipeline in dnceng Azure DevOps
 3. Monitoring for VS insertion PRs in DevDiv Azure DevOps
 4. Validating and approving the VS insertion PRs
+
+## Prerequisites
+
+This workflow requires the following MCP servers / tools to be configured in your Copilot agent environment:
+
+| MCP Server | Purpose | Tools Referenced |
+|------------|---------|-----------------|
+| **GitHub MCP** (`github-mcp-server`) | Interact with GitHub repos and PRs | `github-mcp-server-list_pull_requests`, `github-mcp-server-pull_request_read` |
+| **dnceng Azure DevOps** (`dnceng-azure-devops`) | Trigger builds and check mirror sync in `dnceng/internal` | `dnceng-azure-devops-pipelines_run_pipeline`, `dnceng-azure-devops-pipelines_get_build_status`, `dnceng-azure-devops-repo_search_commits` |
+| **DevDiv Azure DevOps** (`azure-devops-devdiv`) | Find and manage VS insertion PRs | `azure-devops-devdiv-repo_list_pull_requests_by_repo_or_project`, `azure-devops-devdiv-repo_get_pull_request_by_id`, `azure-devops-devdiv-repo_update_pull_request`, `azure-devops-devdiv-repo_list_branches_by_repo` |
 
 ## Key Information
 
@@ -70,7 +80,7 @@ Check for open PRs in `dotnet/workload-versions` targeting the source branch:
 
 ### Step 3: Verify Mirror Status
 Check that the source branch is mirrored to dnceng Azure DevOps:
-- Use `dnceng-azure-devop-repo_search_commits` to verify latest commits are present
+- Use `dnceng-azure-devops-repo_search_commits` to verify latest commits are present
 - Repository: `dotnet-workload-versions`, Project: `internal`
 - **Poll every 5 minutes** until the expected commit appears (typically takes 2-10 minutes)
 
@@ -83,7 +93,7 @@ If user needs to find available VS branches:
 Queue the workloads CI pipeline with correct parameters:
 
 ```
-Tool: dnceng-azure-devop-pipelines_run_pipeline
+Tool: dnceng-azure-devops-pipelines_run_pipeline
 Parameters:
   - project: "internal"
   - pipelineId: 1298
@@ -105,7 +115,7 @@ Parameters:
 
 ### Step 6: Monitor Build
 The build typically takes **~100-110 minutes** to complete:
-- Use `dnceng-azure-devop-pipelines_get_build_status` to check progress
+- Use `dnceng-azure-devops-pipelines_get_build_status` to check progress
 - Build ID is returned when pipeline is queued
 - Key stages: Build Repo → SDL → Publish Assets → VS Insertion
 - Poll every 10-15 minutes during the build
@@ -166,22 +176,13 @@ It's common to run multiple insertion builds simultaneously for different SDK ve
 - Some builds may show "active pull request exists" warnings - this is normal
 - Monitor all builds and validate PRs as they complete
 
-## Skill vs Prompt Considerations
-
-This prompt provides **reference documentation** for the VS workloads insertion workflow. For fully automated execution with:
-- Automatic polling and state management
-- Multi-build orchestration
-- Conditional PR approval logic
-
-Consider creating a **skill** that can maintain state across the ~2 hour workflow and handle edge cases automatically. The prompt remains valuable as documentation and for guided manual execution.
-
 ## Troubleshooting
 
 ### Pipeline fails to start
 - Ensure you're specifying `resources.repositories.self.refName: "refs/heads/eng"` - the pipeline YAML only exists on the eng branch
 
 ### Build cancelled or needs to be restarted
-- Use `dnceng-azure-devop-pipelines_update_build_stage` with `status: "Cancel"` and stage name `__default`
+- Use `dnceng-azure-devops-pipelines_update_build_stage` with `status: "Cancel"` and stage name `__default`
 - Queue a new build with corrected parameters
 
 ### GitHub PR blocked
