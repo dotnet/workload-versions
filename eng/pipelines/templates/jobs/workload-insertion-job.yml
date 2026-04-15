@@ -45,6 +45,15 @@ jobs:
     inputs:
       artifactName: Workloads
       targetPath: $(System.DefaultWorkingDirectory)/artifacts/workloads
+  - task: AzureCLI@2
+    displayName: 🟣 Get DevDiv Drop Access Token
+    inputs:
+      azureSubscription: 'dnceng-devdiv-drop-rw-code-rw-wif'
+      scriptType: pscore
+      scriptLocation: inlineScript
+      inlineScript: |
+        $token = az account get-access-token --resource 499b84ac-1321-427f-aa17-267ca6975798 --query accessToken -o tsv
+        Write-Host "##vso[task.setvariable variable=DevDivDropAccessToken;issecret=true]$token"
   # The variables comprised of workloadShortName and workloadType are set during create-workload-drops.ps1 in Microsoft.NET.Workloads.Vsman.csproj.
   - ${{ each workloadShortName in parameters.workloadDropNames }}:
     - ${{ each workloadType in parameters.workloadDropTypes }}:
@@ -80,7 +89,7 @@ jobs:
           dropName: $(${{ workloadShortName }}_${{ workloadType }}_name)
           # See: https://dev.azure.com/devdiv/DevDiv/_wiki/wikis/DevDiv.wiki/35351/Retain-Drops
           dropRetentionDays: 183
-          accessToken: $(dn-bot-devdiv-drop-rw-code-rw)
+          accessToken: $(DevDivDropAccessToken)
           skipUploadIfExists: true
         condition: eq(variables['PublishWorkloadDrop'], 'True')
 
