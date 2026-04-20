@@ -9,7 +9,7 @@
   },
   "msbuild-sdks": {
     "Microsoft.Build.NoTargets": "3.7.0",
-    "Microsoft.DotNet.Arcade.Sdk": "11.0.0-beta.26209.122",
+    "Microsoft.DotNet.Arcade.Sdk": "11.0.0-beta.26219.104",
     "Microsoft.VisualStudio.Internal.MicroBuild.Vsman": "2.0.174"
   }
 }
