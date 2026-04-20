@@ -40,7 +40,7 @@
   </PropertyGroup>
   <PropertyGroup Label="EmscriptenWorkloads">
     <!-- Workloads from dotnet/sdk -->
-    <MicrosoftNETWorkloadEmscriptenCurrentManifest100100PackageVersion>10.0.106</MicrosoftNETWorkloadEmscriptenCurrentManifest100100PackageVersion>
+    <MicrosoftNETWorkloadEmscriptenCurrentManifest100100PackageVersion>10.0.107</MicrosoftNETWorkloadEmscriptenCurrentManifest100100PackageVersion>
     <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest100100PackageVersion)</EmscriptenWorkloadManifestVersion>
     <!-- emsdk workload prerelease version band must match the emsdk feature band -->
     <EmscriptenWorkloadFeatureBand>10.0.100$([System.Text.RegularExpressions.Regex]::Match($(EmscriptenWorkloadManifestVersion), `-[A-z]*[\.]*\d*`))</EmscriptenWorkloadFeatureBand>
@@ -61,7 +61,7 @@
     <XamarinTvOSWorkloadManifestVersion>$(MicrosoftNETSdktvOSManifest100100PackageVersion)</XamarinTvOSWorkloadManifestVersion>
   </PropertyGroup>
   <PropertyGroup Label="MonoWorkloads">
-    <MicrosoftNETWorkloadMonoToolchainCurrentManifest100100PackageVersion>10.0.106</MicrosoftNETWorkloadMonoToolchainCurrentManifest100100PackageVersion>
+    <MicrosoftNETWorkloadMonoToolchainCurrentManifest100100PackageVersion>10.0.107</MicrosoftNETWorkloadMonoToolchainCurrentManifest100100PackageVersion>
     <MonoWorkloadManifestVersion>$(MicrosoftNETWorkloadMonoToolChainCurrentManifest100100PackageVersion)</MonoWorkloadManifestVersion>
     <!-- mono workload prerelease version band must match the runtime feature band -->
     <MonoWorkloadFeatureBand>10.0.100$([System.Text.RegularExpressions.Regex]::Match($(MonoWorkloadManifestVersion), `-[A-z]*[\.]*\d*`))</MonoWorkloadFeatureBand>
