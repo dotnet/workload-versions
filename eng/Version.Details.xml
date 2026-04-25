@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-10.0.100" Version="10.0.106">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-10.0.100" Version="10.0.108">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet</Uri>
-      <Sha>9b0e111466624eadacf347f942a1457735c48acb</Sha>
+      <Sha>6ee4e7c3186980901e9749f5929b770abbec01d6</Sha>
       <SourceBuild RepoName="emsdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Mono.Toolchain.Current.Manifest-10.0.100" Version="10.0.106">
+    <Dependency Name="Microsoft.NET.Workload.Mono.Toolchain.Current.Manifest-10.0.100" Version="10.0.108">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet</Uri>
-      <Sha>9b0e111466624eadacf347f942a1457735c48acb</Sha>
+      <Sha>6ee4e7c3186980901e9749f5929b770abbec01d6</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-10.0.100" Version="36.1.53">
       <Uri>https://github.com/dotnet/android</Uri>
@@ -36,9 +36,9 @@
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="10.0.0-beta.26201.119">
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="10.0.0-beta.26224.109">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet</Uri>
-      <Sha>9b0e111466624eadacf347f942a1457735c48acb</Sha>
+      <Sha>6ee4e7c3186980901e9749f5929b770abbec01d6</Sha>
       <SourceBuild RepoName="arcade" ManagedOnly="true" />
     </Dependency>
   </ToolsetDependencies>
