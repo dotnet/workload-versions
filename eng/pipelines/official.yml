@@ -29,6 +29,16 @@ parameters:
   displayName: AzDO publish feed
   type: string
   default: public/dotnet-workloads
+- name: publishWorkloadNupkgsToAzDO
+  displayName: Publish workload packages to AzDO
+  type: boolean
+  default: false
+- name: workloadNupkgExcludeList
+  displayName: Exclude workload packages from publish
+  type: object
+  default:
+  - emsdk
+  - mono
 
 - name: dividerVSInsertion
   displayName: '[ ######## VS INSERTION ######## ]'
@@ -202,6 +212,8 @@ extends:
           setVersionPatch: ${{ parameters.setVersionPatch }}
           setPreReleaseVersionLabel: ${{ parameters.setPreReleaseVersionLabel }}
           setPreReleaseVersionIteration: ${{ parameters.setPreReleaseVersionIteration }}
+          downloadWorkloadNupkgs: ${{ parameters.publishWorkloadNupkgsToAzDO }}
+          workloadNupkgExcludeList: ${{ parameters.workloadNupkgExcludeList }}
 
     - ${{ if eq(parameters.createVSInsertion, true) }}:
       - stage: Insertion
