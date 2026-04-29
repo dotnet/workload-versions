@@ -22,19 +22,19 @@ parameters:
   type: boolean
   default: false
 - name: publishToAzDO
-  displayName: Publish to AzDO
+  displayName: Publish package(s) to AzDO
   type: boolean
   default: false
 - name: azDOPublishFeed
   displayName: AzDO publish feed
   type: string
   default: public/dotnet-workloads
-- name: publishWorkloadNupkgsToAzDO
-  displayName: Publish workload packages to AzDO
+- name: downloadWorkloadNupkgs
+  displayName: Download workload packages (.nupkg)
   type: boolean
   default: false
 - name: workloadNupkgExcludeList
-  displayName: Exclude workload packages from publish
+  displayName: Exclude workload packages (.nupkg)
   type: object
   default:
   - emsdk
@@ -212,7 +212,7 @@ extends:
           setVersionPatch: ${{ parameters.setVersionPatch }}
           setPreReleaseVersionLabel: ${{ parameters.setPreReleaseVersionLabel }}
           setPreReleaseVersionIteration: ${{ parameters.setPreReleaseVersionIteration }}
-          downloadWorkloadNupkgs: ${{ parameters.publishWorkloadNupkgsToAzDO }}
+          downloadWorkloadNupkgs: ${{ parameters.downloadWorkloadNupkgs }}
           workloadNupkgExcludeList: ${{ parameters.workloadNupkgExcludeList }}
 
     - ${{ if eq(parameters.createVSInsertion, true) }}:

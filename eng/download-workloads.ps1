@@ -41,10 +41,10 @@ if (-not $workloadListJson) {
   $workloadListJson = '[]';
 }
 if (-not $workloadNupkgExcludeListJson) {
-   $workloadNupkgExcludeListJson = '[]';
+  $workloadNupkgExcludeListJson = '[]';
 }
 if (-not $workloadNupkgPath) {
-   $workloadNupkgPath = "$workloadPath/packages/workloadNupkgs";
+  $workloadNupkgPath = "$workloadPath/packages/workloadNupkgs";
 }
 
 $nonShippingFlag = ''
