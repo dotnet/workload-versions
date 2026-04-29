@@ -33,7 +33,7 @@ param (
   [bool] $includeNonShipping = $false,
   [bool] $downloadWorkloadNupkgs = $false,
   [string] $workloadNupkgExcludeListJson = '',
-  [string] $workloadNupkgPath = '',
+  [string] $workloadNupkgPath = ''
 )
 
 ## Initialize ##
