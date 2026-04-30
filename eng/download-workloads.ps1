@@ -79,7 +79,8 @@ if ($ci) {
 # Reads the Version.Details.xml file to get the workload builds.
 $versionDetailsPath = (Get-Item "$PSScriptRoot/Version.Details.xml").FullName
 $versionDetailsXml = [Xml.XmlDocument](Get-Content $versionDetailsPath)
-$versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Name, Version, Uri, Sha, BarId -Unique
+# DropName is not a value in the Version.Details.xml. We end up adding the drop name after the workload drop is downloaded.
+$versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Name, Version, Uri, Sha, BarId, DropName -Unique
 
 # Construct the asset filter to only download the required workload drops.
 $workloadFilter = ''
@@ -103,6 +104,9 @@ Write-Host "assetFilter: $assetFilter"
 $versionDetails | ForEach-Object {
   Write-Host "Dependency name: $($_.Name)"
   Write-Host "Dependency version: $($_.Version)"
+
+  # Prior to running, we want to compare the contents of the output folder to see if the drop was acquired.
+  $workloadDropsBefore = Get-ChildItem $workloadPath -File -Recurse
 
   $darcArguments = @(
     'gather-drop'
@@ -135,6 +139,17 @@ $versionDetails | ForEach-Object {
   Write-Host "darcBuildArguments: $($darcBuildArguments | Join-String -Separator ' ')"
 
   & $darc ($darcArguments + $darcBuildArguments + $ciArguments)
+
+  # Check if a workload drop was downloaded.
+  $workloadDropsAfter = Get-ChildItem $workloadPath -File -Recurse
+  $workloadDrops = (Compare-Object -ReferenceObject $workloadDropsBefore -DifferenceObject $workloadDropsAfter).InputObject
+  if ($workloadDrops) {
+    # Only use the first file to extract the drop name.
+    $dropToParse = $workloadDrops | Select-Object -First 1
+    $null = $dropToParse.Name -match 'Workload\.VSDrop\.([^.]+)\.'
+    # DropName is needed for the workload .nupkg download process below.
+    $_.DropName = $Matches[1]
+  }
 }
 
 Write-Host 'Workload drops downloaded:'
@@ -151,46 +166,41 @@ if ($downloadWorkloadNupkgs) {
   $nupkgAssetFilter = '(?<!\.symbols\.nupkg)(\.nupkg)$'
 
   $filteredWorkloadDropNames | ForEach-Object {
-    # Check if the workload drop path contains any files with this workload name in the filename.
     $dropName = $_
-    $workloadDrops = Get-ChildItem $workloadPath -File -Recurse | Where-Object { $_.Name -match $dropName }
-    if ($workloadDrops) {
-      Write-Host "Downloading .nupkgs for workload: $dropName"
+    $versionDetail = $versionDetails | Where-Object { $_.DropName -eq $dropName } | Select-Object -First 1
 
-      $workloadDrops | ForEach-Object {
-        $nupkgDarcArguments = @(
-          'gather-drop'
-          '--asset-filter'
-          $nupkgAssetFilter
-          '--output-dir'
-          $workloadNupkgPath
-          '--include-released'
-          '--skip-existing'
-          '--continue-on-error'
-          '--use-azure-credential-for-blobs'
-          $nonShippingFlag
-        )
+    Write-Host "Downloading .nupkgs for workload: $dropName"
+    $nupkgDarcArguments = @(
+      'gather-drop'
+      '--asset-filter'
+      $nupkgAssetFilter
+      '--output-dir'
+      $workloadNupkgPath
+      '--include-released'
+      '--skip-existing'
+      '--continue-on-error'
+      '--use-azure-credential-for-blobs'
+      $nonShippingFlag
+    )
 
-        $nupkgDarcBuildArguments = @(
-          '--repo'
-          $_.Uri
-          '--commit'
-          $_.Sha
-        )
+    $nupkgDarcBuildArguments = @(
+      '--repo'
+      $versionDetail.Uri
+      '--commit'
+      $versionDetail.Sha
+    )
 
-        if ($_.BarId) {
-          $nupkgDarcBuildArguments = @(
-            '--id'
-            $_.BarId
-          )
-        }
-
-        Write-Host "nupkgDarcArguments: $($nupkgDarcArguments | Join-String -Separator ' ')"
-        Write-Host "nupkgDarcBuildArguments: $($nupkgDarcBuildArguments | Join-String -Separator ' ')"
-
-        & $darc ($nupkgDarcArguments + $nupkgDarcBuildArguments + $ciArguments)
-      }
+    if ($versionDetail.BarId) {
+      $nupkgDarcBuildArguments = @(
+        '--id'
+        $versionDetail.BarId
+      )
     }
+
+    Write-Host "nupkgDarcArguments: $($nupkgDarcArguments | Join-String -Separator ' ')"
+    Write-Host "nupkgDarcBuildArguments: $($nupkgDarcBuildArguments | Join-String -Separator ' ')"
+
+    & $darc ($nupkgDarcArguments + $nupkgDarcBuildArguments + $ciArguments)
   }
 
   Write-Host 'Workload .nupkgs downloaded:'
