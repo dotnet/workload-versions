@@ -107,6 +107,9 @@ $versionDetails | ForEach-Object {
 
   # Prior to running, we want to compare the contents of the output folder to see if the drop was acquired.
   $workloadDropsBefore = Get-ChildItem $workloadPath -File -Recurse
+  if (-not $workloadDropsBefore) {
+    $workloadDropsBefore = @()
+  }
 
   $darcArguments = @(
     'gather-drop'
@@ -142,6 +145,10 @@ $versionDetails | ForEach-Object {
 
   # Check if a workload drop was downloaded.
   $workloadDropsAfter = Get-ChildItem $workloadPath -File -Recurse
+  if (-not $workloadDropsAfter) {
+    $workloadDropsAfter = @()
+  }
+
   $workloadDrops = (Compare-Object -ReferenceObject $workloadDropsBefore -DifferenceObject $workloadDropsAfter).InputObject
   if ($workloadDrops) {
     # Only use the first file to extract the drop name.
