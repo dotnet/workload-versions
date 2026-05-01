@@ -178,7 +178,7 @@ if ($downloadWorkloadNupkgs) {
   $filteredWorkloadDropNames = ConvertFrom-Json -InputObject $workloadListJson | Where-Object { $nupkgExcludeList -notcontains $_ }
 
   # Asset filter for .nupkg files, excluding .symbols.nupkg.
-  $nupkgAssetFilter = '(?<!\.symbols)\.nupkg$'
+  $nupkgAssetFilter = '*(?<!\.symbols)\.nupkg$'
 
   $filteredWorkloadDropNames | ForEach-Object {
     $dropName = $_
