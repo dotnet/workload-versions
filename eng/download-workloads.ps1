@@ -170,9 +170,9 @@ if ($downloadWorkloadNupkgs) {
   $nupkgExcludeList = ConvertFrom-Json -InputObject $workloadNupkgExcludeListJson
   $filteredWorkloadDropNames = ConvertFrom-Json -InputObject $workloadListJson | Where-Object { $nupkgExcludeList -notcontains $_ }
 
-  # Asset filter to include everything except .symbols.nupkg, .zip, and .xml files.
-  # Note: The $ at the end of these filters are required for the positive/negative lookbehinds to function in DARC.
-  $nupkgAssetFilter = '(?<!\.symbols\.nupkg)(?<!\.zip)(?<!\.xml)$'
+  # Asset filter to exclude any asset with a '/' in the name (nested assets).
+  # All root-level packages have an asset name that does NOT include the file extension. These root-level packages ARE the workload .nupkgs we want to download.
+  $nupkgAssetFilter = '^[^/]+$'
 
   $filteredWorkloadDropNames | ForEach-Object {
     $dropName = $_
