@@ -91,7 +91,7 @@ if ($workloadList.Length -ne 0) {
   $workloadFilter = "($($workloadList | Join-String -Separator '|'))"
 }
 
-# Note: The $ at the end of these filters are required for the positive/negative lookbehinds to function.
+# Note: The $ at the end of these filters are required for the positive/negative lookbehinds to function in DARC.
 # Exclude pre.components.zip.
 $componentFilter = '(?<!pre\.components\.zip)$'
 if ($usePreComponents) {
@@ -150,7 +150,7 @@ $versionDetails | ForEach-Object {
     $workloadDropsAfter = @()
   }
 
-  $fileDelta = Compare-Object -ReferenceObject $workloadDropsBefore -DifferenceObject $workloadDropsAfter
+  $fileDelta = Compare-Object -ReferenceObject $workloadDropsBefore -DifferenceObject $workloadDropsAfter -Property FullName
   if ($fileDelta) {
     $workloadDropFileNames = $fileDelta.InputObject.Name
     # Get the drop name(s) by extracting the name out of the downloaded files.
@@ -171,7 +171,8 @@ if ($downloadWorkloadNupkgs) {
   $filteredWorkloadDropNames = ConvertFrom-Json -InputObject $workloadListJson | Where-Object { $nupkgExcludeList -notcontains $_ }
 
   # Asset filter for .nupkg files, excluding .symbols.nupkg.
-  $nupkgAssetFilter = '\.nupkg(?<!\.symbols\.nupkg)$'
+  # Note: The $ at the end of these filters are required for the positive/negative lookbehinds to function in DARC.
+  $nupkgAssetFilter = '^.*\.nupkg(?<!\.symbols\.nupkg)$'
 
   $filteredWorkloadDropNames | ForEach-Object {
     $dropName = $_

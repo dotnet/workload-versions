@@ -91,7 +91,7 @@ jobs:
               -includeNonShipping:$${{ parameters.includeNonShippingWorkloads }}
               -downloadWorkloadNupkgs:$${{ parameters.downloadWorkloadNupkgs }}
               -WorkloadNupkgExcludeListJson '$(WorkloadNupkgExcludeListJson)'
-              -workloadNupkgPath '$(System.DefaultWorkingDirectory)artifacts/packages/workloadNupkgs'
+              -workloadNupkgPath '$(System.DefaultWorkingDirectory)/artifacts/packages/workloadNupkgs'
       - powershell: eng/create-version-override.ps1
           -createTestWorkloadSet:$${{ parameters.createTestWorkloadSet }}
           -versionSdkMinor '${{ parameters.setVersionSdkMinor }}'
