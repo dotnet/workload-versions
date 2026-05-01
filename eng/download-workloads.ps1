@@ -149,8 +149,9 @@ $versionDetails | ForEach-Object {
     $workloadDropsAfter = @()
   }
 
-  $workloadDropFileNames = (Compare-Object -ReferenceObject $workloadDropsBefore -DifferenceObject $workloadDropsAfter).InputObject.Name
-  if ($workloadDropFileNames) {
+  $fileDelta = Compare-Object -ReferenceObject $workloadDropsBefore -DifferenceObject $workloadDropsAfter
+  if ($fileDelta) {
+    $workloadDropFileNames = $fileDelta.InputObject.Name
     # Get the drop name(s) by extracting the name out of the downloaded files.
     # DropNames are needed for the workload .nupkg download process below.
     $_.DropNames = $workloadDropFileNames | ForEach-Object { if ($_ -match 'Workload\.VSDrop\.([^.]+)\.') { $Matches[1] } } | Select-Object -Unique
