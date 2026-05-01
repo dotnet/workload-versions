@@ -150,7 +150,7 @@ $versionDetails | ForEach-Object {
     $workloadDropsAfter = @()
   }
 
-  $fileDelta = Compare-Object -ReferenceObject $workloadDropsBefore -DifferenceObject $workloadDropsAfter -Property FullName
+  $fileDelta = Compare-Object -ReferenceObject $workloadDropsBefore -DifferenceObject $workloadDropsAfter
   if ($fileDelta) {
     $workloadDropFileNames = $fileDelta.InputObject.Name
     # Get the drop name(s) by extracting the name out of the downloaded files.
@@ -162,7 +162,7 @@ $versionDetails | ForEach-Object {
 
 Write-Host 'Workload drops downloaded:'
 # https://stackoverflow.com/a/9570030/294804
-Get-ChildItem $workloadPath -File -Include 'Workload.VSDrop.*.zip' -Recurse | Select-Object -Expand FullName
+Get-ChildItem $workloadPath -File -Include 'Workload.VSDrop.*.zip' -Recurse -ErrorAction SilentlyContinue | Select-Object -Expand FullName
 
 # Download workload .nupkg files if enabled.
 if ($downloadWorkloadNupkgs) {
@@ -177,6 +177,10 @@ if ($downloadWorkloadNupkgs) {
   $filteredWorkloadDropNames | ForEach-Object {
     $dropName = $_
     $versionDetail = $versionDetails | Where-Object { $_.DropNames -contains $dropName } | Select-Object -First 1
+    if (-not $versionDetail) {
+      Write-Host "No version detail found for drop name: $dropName. Skipping .nupkg download for this workload."
+      return
+    }
 
     Write-Host "Downloading .nupkgs for workload: $dropName"
     $nupkgDarcArguments = @(
@@ -213,5 +217,5 @@ if ($downloadWorkloadNupkgs) {
   }
 
   Write-Host 'Workload .nupkgs downloaded:'
-  Get-ChildItem $workloadNupkgPath -File -Include '*.nupkg' -Recurse | Select-Object -Expand FullName
+  Get-ChildItem $workloadNupkgPath -File -Include '*.nupkg' -Recurse -ErrorAction SilentlyContinue | Select-Object -Expand FullName
 }
