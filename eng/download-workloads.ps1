@@ -79,8 +79,8 @@ if ($ci) {
 # Reads the Version.Details.xml file to get the workload builds.
 $versionDetailsPath = (Get-Item "$PSScriptRoot/Version.Details.xml").FullName
 $versionDetailsXml = [Xml.XmlDocument](Get-Content $versionDetailsPath)
-# DropName is not a value in the Version.Details.xml. We end up adding the drop name after the workload drop is downloaded.
-$versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Name, Version, Uri, Sha, BarId, DropName -Unique
+# DropNames is not a value in the Version.Details.xml. We end up adding the drop name(s) after downloading the drops.
+$versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Name, Version, Uri, Sha, BarId, DropNames -Unique
 
 # Construct the asset filter to only download the required workload drops.
 $workloadFilter = ''
@@ -149,13 +149,12 @@ $versionDetails | ForEach-Object {
     $workloadDropsAfter = @()
   }
 
-  $workloadDrops = (Compare-Object -ReferenceObject $workloadDropsBefore -DifferenceObject $workloadDropsAfter).InputObject
-  if ($workloadDrops) {
-    # Only use the first file to extract the drop name.
-    $dropToParse = $workloadDrops | Select-Object -First 1
-    $null = $dropToParse.Name -match 'Workload\.VSDrop\.([^.]+)\.'
-    # DropName is needed for the workload .nupkg download process below.
-    $_.DropName = $Matches[1]
+  $workloadDropFileNames = (Compare-Object -ReferenceObject $workloadDropsBefore -DifferenceObject $workloadDropsAfter).InputObject.Name
+  if ($workloadDropFileNames) {
+    # Get the drop name(s) by extracting the name out of the downloaded files.
+    # DropNames are needed for the workload .nupkg download process below.
+    $_.DropNames = $workloadDropFileNames | ForEach-Object { if ($_ -match 'Workload\.VSDrop\.([^.]+)\.') { $Matches[1] } } | Select-Object -Unique
+    Write-Host "DropNames: $($_.DropNames -join ', ')"
   }
 }
 
@@ -174,7 +173,7 @@ if ($downloadWorkloadNupkgs) {
 
   $filteredWorkloadDropNames | ForEach-Object {
     $dropName = $_
-    $versionDetail = $versionDetails | Where-Object { $_.DropName -eq $dropName } | Select-Object -First 1
+    $versionDetail = $versionDetails | Where-Object { $_.DropNames -contains $dropName } | Select-Object -First 1
 
     Write-Host "Downloading .nupkgs for workload: $dropName"
     $nupkgDarcArguments = @(
