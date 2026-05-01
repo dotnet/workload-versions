@@ -172,7 +172,7 @@ if ($downloadWorkloadNupkgs) {
 
   # Asset filter for .nupkg files, excluding .symbols.nupkg.
   # Note: The $ at the end of these filters are required for the positive/negative lookbehinds to function in DARC.
-  $nupkgAssetFilter = '^.*\.nupkg(?<!\.symbols\.nupkg)$'
+  $nupkgAssetFilter = '((\.nupkg)(?<!\.symbols\.nupkg))$'
 
   $filteredWorkloadDropNames | ForEach-Object {
     $dropName = $_
