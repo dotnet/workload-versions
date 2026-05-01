@@ -28,25 +28,18 @@ param (
   [Parameter(Mandatory=$true)] [string] $workloadPath,
   [SecureString] $gitHubPat,
   [SecureString] $azDOPat,
-  [string] $workloadListJson = '',
+  [string] $workloadListJson = '[]',
   [bool] $usePreComponents = $false,
   [bool] $includeNonShipping = $false,
   [bool] $downloadWorkloadNupkgs = $false,
-  [string] $workloadNupkgExcludeListJson = '',
+  [string] $workloadNupkgExcludeListJson = '[]',
   [string] $workloadNupkgPath = ''
 )
 
 ## Initialize ##
-if (-not $workloadListJson) {
-  $workloadListJson = '[]';
-}
-if (-not $workloadNupkgExcludeListJson) {
-  $workloadNupkgExcludeListJson = '[]';
-}
 if (-not $workloadNupkgPath) {
   $workloadNupkgPath = "$workloadPath/packages/workloadNupkgs";
 }
-
 $nonShippingFlag = ''
 if ($includeNonShipping) {
   $nonShippingFlag = '--non-shipping'
@@ -178,7 +171,7 @@ if ($downloadWorkloadNupkgs) {
   $filteredWorkloadDropNames = ConvertFrom-Json -InputObject $workloadListJson | Where-Object { $nupkgExcludeList -notcontains $_ }
 
   # Asset filter for .nupkg files, excluding .symbols.nupkg.
-  $nupkgAssetFilter = '*(?<!\.symbols)\.nupkg$'
+  $nupkgAssetFilter = '.*(?<!\.symbols)\.nupkg$'
 
   $filteredWorkloadDropNames | ForEach-Object {
     $dropName = $_
