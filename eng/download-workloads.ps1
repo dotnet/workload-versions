@@ -170,9 +170,9 @@ if ($downloadWorkloadNupkgs) {
   $nupkgExcludeList = ConvertFrom-Json -InputObject $workloadNupkgExcludeListJson
   $filteredWorkloadDropNames = ConvertFrom-Json -InputObject $workloadListJson | Where-Object { $nupkgExcludeList -notcontains $_ }
 
-  # Asset filter for .nupkg files, excluding .symbols.nupkg.
+  # Asset filter to include everything except .symbols.nupkg, .zip, and .xml files.
   # Note: The $ at the end of these filters are required for the positive/negative lookbehinds to function in DARC.
-  $nupkgAssetFilter = '((\.nupkg)(?<!\.symbols\.nupkg))$'
+  $nupkgAssetFilter = '(?<!\.symbols\.nupkg)(?<!\.zip)(?<!\.xml)$'
 
   $filteredWorkloadDropNames | ForEach-Object {
     $dropName = $_
