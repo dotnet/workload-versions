@@ -80,7 +80,15 @@ if ($ci) {
 $versionDetailsPath = (Get-Item "$PSScriptRoot/Version.Details.xml").FullName
 $versionDetailsXml = [Xml.XmlDocument](Get-Content $versionDetailsPath)
 # DropNames is not a value in the Version.Details.xml. We end up adding the drop name(s) after downloading the drops.
-$versionDetails = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Name, Version, Uri, Sha, BarId, DropNames -Unique
+$versionDetailsUnfiltered = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Name, Version, Uri, Sha, BarId, DropNames
+# Only unique entries are needed (based on Sha). If BarId is present, those entries are kept instead of BarId-less entries.
+$versionDetails = $versionDetailsUnfiltered | Group-Object -Property Sha | ForEach-Object {
+  $entries = $_.Group | Where-Object { $_.BarId }
+  if (-not $entries) {
+    $entries = $_.Group | Select-Object -First 1
+  }
+  $entries
+}
 
 # Construct the asset filter to only download the required workload drops.
 $workloadFilter = ''
@@ -170,7 +178,7 @@ if ($downloadWorkloadNupkgs) {
   $filteredWorkloadDropNames = ConvertFrom-Json -InputObject $workloadListJson | Where-Object { $nupkgExcludeList -notcontains $_ }
 
   # Asset filter for .nupkg files, excluding .symbols.nupkg.
-  $nupkgAssetFilter = '(?<!\.symbols\.nupkg)(\.nupkg)$'
+  $nupkgAssetFilter = '(?<!\.symbols)\.nupkg$'
 
   $filteredWorkloadDropNames | ForEach-Object {
     $dropName = $_
