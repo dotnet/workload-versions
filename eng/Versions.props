@@ -39,7 +39,7 @@
   </PropertyGroup>
   <PropertyGroup Label="EmscriptenWorkloads">
     <!-- Workloads from dotnet/sdk -->
-    <MicrosoftNETWorkloadEmscriptenCurrentManifest110100preview4PackageVersion>11.0.100-preview.4.26224.122</MicrosoftNETWorkloadEmscriptenCurrentManifest110100preview4PackageVersion>
+    <MicrosoftNETWorkloadEmscriptenCurrentManifest110100preview4PackageVersion>11.0.100-preview.4.26230.115</MicrosoftNETWorkloadEmscriptenCurrentManifest110100preview4PackageVersion>
     <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest110100preview4PackageVersion)</EmscriptenWorkloadManifestVersion>
     <!-- emsdk workload prerelease version band must match the emsdk feature band -->
     <EmscriptenWorkloadFeatureBand>11.0.100$([System.Text.RegularExpressions.Regex]::Match($(EmscriptenWorkloadManifestVersion), `-[A-z]*[\.]*\d*`))</EmscriptenWorkloadFeatureBand>
@@ -47,10 +47,10 @@
   <PropertyGroup Label="MauiWorkloads">
     <MauiFeatureBand>11.0.100-preview.4</MauiFeatureBand>
     <MicrosoftNETSdkAndroidManifest110100preview4PackageVersion>36.99.0-preview.4.137</MicrosoftNETSdkAndroidManifest110100preview4PackageVersion>
-    <MicrosoftNETSdkiOSManifest110100preview4PackageVersion>26.4.11511-net11-p4</MicrosoftNETSdkiOSManifest110100preview4PackageVersion>
-    <MicrosoftNETSdktvOSManifest110100preview4PackageVersion>26.4.11511-net11-p4</MicrosoftNETSdktvOSManifest110100preview4PackageVersion>
-    <MicrosoftNETSdkMacCatalystManifest110100preview4PackageVersion>26.4.11511-net11-p4</MicrosoftNETSdkMacCatalystManifest110100preview4PackageVersion>
-    <MicrosoftNETSdkmacOSManifest110100preview4PackageVersion>26.4.11511-net11-p4</MicrosoftNETSdkmacOSManifest110100preview4PackageVersion>
+    <MicrosoftNETSdkiOSManifest110100preview4PackageVersion>26.4.11514-net11-p4</MicrosoftNETSdkiOSManifest110100preview4PackageVersion>
+    <MicrosoftNETSdktvOSManifest110100preview4PackageVersion>26.4.11514-net11-p4</MicrosoftNETSdktvOSManifest110100preview4PackageVersion>
+    <MicrosoftNETSdkMacCatalystManifest110100preview4PackageVersion>26.4.11514-net11-p4</MicrosoftNETSdkMacCatalystManifest110100preview4PackageVersion>
+    <MicrosoftNETSdkmacOSManifest110100preview4PackageVersion>26.4.11514-net11-p4</MicrosoftNETSdkmacOSManifest110100preview4PackageVersion>
     <MicrosoftNETSdkMauiManifest110100preview4PackageVersion>11.0.0-preview.4.26230.3</MicrosoftNETSdkMauiManifest110100preview4PackageVersion>
     <MauiWorkloadManifestVersion>$(MicrosoftNETSdkMauiManifest110100preview4PackageVersion)</MauiWorkloadManifestVersion>
     <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest110100preview4PackageVersion)</XamarinAndroidWorkloadManifestVersion>
@@ -60,7 +60,7 @@
     <XamarinTvOSWorkloadManifestVersion>$(MicrosoftNETSdktvOSManifest110100preview4PackageVersion)</XamarinTvOSWorkloadManifestVersion>
   </PropertyGroup>
   <PropertyGroup Label="MonoWorkloads">
-    <MicrosoftNETWorkloadMonoToolchainCurrentManifest110100preview4PackageVersion>11.0.100-preview.4.26224.122</MicrosoftNETWorkloadMonoToolchainCurrentManifest110100preview4PackageVersion>
+    <MicrosoftNETWorkloadMonoToolchainCurrentManifest110100preview4PackageVersion>11.0.100-preview.4.26230.115</MicrosoftNETWorkloadMonoToolchainCurrentManifest110100preview4PackageVersion>
     <MicrosoftNETSdkPackageVersion>11.0.100-preview.4.26166.114</MicrosoftNETSdkPackageVersion>
     <!-- Workloads from dotnet/sdk use MicrosoftNETSdkPackageVersion as the manifests are now built from the dotnet/sdk repo -->
     <MonoWorkloadManifestVersion>$(MicrosoftNETWorkloadMonoToolchainCurrentManifest110100preview4PackageVersion)</MonoWorkloadManifestVersion>
