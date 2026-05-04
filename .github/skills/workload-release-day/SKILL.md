@@ -18,13 +18,15 @@ Build and publish workload sets to NuGet.org for Patch Tuesday releases. These w
 
 ### Active Branches & Workload Sets
 
-| Source Branch | Workload Sets | Notes |
-|---------------|---------------|-------|
-| `release/8.0.4xx` | 8.0.4xx | Stable, uses branch defaults |
-| `release/9.0.1xx` | 9.0.1xx | Stable, uses branch defaults |
-| `release/9.0.1xx` | 9.0.3xx | Stable, override `setVersionSdkMinor: 3` |
-| `release/10` | 10.0.1xx | Stable, uses branch defaults |
-| `release/10` | 10.0.2xx | Preview, override `setVersionSdkMinor: 2` |
+> ⚠️ **Important**: Branch version files are no longer kept up to date. You **must** always set `setVersionSdkMinor` and `setVersionFeature` explicitly for every build. Use the release tracker (dotnet-release-tracker skill) or releases.json to look up the correct SDK versions.
+
+| Source Branch | Workload Sets | Required Overrides |
+|---------------|---------------|-------------------|
+| `release/8.0.4xx` | 8.0.4xx | `setVersionSdkMinor`, `setVersionFeature` |
+| `release/9.0.1xx` | 9.0.1xx | `setVersionSdkMinor`, `setVersionFeature` |
+| `release/9.0.1xx` | 9.0.3xx | `setVersionSdkMinor`, `setVersionFeature` |
+| `release/10` | 10.0.1xx | `setVersionSdkMinor`, `setVersionFeature` |
+| `release/10` | 10.0.2xx | `setVersionSdkMinor`, `setVersionFeature` |
 
 ## Workflow
 
@@ -60,25 +62,11 @@ Use `dnceng-azure-devops-pipelines_run_pipeline`:
 }
 ```
 
-### Stable Workload Set (Default Version)
+### Stable Workload Set
 
-```json
-{
-  "templateParameters": {
-    "sourceBranch": "<branch>",
-    "createTestWorkloadSet": "false",
-    "publishToAzDO": "true",
-    "azDOPublishFeed": "public/dotnet-workloads",
-    "createVSInsertion": "false",
-    "stabilizePackageVersion": "true",
-    "publishToNuGet": "true"
-  }
-}
-```
+All stable builds require explicit `setVersionSdkMinor` and `setVersionFeature` parameters. Derive these from the target SDK version: for SDK version `X.Y.CFP`, `setVersionSdkMinor` = `C` (hundreds digit) and `setVersionFeature` = `FP` (tens + ones digits, two-digit zero-padded).
 
-### Stable Workload Set (Version Override)
-
-For 9.0.3xx from 9.0.1xx branch:
+Example for 9.0.314 from release/9.0.1xx branch:
 
 ```json
 {
@@ -91,7 +79,7 @@ For 9.0.3xx from 9.0.1xx branch:
     "stabilizePackageVersion": "true",
     "publishToNuGet": "true",
     "setVersionSdkMinor": "3",
-    "setVersionFeature": "11"
+    "setVersionFeature": "14"
   }
 }
 ```
@@ -135,9 +123,10 @@ For 10.0.2xx-preview from release/10 branch:
 1. **Pipeline branch**: MUST use `refs/heads/eng` in resources
 2. **No VS Insertion**: `createVSInsertion` = `false` for all release day runs
 3. **Stabilize versions**: `stabilizePackageVersion` = `true` for stable releases, `false` for preview
-4. **Preview feature band**: Set `setVersionFeature` = `"00"` to zero out the feature band for new preview SDK minor versions
-5. **Publish to NuGet**: `publishToNuGet` = `true` to push to NuGet.org
-6. **Build duration**: ~60-90 minutes per build
+4. **Always set version overrides**: Branch version files are no longer kept current. Always set `setVersionSdkMinor` and `setVersionFeature` explicitly for every build. Use release tracker to look up SDK versions.
+5. **Preview feature band**: Set `setVersionFeature` = `"00"` to zero out the feature band for new preview SDK minor versions
+6. **Publish to NuGet**: `publishToNuGet` = `true` to push to NuGet.org
+7. **Build duration**: ~60-90 minutes per build
 
 ## Output
 
