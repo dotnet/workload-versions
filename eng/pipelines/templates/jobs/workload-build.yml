@@ -56,7 +56,7 @@ jobs:
         displayName: 🟣 Set run name via source branch commit message
         # Name is required to reference the variables created within this build step in other stages.
         name: SetRunName
-      - ${{ if eq(parameters.createVSInsertion, true) }}:
+      - ${{ if or(eq(parameters.createVSInsertion, true), eq(parameters.downloadWorkloadNupkgs, true)) }}:
         # The convertToJson expression in AzDO creates "pretty" JSON with line breaks and indentation.
         # To simplify passing this JSON to scripts, we collapse it to a single line.
         - powershell: |
@@ -66,8 +66,17 @@ jobs:
             $workloadListJson = $workloadDropNames -replace '\r?\n\s*', ''
             Write-Host "##vso[task.setvariable variable=WorkloadListJson]$workloadListJson"
           displayName: 🟣 Set WorkloadListJson variable
+        # The convertToJson expression in AzDO creates "pretty" JSON with line breaks and indentation.
+        # To simplify passing this JSON to scripts, we collapse it to a single line.
+        - powershell: |
+            $workloadNupkgExcludeList = @'
+            ${{ convertToJson(parameters.workloadNupkgExcludeList) }}
+            '@
+            $workloadNupkgExcludeListJson = $workloadNupkgExcludeList -replace '\r?\n\s*', ''
+            Write-Host "##vso[task.setvariable variable=WorkloadNupkgExcludeListJson]$workloadNupkgExcludeListJson"
+          displayName: 🟣 Set WorkloadNupkgExcludeListJson variable
         - task: AzureCLI@2
-          displayName: 🟣 Download workloads for VS insertion
+          displayName: 🟣 Download workloads
           inputs:
             azureSubscription: DotNetStaging
             scriptType: pscore
@@ -80,6 +89,9 @@ jobs:
               -workloadListJson '$(WorkloadListJson)'
               -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }}
               -includeNonShipping:$${{ parameters.includeNonShippingWorkloads }}
+              -downloadWorkloadNupkgs:$${{ parameters.downloadWorkloadNupkgs }}
+              -WorkloadNupkgExcludeListJson '$(WorkloadNupkgExcludeListJson)'
+              -workloadNupkgPath '$(System.DefaultWorkingDirectory)/artifacts/packages/workloadNupkgs'
       - powershell: eng/create-version-override.ps1
           -createTestWorkloadSet:$${{ parameters.createTestWorkloadSet }}
           -versionSdkMinor '${{ parameters.setVersionSdkMinor }}'
