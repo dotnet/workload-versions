@@ -48,6 +48,7 @@ cmake/
 ###############################################################################
 eng/
 !eng/common/
+!eng/pipelines/official.yml
 !eng/pipelines/public.yml
 !eng/Version.Details.xml
 !eng/Versions.props
