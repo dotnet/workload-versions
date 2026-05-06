@@ -80,18 +80,19 @@ jobs:
           inputs:
             azureSubscription: DotNetStaging
             scriptType: pscore
-            scriptPath: $(System.DefaultWorkingDirectory)/eng/download-workloads.ps1
-            # Note: The second $ for usePreComponents and includeNonShipping allows the value to resolve as `$true` or `$false`.
-            arguments: >-
-              -workloadPath '$(System.DefaultWorkingDirectory)/artifacts/workloads'
-              -gitHubPat (ConvertTo-SecureString -String '$(BotAccount-dotnet-bot-repo-PAT)' -AsPlainText -Force)
-              -azDOPat (ConvertTo-SecureString -String '$(dn-bot-all-drop-rw-code-rw-release-all)' -AsPlainText -Force)
-              -workloadListJson '$(WorkloadListJson)'
-              -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }}
-              -includeNonShipping:$${{ parameters.includeNonShippingWorkloads }}
-              -downloadWorkloadNupkgs:$${{ parameters.downloadWorkloadNupkgs }}
-              -WorkloadNupkgExcludeListJson '$(WorkloadNupkgExcludeListJson)'
-              -workloadNupkgPath '$(System.DefaultWorkingDirectory)/artifacts/packages/workloadNupkgs'
+            scriptLocation: inlineScript
+            inlineScript: |
+              $azDOToken = az account get-access-token --resource 499b84ac-1321-427f-aa17-267ca6975798 --query accessToken -o tsv
+              & '$(System.DefaultWorkingDirectory)/eng/download-workloads.ps1' `
+                -workloadPath '$(System.DefaultWorkingDirectory)/artifacts/workloads' `
+                -gitHubPat (ConvertTo-SecureString -String '$(BotAccount-dotnet-bot-repo-PAT)' -AsPlainText -Force) `
+                -azDOPat (ConvertTo-SecureString -String $azDOToken -AsPlainText -Force) `
+                -workloadListJson '$(WorkloadListJson)' `
+                -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }} `
+                -includeNonShipping:$${{ parameters.includeNonShippingWorkloads }} `
+                -downloadWorkloadNupkgs:$${{ parameters.downloadWorkloadNupkgs }} `
+                -WorkloadNupkgExcludeListJson '$(WorkloadNupkgExcludeListJson)' `
+                -workloadNupkgPath '$(System.DefaultWorkingDirectory)/artifacts/packages/workloadNupkgs'
       - powershell: eng/create-version-override.ps1
           -createTestWorkloadSet:$${{ parameters.createTestWorkloadSet }}
           -versionSdkMinor '${{ parameters.setVersionSdkMinor }}'
