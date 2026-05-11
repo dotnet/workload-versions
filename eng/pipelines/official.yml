@@ -294,13 +294,11 @@ extends:
                       }
 
                       $feedParts = '${{ parameters.azDOPublishFeed }}'.Split('/', 2)
-                      $projectName = ''
-                      $feedName = ''
-
                       if ($feedParts.Count -eq 2) {
                         $projectName = $feedParts[0]
                         $feedName = $feedParts[1]
                       } else {
+                        $projectName = $null
                         $feedName = $feedParts[0]
                       }
 
@@ -311,7 +309,11 @@ extends:
                         $feedUrl = "$collectionUri/$projectName/_apis/packaging/feeds/$feedName?api-version=7.2-preview.1"
                       }
 
-                      $feed = Invoke-RestMethod -Method Get -Uri $feedUrl -Headers $headers
+                      try {
+                        $feed = Invoke-RestMethod -Method Get -Uri $feedUrl -Headers $headers
+                      } catch {
+                        throw "Failed to retrieve feed '$feedName'. Verify that the feed exists and this pipeline has permission to manage feed settings."
+                      }
                       if (-not $feed.allowExternalVersions) {
                         $body = @{
                           name = $feed.name
