@@ -3,7 +3,9 @@
 
 param (
   [Parameter(Mandatory = $true)] [string] $packagesPath,
-  [Parameter(Mandatory = $true)] [string] $feedIndexUrl
+  [Parameter(Mandatory = $true)] [string] $feedIndexUrl,
+  [int] $pollingIntervalSeconds = 300,
+  [int] $maxAttempts = 60
 )
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -68,9 +70,6 @@ if (-not $packageFiles) {
 }
 
 $packageBaseAddress = Get-PackageBaseAddress -indexUrl $feedIndexUrl
-$pollingIntervalSeconds = 300
-$maxAttempts = 60
-
 foreach ($packageFile in $packageFiles) {
   $packageMetadata = Get-PackageMetadata -packageFilePath $packageFile.FullName
   $idLower = $packageMetadata.Id.ToLowerInvariant()

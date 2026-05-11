@@ -271,7 +271,7 @@ extends:
                   - powershell: >-
                       eng/wait-for-package-availability.ps1
                       -packagesPath '$(System.DefaultWorkingDirectory)/artifacts/packages/publishBuckets/packs'
-                      -feedIndexUrl 'https://pkgs.dev.azure.com/dnceng/${{ parameters.azDOPublishFeed }}/nuget/v3/index.json'
+                      -feedIndexUrl 'https://pkgs.dev.azure.com/dnceng/${{ replace(parameters.azDOPublishFeed, '/', '/_packaging/') }}/nuget/v3/index.json'
                     displayName: 🟣 Wait for packs in AzDO
                   - task: 1ES.PublishNuget@1
                     displayName: 🟣 Publish manifests to AzDO
@@ -283,7 +283,7 @@ extends:
                   - powershell: >-
                       eng/wait-for-package-availability.ps1
                       -packagesPath '$(System.DefaultWorkingDirectory)/artifacts/packages/publishBuckets/manifests'
-                      -feedIndexUrl 'https://pkgs.dev.azure.com/dnceng/${{ parameters.azDOPublishFeed }}/nuget/v3/index.json'
+                      -feedIndexUrl 'https://pkgs.dev.azure.com/dnceng/${{ replace(parameters.azDOPublishFeed, '/', '/_packaging/') }}/nuget/v3/index.json'
                     displayName: 🟣 Wait for manifests in AzDO
                   - task: 1ES.PublishNuget@1
                     displayName: 🟣 Publish workload set to AzDO

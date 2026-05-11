@@ -10,6 +10,10 @@ param (
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
+$workloadSetPrefix = 'microsoft.net.workloads.'
+$msiExclusionPattern = '\.msi\.'
+$manifestPattern = 'manifest'
+
 function Get-PackageMetadata {
   param (
     [Parameter(Mandatory = $true)] [string] $packageFilePath
@@ -73,9 +77,9 @@ foreach ($package in $allPackages) {
   $packageIdLower = $packageId.ToLowerInvariant()
 
   $bucketName = 'packs'
-  if ($packageIdLower.StartsWith('microsoft.net.workloads.') -and $packageIdLower -notmatch '\.msi\.') {
+  if ($packageIdLower.StartsWith($workloadSetPrefix) -and $packageIdLower -notmatch $msiExclusionPattern) {
     $bucketName = 'workloadSet'
-  } elseif ($packageId -imatch 'manifest') {
+  } elseif ($packageId -imatch $manifestPattern) {
     $bucketName = 'manifests'
   }
 
