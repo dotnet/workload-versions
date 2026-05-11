@@ -268,6 +268,7 @@ extends:
                       publishVstsFeed: ${{ parameters.azDOPublishFeed }}
                   - powershell: |
                       $ErrorActionPreference = 'Stop'
+                      Write-Host "##vso[task.setvariable variable=RetryAzdoPublish]false"
 
                       $headers = @{
                         Authorization = "Bearer $env:SYSTEM_ACCESSTOKEN"
@@ -277,12 +278,17 @@ extends:
                       $timeline = Invoke-RestMethod -Method Get -Uri $timelineUrl -Headers $headers
 
                       $publishStep = $timeline.records |
-                        Where-Object { $_.name -eq '🟣 Publish packages to AzDO' } |
+                        Where-Object { $_.identifier -eq 'InitialPublishToAzDO' } |
                         Sort-Object -Property lastModified -Descending |
                         Select-Object -First 1
 
                       if (-not $publishStep -or -not $publishStep.log -or -not $publishStep.log.url) {
                         throw "Could not locate logs for the failed AzDO publish task."
+                      }
+
+                      if ("$($publishStep.result)".ToLowerInvariant() -ne 'failed') {
+                        Write-Host "Initial AzDO publish step did not fail. Skipping allowExternalVersions update and retry."
+                        return
                       }
 
                       $publishLogUrl = "$($publishStep.log.url)?api-version=7.1-preview.2"
@@ -293,7 +299,12 @@ extends:
                         throw "AzDO publish failed for a reason other than an upstream-source conflict."
                       }
 
-                      $feedParts = '${{ parameters.azDOPublishFeed }}'.Split('/', 2)
+                      $feedInput = '${{ parameters.azDOPublishFeed }}'.Trim()
+                      if ([string]::IsNullOrEmpty($feedInput)) {
+                        throw "The 'azDOPublishFeed' parameter must not be empty."
+                      }
+
+                      $feedParts = $feedInput.Split('/', 2)
                       if ($feedParts.Count -eq 2) {
                         $projectName = $feedParts[0]
                         $feedName = $feedParts[1]
@@ -320,17 +331,21 @@ extends:
                           name = $feed.name
                           allowExternalVersions = $true
                         } | ConvertTo-Json -Compress
+                        $patchHeaders = @{} + $headers
+                        $patchHeaders['Content-Type'] = 'application/json'
 
                         Invoke-RestMethod `
                           -Method Patch `
                           -Uri $feedUrl `
-                          -Headers ($headers + @{ 'Content-Type' = 'application/json' }) `
+                          -Headers $patchHeaders `
                           -Body $body
+                      } else {
+                        Write-Host "Feed '$($feed.name)' already has allowExternalVersions enabled."
                       }
 
                       Write-Host "##vso[task.setvariable variable=RetryAzdoPublish]true"
                     displayName: 🟣 Enable allowExternalVersions after upstream conflict
-                    condition: and(succeededOrFailed(), eq(variables['Agent.JobStatus'], 'SucceededWithIssues'))
+                    condition: and(succeededOrFailed(), ne(variables['Agent.JobStatus'], 'Succeeded'))
                     env:
                       SYSTEM_ACCESSTOKEN: $(System.AccessToken)
                   - task: 1ES.PublishNuget@1
