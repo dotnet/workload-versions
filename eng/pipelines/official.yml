@@ -258,7 +258,84 @@ extends:
                 # DotNetCoreCLI@2 docs: https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/dotnet-core-cli-v2
                 - ${{ if eq(parameters.publishToAzDO, true) }}:
                   - task: 1ES.PublishNuget@1
+                    name: InitialPublishToAzDO
                     displayName: 🟣 Publish packages to AzDO
+                    continueOnError: true
+                    inputs:
+                      useDotNetTask: true
+                      packagesToPush: $(System.DefaultWorkingDirectory)/artifacts/packages/**/*.nupkg
+                      packageParentPath: $(System.DefaultWorkingDirectory)/artifacts
+                      publishVstsFeed: ${{ parameters.azDOPublishFeed }}
+                  - powershell: |
+                      $ErrorActionPreference = 'Stop'
+
+                      $headers = @{
+                        Authorization = "Bearer $env:SYSTEM_ACCESSTOKEN"
+                      }
+
+                      $timelineUrl = "$(System.CollectionUri)$(System.TeamProject)/_apis/build/builds/$(Build.BuildId)/timeline?api-version=7.1-preview.1"
+                      $timeline = Invoke-RestMethod -Method Get -Uri $timelineUrl -Headers $headers
+
+                      $publishStep = $timeline.records |
+                        Where-Object { $_.name -eq '🟣 Publish packages to AzDO' } |
+                        Sort-Object -Property lastModified -Descending |
+                        Select-Object -First 1
+
+                      if (-not $publishStep -or -not $publishStep.log -or -not $publishStep.log.url) {
+                        throw "Could not locate logs for the failed AzDO publish task."
+                      }
+
+                      $publishLogUrl = "$($publishStep.log.url)?api-version=7.1-preview.2"
+                      $publishLog = (Invoke-WebRequest -Uri $publishLogUrl -Headers $headers -UseBasicParsing).Content
+
+                      $upstreamConflictMessage = "exists in at least one of the feed's upstream sources"
+                      if ($publishLog -notmatch [Regex]::Escape($upstreamConflictMessage)) {
+                        throw "AzDO publish failed for a reason other than an upstream-source conflict."
+                      }
+
+                      $feedParts = '${{ parameters.azDOPublishFeed }}'.Split('/', 2)
+                      if ($feedParts.Count -eq 2) {
+                        $projectName = $feedParts[0]
+                        $feedName = $feedParts[1]
+                      } else {
+                        $projectName = $null
+                        $feedName = $feedParts[0]
+                      }
+
+                      $collectionUri = "$(System.CollectionUri)".TrimEnd('/')
+                      if ([string]::IsNullOrEmpty($projectName)) {
+                        $feedUrl = "$collectionUri/_apis/packaging/feeds/$feedName?api-version=7.2-preview.1"
+                      } else {
+                        $feedUrl = "$collectionUri/$projectName/_apis/packaging/feeds/$feedName?api-version=7.2-preview.1"
+                      }
+
+                      try {
+                        $feed = Invoke-RestMethod -Method Get -Uri $feedUrl -Headers $headers
+                      } catch {
+                        throw "Failed to retrieve feed '$feedName'. Verify that the feed exists and this pipeline has permission to manage feed settings."
+                      }
+
+                      if (-not $feed.allowExternalVersions) {
+                        $body = @{
+                          name = $feed.name
+                          allowExternalVersions = $true
+                        } | ConvertTo-Json -Compress
+
+                        Invoke-RestMethod `
+                          -Method Patch `
+                          -Uri $feedUrl `
+                          -Headers ($headers + @{ 'Content-Type' = 'application/json' }) `
+                          -Body $body
+                      }
+
+                      Write-Host "##vso[task.setvariable variable=RetryAzdoPublish]true"
+                    displayName: 🟣 Enable allowExternalVersions after upstream conflict
+                    condition: and(succeededOrFailed(), eq(variables['Agent.JobStatus'], 'SucceededWithIssues'))
+                    env:
+                      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+                  - task: 1ES.PublishNuget@1
+                    displayName: 🟣 Retry package publish to AzDO
+                    condition: and(succeededOrFailed(), eq(variables['RetryAzdoPublish'], 'true'))
                     inputs:
                       useDotNetTask: true
                       packagesToPush: $(System.DefaultWorkingDirectory)/artifacts/packages/**/*.nupkg
