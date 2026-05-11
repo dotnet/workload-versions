@@ -47,7 +47,6 @@ cmake/
 # Eng branch specific files
 ###############################################################################
 eng/
-!eng/
 !eng/common/
 !eng/pipelines/
 !eng/pipelines/public.yml
