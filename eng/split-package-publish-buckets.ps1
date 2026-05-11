@@ -70,8 +70,10 @@ if (-not $allPackages) {
 foreach ($package in $allPackages) {
   $packageId = Get-PackageMetadata -packageFilePath $package.FullName
 
+  $packageIdLower = $packageId.ToLowerInvariant()
+
   $bucketName = 'packs'
-  if ($packageId -imatch '^microsoft\.net\.workloads\.\d+\.\d+\.\d+$') {
+  if ($packageIdLower.StartsWith('microsoft.net.workloads.') -and $packageIdLower -notmatch '\.msi\.') {
     $bucketName = 'workloadSet'
   } elseif ($packageId -imatch 'manifest') {
     $bucketName = 'manifests'

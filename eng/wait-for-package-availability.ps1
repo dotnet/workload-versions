@@ -1,5 +1,5 @@
 # This script waits for package versions to appear on a NuGet V3 feed.
-# It polls package versions sequentially every 5 minutes.
+# It polls package versions sequentially using the interval configured below.
 
 param (
   [Parameter(Mandatory = $true)] [string] $packagesPath,
