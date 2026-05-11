@@ -2,6 +2,16 @@
 
   <Import Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" />
 
+  <!-- Workaround: Arcade SDK declares InstallDotNetCore with Runtime="NET" but no Architecture,
+       causing MSB4216 when the host MSBuild is x86 (no x86 .NET task host exists).
+       Architecture="*" lets MSBuild use any available architecture.
+       Remove once dotnet/arcade includes this fix. -->
+  <UsingTask Condition="'$(ArcadeSdkBuildTasksAssembly)' != ''"
+             TaskName="Microsoft.DotNet.Arcade.Sdk.InstallDotNetCore"
+             AssemblyFile="$(ArcadeSdkBuildTasksAssembly)"
+             Runtime="NET"
+             Architecture="*" />
+
   <PropertyGroup>
     <!-- Need to update the workloads version after the arcade targets have run -->
     <WorkloadsVersion Condition="'$(VersionSuffix)' != ''">$(WorkloadsVersion)-$(VersionSuffix)</WorkloadsVersion>
