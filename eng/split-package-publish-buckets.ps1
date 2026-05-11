@@ -79,7 +79,7 @@ foreach ($package in $allPackages) {
   $bucketName = 'packs'
   if ($packageIdLower.StartsWith($workloadSetPrefix) -and $packageIdLower -notmatch $msiExclusionPattern) {
     $bucketName = 'workloadSet'
-  } elseif ($packageId -imatch $manifestPattern) {
+  } elseif ($packageIdLower -match $manifestPattern) {
     $bucketName = 'manifests'
   }
 
