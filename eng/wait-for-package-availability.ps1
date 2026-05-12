@@ -63,6 +63,22 @@ function Get-PackageBaseAddress {
   return $resource.'@id'.TrimEnd('/')
 }
 
+function Get-HttpStatusCodeFromException {
+  param (
+    [Parameter(Mandatory = $true)] $exception
+  )
+
+  if ($exception -and $exception.Response) {
+    try {
+      return [int]$exception.Response.StatusCode.value__
+    } catch {
+      return $null
+    }
+  }
+
+  return $null
+}
+
 $packagesPath = (Resolve-Path -Path $packagesPath).Path
 $packageFiles = Get-ChildItem -Path $packagesPath -Filter *.nupkg -File
 if (-not $packageFiles) {
@@ -90,7 +106,16 @@ foreach ($packageFile in $packageFiles) {
 
       Write-Host "  Not available yet (attempt $attempt of $maxAttempts)."
     } catch {
-      Write-Host "  Failed to query package index on attempt $attempt of $maxAttempts. Error: $($_.Exception.Message)"
+      $statusCode = Get-HttpStatusCodeFromException -exception $_.Exception
+      if ($statusCode -in @(400, 401, 403, 409, 410, 422)) {
+        throw "Non-retryable HTTP status code $statusCode querying '$registrationUrl'. Error: $($_.Exception.Message)"
+      }
+
+      if ($statusCode) {
+        Write-Host "  Failed to query package index on attempt $attempt of $maxAttempts with HTTP $statusCode. Error: $($_.Exception.Message)"
+      } else {
+        Write-Host "  Failed to query package index on attempt $attempt of $maxAttempts. Error: $($_.Exception.Message)"
+      }
     }
 
     if ($attempt -lt $maxAttempts) {
