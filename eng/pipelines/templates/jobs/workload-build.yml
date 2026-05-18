@@ -32,6 +32,18 @@ jobs:
         parameters:
           sourceBranchAlias: source
           engBranchAlias: self
+      - ${{ if eq(parameters.createVSInsertion, true) }}:
+        - powershell: Write-Host "##vso[build.addbuildtag]insert-vs"
+          displayName: 🟣 Tag pipeline run - VS insertion
+      - ${{ if eq(parameters.publishToAzDO, true) }}:
+        - powershell: Write-Host "##vso[build.addbuildtag]publish-azdo"
+          displayName: 🟣 Tag pipeline run - Publish to AzDO
+      - ${{ if eq(parameters.publishToNuGet, true) }}:
+        - powershell: Write-Host "##vso[build.addbuildtag]publish-nuget"
+          displayName: 🟣 Tag pipeline run - Publish to NuGet
+      - ${{ if eq(parameters.downloadWorkloadNupkgs, true) }}:
+        - powershell: Write-Host "##vso[build.addbuildtag]workload-packages"
+          displayName: 🟣 Tag pipeline run - Workload packages
       # Sets the run name to use the source branch commit message.
       # Also, sets the OfficialBuildId variable to the original Build.BuildNumber for use in Arcade.
       # See: https://learn.microsoft.com/en-us/azure/devops/pipelines/process/run-number

@@ -214,6 +214,8 @@ extends:
           setPreReleaseVersionIteration: ${{ parameters.setPreReleaseVersionIteration }}
           downloadWorkloadNupkgs: ${{ parameters.downloadWorkloadNupkgs }}
           workloadNupkgExcludeList: ${{ parameters.workloadNupkgExcludeList }}
+          publishToAzDO: ${{ parameters.publishToAzDO }}
+          publishToNuGet: ${{ parameters.publishToNuGet }}
 
     - ${{ if eq(parameters.createVSInsertion, true) }}:
       - stage: Insertion
