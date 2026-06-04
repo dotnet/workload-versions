@@ -39,14 +39,14 @@
   </PropertyGroup>
   <PropertyGroup Label="EmscriptenWorkloads">
     <!-- Workloads from dotnet/sdk -->
-    <MicrosoftNETWorkloadEmscriptenCurrentManifest110100preview5PackageVersion>11.0.100-preview.5.26279.113</MicrosoftNETWorkloadEmscriptenCurrentManifest110100preview5PackageVersion>
+    <MicrosoftNETWorkloadEmscriptenCurrentManifest110100preview5PackageVersion>11.0.100-preview.5.26302.115</MicrosoftNETWorkloadEmscriptenCurrentManifest110100preview5PackageVersion>
     <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest110100preview5PackageVersion)</EmscriptenWorkloadManifestVersion>
     <!-- emsdk workload prerelease version band must match the emsdk feature band -->
     <EmscriptenWorkloadFeatureBand>11.0.100$([System.Text.RegularExpressions.Regex]::Match($(EmscriptenWorkloadManifestVersion), `-[A-z]*[\.]*\d*`))</EmscriptenWorkloadFeatureBand>
   </PropertyGroup>
   <PropertyGroup Label="MauiWorkloads">
     <MauiFeatureBand>11.0.100-preview.5</MauiFeatureBand>
-    <MicrosoftNETSdkAndroidManifest110100preview5PackageVersion>36.99.0-preview.5.305</MicrosoftNETSdkAndroidManifest110100preview5PackageVersion>
+    <MicrosoftNETSdkAndroidManifest110100preview5PackageVersion>36.99.0-preview.5.308</MicrosoftNETSdkAndroidManifest110100preview5PackageVersion>
     <MicrosoftNETSdkiOSManifest110100preview5PackageVersion>26.5.11546-net11-p5</MicrosoftNETSdkiOSManifest110100preview5PackageVersion>
     <MicrosoftNETSdktvOSManifest110100preview5PackageVersion>26.5.11546-net11-p5</MicrosoftNETSdktvOSManifest110100preview5PackageVersion>
     <MicrosoftNETSdkMacCatalystManifest110100preview5PackageVersion>26.5.11546-net11-p5</MicrosoftNETSdkMacCatalystManifest110100preview5PackageVersion>
@@ -60,7 +60,7 @@
     <XamarinTvOSWorkloadManifestVersion>$(MicrosoftNETSdktvOSManifest110100preview5PackageVersion)</XamarinTvOSWorkloadManifestVersion>
   </PropertyGroup>
   <PropertyGroup Label="MonoWorkloads">
-    <MicrosoftNETWorkloadMonoToolchainCurrentManifest110100preview5PackageVersion>11.0.100-preview.5.26279.113</MicrosoftNETWorkloadMonoToolchainCurrentManifest110100preview5PackageVersion>
+    <MicrosoftNETWorkloadMonoToolchainCurrentManifest110100preview5PackageVersion>11.0.100-preview.5.26302.115</MicrosoftNETWorkloadMonoToolchainCurrentManifest110100preview5PackageVersion>
     <MicrosoftNETSdkPackageVersion>11.0.100-preview.4.26166.114</MicrosoftNETSdkPackageVersion>
     <!-- Workloads from dotnet/sdk use MicrosoftNETSdkPackageVersion as the manifests are now built from the dotnet/sdk repo -->
     <MonoWorkloadManifestVersion>$(MicrosoftNETWorkloadMonoToolchainCurrentManifest110100preview5PackageVersion)</MonoWorkloadManifestVersion>
