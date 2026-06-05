@@ -30,15 +30,15 @@
       <Uri>https://github.com/dotnet/macios</Uri>
       <Sha>5d26a4d9d638b9424acf0f7de72de8d4302bcb00</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-11.0.100-preview.5" Version="11.0.0-preview.5.26302.10">
+    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-11.0.100-preview.5" Version="11.0.0-preview.5.26304.4">
       <Uri>https://github.com/dotnet/maui</Uri>
-      <Sha>9e0928a6dafadc3e639e6ea708fca84aaefcad15</Sha>
+      <Sha>ee114588a1a930649fae2cc10b5aca7c29ec4b3a</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="11.0.0-beta.26302.115">
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="11.0.0-beta.26304.107">
       <Uri>https://github.com/dotnet/dotnet</Uri>
-      <Sha>f7b4c5716faaee8fb8a289aed29118cad955c45f</Sha>
+      <Sha>893e9b895dedd835b03cb92f87e4cae26b5e53f2</Sha>
       <SourceBuild RepoName="arcade" ManagedOnly="true" />
     </Dependency>
   </ToolsetDependencies>
