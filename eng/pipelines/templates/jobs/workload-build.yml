@@ -127,6 +127,12 @@ jobs:
         displayName: 🟣 Build solution
         # Name is required to reference the variables created within this build step in other stages.
         name: BuildSolution
+      - powershell: |
+          $destDir = "$(Build.ArtifactStagingDirectory)/artifacts/publishScripts"
+          New-Item -ItemType Directory -Path $destDir -Force | Out-Null
+          Copy-Item "eng/split-package-publish-buckets.ps1" $destDir
+          Copy-Item "eng/wait-for-package-availability.ps1" $destDir
+        displayName: 🟣 Copy publish scripts to artifacts
       - ${{ if eq(parameters.createVSInsertion, true) }}:
         - task: 1ES.PublishPipelineArtifact@1
           displayName: 🟣 Publish workload artifacts
