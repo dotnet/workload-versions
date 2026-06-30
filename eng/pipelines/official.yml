@@ -151,12 +151,7 @@ variables:
 ############### GROUPS ###############
 # Provides TSA variables for automatic bug reporting.
 - group: DotNet-CLI-SDLValidation-Params
-# Release-Pipeline provides: BotAccount-dotnet-bot-repo-PAT, dn-bot-all-drop-rw-code-rw-release-all
-# https://dnceng.visualstudio.com/internal/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=87&path=Release-Pipeline
-- group: Release-Pipeline
-# DotNet-DevDiv-Insertion-Workflow-Variables provides: dn-bot-devdiv-drop-rw-code-rw
-# https://dnceng.visualstudio.com/internal/_library?itemType=VariableGroups&view=VariableGroupView&variableGroupId=33&path=DotNet-DevDiv-Insertion-Workflow-Variables
-- group: DotNet-DevDiv-Insertion-Workflow-Variables
+- group: DotNetBot-GitHub-AllBranches
 
 resources:
   repositories:
