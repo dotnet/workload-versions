@@ -2,7 +2,7 @@
 # The buckets are:
 # 1) packs: all non-manifest packages except the workload set package
 # 2) manifests: package IDs containing 'manifest'
-# 3) workloadSet: package IDs matching Microsoft.NET.Workloads.<feature-band>
+# 3) workloadSet: package IDs starting with Microsoft.NET.Workloads. (including architecture-specific MSI variants)
 
 param (
   [Parameter(Mandatory = $true)] [string] $packagesPath
@@ -11,7 +11,6 @@ param (
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 $workloadSetPrefix = 'microsoft.net.workloads.'
-$msiExclusionPattern = '\.msi\.'
 $manifestPattern = 'manifest'
 
 function Get-PackageMetadata {
@@ -77,7 +76,7 @@ foreach ($package in $allPackages) {
   $packageIdLower = $packageId.ToLowerInvariant()
 
   $bucketName = 'packs'
-  if ($packageIdLower.StartsWith($workloadSetPrefix) -and $packageIdLower -notmatch $msiExclusionPattern) {
+  if ($packageIdLower.StartsWith($workloadSetPrefix)) {
     $bucketName = 'workloadSet'
   } elseif ($packageIdLower -match $manifestPattern) {
     $bucketName = 'manifests'
