@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-11.0.100-preview.6" Version="11.0.100-preview.6.26356.105">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-11.0.100-preview.6" Version="11.0.100-preview.6.26357.118">
       <Uri>https://github.com/dotnet/dotnet</Uri>
-      <Sha>d6b097b81e41939607a265cf95b25302ee9d9bce</Sha>
+      <Sha>2461daa1d76b420ad12e4ebd73e64a4421cc365f</Sha>
       <SourceBuild RepoName="emsdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Mono.Toolchain.Current.Manifest-11.0.100-preview.6" Version="11.0.100-preview.6.26356.105">
+    <Dependency Name="Microsoft.NET.Workload.Mono.Toolchain.Current.Manifest-11.0.100-preview.6" Version="11.0.100-preview.6.26357.118">
       <Uri>https://github.com/dotnet/dotnet</Uri>
-      <Sha>d6b097b81e41939607a265cf95b25302ee9d9bce</Sha>
+      <Sha>2461daa1d76b420ad12e4ebd73e64a4421cc365f</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-11.0.100-preview.6" Version="37.0.0-preview.6.59">
       <Uri>https://github.com/dotnet/android</Uri>
@@ -30,15 +30,15 @@
       <Uri>https://github.com/dotnet/macios</Uri>
       <Sha>7f0236e0f25c0edc3f3a8b543a6bb2d84d97a729</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-11.0.100-preview.6" Version="11.0.0-preview.6.26351.3">
+    <Dependency Name="Microsoft.NET.Sdk.Maui.Manifest-11.0.100-preview.6" Version="11.0.0-preview.6.26357.6">
       <Uri>https://github.com/dotnet/maui</Uri>
-      <Sha>6e35dc58d0561cc69caa14dbfc59a0375d5d94d2</Sha>
+      <Sha>078afffd950c2db765123748f81ac0aea214e829</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="11.0.0-beta.26356.105">
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="11.0.0-beta.26357.118">
       <Uri>https://github.com/dotnet/dotnet</Uri>
-      <Sha>d6b097b81e41939607a265cf95b25302ee9d9bce</Sha>
+      <Sha>2461daa1d76b420ad12e4ebd73e64a4421cc365f</Sha>
       <SourceBuild RepoName="arcade" ManagedOnly="true" />
     </Dependency>
   </ToolsetDependencies>
