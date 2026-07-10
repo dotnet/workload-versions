@@ -44,7 +44,12 @@ steps:
     InsertionReviewers: Dotnet Core SDK and CLI
     InsertionBuildPolicies: Request Perf DDRITs
     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/631/Copy-Commit-Details-to-PR
-    AddCommitsToPR: true
+    # Disabled: this feature's "Copy Commit Details to PR" step fatally fails the task *after* the insertion PR
+    # is already created when it cannot compute a commit diff (e.g. the metadata service has no bearer token and
+    # the legacy fallback selects a same-commit sibling build as the baseline, yielding "No changes found").
+    # The commits for these insertions are version-number updates rather than meaningful code changes, so the
+    # auto-generated commit list adds little value and isn't worth failing the build over.
+    AddCommitsToPR: false
     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/634/Link-Work-Items-to-PR
     LinkWorkItemsToPR: false
     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/638/Set-AutoComplete-on-an-Insertion
