@@ -33,9 +33,9 @@
       <Uri>https://github.com/dotnet/maui</Uri>
       <Sha>f4dbb744f19d479c9dc0582e97ba7753df149638</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.424-servicing.26357.2">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.424-servicing.26363.2">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-installer</Uri>
-      <Sha>2091e5638b5b5be78ddc44bc86de7dcfd2fe8291</Sha>
+      <Sha>a3d403e5e820e9af50ad475a2d46195424952127</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
