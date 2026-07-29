@@ -1,6 +1,8 @@
 <Project>
   <!-- Arcade features -->
   <PropertyGroup>
+    <!-- Arcade 11 removed WixToolsetPath from CreateVisualStudioWorkloadSet; the WiX 6 toolset is required. -->
+    <UseWixToolset6>true</UseWixToolset6>
     <VersionMajor>11</VersionMajor>
     <VersionMinor>0</VersionMinor>
     <VersionSDKMinor>1</VersionSDKMinor>
