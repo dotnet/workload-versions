@@ -34,6 +34,12 @@
     <MicrosoftDotNetBuildTasksWorkloadsPackageVersion>$(ArcadeSdkVersion)</MicrosoftDotNetBuildTasksWorkloadsPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
+    <!--
+      Arcade 11 replaced the WixToolsetPath parameter on CreateVisualStudioWorkloadSet with
+      WixExe/HeatExe/WixExtensions, so opt out of the legacy WiX 3 toolset. WixPackageVersion
+      is only used by the WiX 3 path and can be removed once every branch has opted out.
+    -->
+    <UseWixToolset3>false</UseWixToolset3>
     <WixPackageVersion>3.14.0-8606.20240208.1</WixPackageVersion>
     <SwixPackageVersion>1.1.392</SwixPackageVersion>
   </PropertyGroup>
