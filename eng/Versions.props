@@ -34,24 +34,30 @@
     <MicrosoftDotNetBuildTasksWorkloadsPackageVersion>$(ArcadeSdkVersion)</MicrosoftDotNetBuildTasksWorkloadsPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
+    <!--
+      Arcade 11 replaced the WixToolsetPath parameter on CreateVisualStudioWorkloadSet with
+      WixExe/HeatExe/WixExtensions, so opt out of the legacy WiX 3 toolset. WixPackageVersion
+      is only used by the WiX 3 path and can be removed once every branch has opted out.
+    -->
+    <UseWixToolset3>false</UseWixToolset3>
     <WixPackageVersion>3.14.0-8606.20240208.1</WixPackageVersion>
     <SwixPackageVersion>1.1.392</SwixPackageVersion>
   </PropertyGroup>
   <PropertyGroup Label="EmscriptenWorkloads">
     <!-- Workloads from dotnet/sdk -->
-    <MicrosoftNETWorkloadEmscriptenCurrentManifest110100preview7PackageVersion>11.0.100-preview.6.26359.118</MicrosoftNETWorkloadEmscriptenCurrentManifest110100preview7PackageVersion>
+    <MicrosoftNETWorkloadEmscriptenCurrentManifest110100preview7PackageVersion>11.0.100-preview.7.26379.122</MicrosoftNETWorkloadEmscriptenCurrentManifest110100preview7PackageVersion>
     <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest110100preview7PackageVersion)</EmscriptenWorkloadManifestVersion>
     <!-- emsdk workload prerelease version band must match the emsdk feature band -->
     <EmscriptenWorkloadFeatureBand>11.0.100$([System.Text.RegularExpressions.Regex]::Match($(EmscriptenWorkloadManifestVersion), `-[A-z]*[\.]*\d*`))</EmscriptenWorkloadFeatureBand>
   </PropertyGroup>
   <PropertyGroup Label="MauiWorkloads">
     <MauiFeatureBand>11.0.100-preview.7</MauiFeatureBand>
-    <MicrosoftNETSdkAndroidManifest110100preview7PackageVersion>37.0.0-preview.6.59</MicrosoftNETSdkAndroidManifest110100preview7PackageVersion>
-    <MicrosoftNETSdkiOSManifest110100preview7PackageVersion>26.5.11720-net11-p6</MicrosoftNETSdkiOSManifest110100preview7PackageVersion>
-    <MicrosoftNETSdktvOSManifest110100preview7PackageVersion>26.5.11720-net11-p6</MicrosoftNETSdktvOSManifest110100preview7PackageVersion>
-    <MicrosoftNETSdkMacCatalystManifest110100preview7PackageVersion>26.5.11720-net11-p6</MicrosoftNETSdkMacCatalystManifest110100preview7PackageVersion>
-    <MicrosoftNETSdkmacOSManifest110100preview7PackageVersion>26.5.11720-net11-p6</MicrosoftNETSdkmacOSManifest110100preview7PackageVersion>
-    <MicrosoftNETSdkMauiManifest110100preview7PackageVersion>11.0.0-preview.6.26360.8</MicrosoftNETSdkMauiManifest110100preview7PackageVersion>
+    <MicrosoftNETSdkAndroidManifest110100preview7PackageVersion>37.0.0-preview.7.2129</MicrosoftNETSdkAndroidManifest110100preview7PackageVersion>
+    <MicrosoftNETSdkiOSManifest110100preview7PackageVersion>26.5.11991-net11-p7</MicrosoftNETSdkiOSManifest110100preview7PackageVersion>
+    <MicrosoftNETSdktvOSManifest110100preview7PackageVersion>26.5.11991-net11-p7</MicrosoftNETSdktvOSManifest110100preview7PackageVersion>
+    <MicrosoftNETSdkMacCatalystManifest110100preview7PackageVersion>26.5.11991-net11-p7</MicrosoftNETSdkMacCatalystManifest110100preview7PackageVersion>
+    <MicrosoftNETSdkmacOSManifest110100preview7PackageVersion>26.5.11991-net11-p7</MicrosoftNETSdkmacOSManifest110100preview7PackageVersion>
+    <MicrosoftNETSdkMauiManifest110100preview7PackageVersion>11.0.0-preview.7.26378.14</MicrosoftNETSdkMauiManifest110100preview7PackageVersion>
     <MauiWorkloadManifestVersion>$(MicrosoftNETSdkMauiManifest110100preview7PackageVersion)</MauiWorkloadManifestVersion>
     <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest110100preview7PackageVersion)</XamarinAndroidWorkloadManifestVersion>
     <XamarinIOSWorkloadManifestVersion>$(MicrosoftNETSdkiOSManifest110100preview7PackageVersion)</XamarinIOSWorkloadManifestVersion>
@@ -60,7 +66,7 @@
     <XamarinTvOSWorkloadManifestVersion>$(MicrosoftNETSdktvOSManifest110100preview7PackageVersion)</XamarinTvOSWorkloadManifestVersion>
   </PropertyGroup>
   <PropertyGroup Label="MonoWorkloads">
-    <MicrosoftNETWorkloadMonoToolchainCurrentManifest110100preview7PackageVersion>11.0.100-preview.6.26359.118</MicrosoftNETWorkloadMonoToolchainCurrentManifest110100preview7PackageVersion>
+    <MicrosoftNETWorkloadMonoToolchainCurrentManifest110100preview7PackageVersion>11.0.100-preview.7.26379.122</MicrosoftNETWorkloadMonoToolchainCurrentManifest110100preview7PackageVersion>
     <MicrosoftNETSdkPackageVersion>11.0.100-preview.4.26166.114</MicrosoftNETSdkPackageVersion>
     <!-- Workloads from dotnet/sdk use MicrosoftNETSdkPackageVersion as the manifests are now built from the dotnet/sdk repo -->
     <MonoWorkloadManifestVersion>$(MicrosoftNETWorkloadMonoToolchainCurrentManifest110100preview7PackageVersion)</MonoWorkloadManifestVersion>
