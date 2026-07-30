@@ -52,7 +52,7 @@
   </PropertyGroup>
   <PropertyGroup Label="MauiWorkloads">
     <MauiFeatureBand>11.0.100-preview.7</MauiFeatureBand>
-    <MicrosoftNETSdkAndroidManifest110100preview7PackageVersion>37.0.0-preview.7.2129</MicrosoftNETSdkAndroidManifest110100preview7PackageVersion>
+    <MicrosoftNETSdkAndroidManifest110100preview7PackageVersion>37.0.0-preview.7.2131</MicrosoftNETSdkAndroidManifest110100preview7PackageVersion>
     <MicrosoftNETSdkiOSManifest110100preview7PackageVersion>26.5.11991-net11-p7</MicrosoftNETSdkiOSManifest110100preview7PackageVersion>
     <MicrosoftNETSdktvOSManifest110100preview7PackageVersion>26.5.11991-net11-p7</MicrosoftNETSdktvOSManifest110100preview7PackageVersion>
     <MicrosoftNETSdkMacCatalystManifest110100preview7PackageVersion>26.5.11991-net11-p7</MicrosoftNETSdkMacCatalystManifest110100preview7PackageVersion>
