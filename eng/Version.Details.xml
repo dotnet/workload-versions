@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-9.0.100" Version="9.0.19" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-9.0.100" Version="9.0.20" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>dd379007ea0e38b82e87ca5fd61bb43b432eaf7a</Sha>
+      <Sha>b2bf6cec0cb4ce281802ac3951bdd14287aad112</Sha>
       <SourceBuild RepoName="emsdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.19" CoherentParentDependency="Microsoft.NET.Sdk">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="9.0.20" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
-      <Sha>8381bdb01fe4a26e1f61370e779c78bb73ecc95b</Sha>
+      <Sha>3879076d9a06ce098d37c3882fb1845a6627335b</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-9.0.100" Version="35.0.105">
       <Uri>https://github.com/dotnet/android</Uri>
@@ -34,9 +34,9 @@
       <Uri>https://github.com/dotnet/maui</Uri>
       <Sha>c1f4f7d879f6126029009902289efd6a4bb1bda9</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="9.0.120-servicing.26371.12">
+    <Dependency Name="Microsoft.NET.Sdk" Version="9.0.121-servicing.26414.7">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>3f97250e38169d4fede59f43029c6d987c015eb4</Sha>
+      <Sha>b7cb81089af89db111181f2b7e0d4de9fc4da1ef</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
