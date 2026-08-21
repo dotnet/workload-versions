@@ -14,6 +14,7 @@ description: Triggers the dotnet-workload-versions-official-ci pipeline for VS i
 
 ## Workflow
 
+- [ ] Confirm runtime/emsdk coherency was validated on the source commit
 - [ ] Validate inputs and branch names
 - [ ] Trigger pipeline 1298 with correct parameters
 - [ ] Report build ID and link
@@ -48,6 +49,7 @@ Use `dnceng-azure-devops-pipelines_run_pipeline`:
 3. **Branch format**: YAML array with `- ` prefix and `\n` separators
 4. **Empty arrays**: Use `"[]"`
 5. **Build duration**: ~100-110 minutes
+6. **Runtime/emsdk gate**: Do not trigger if a runtime minor/servicing update is missing the matching emsdk manifest update. Validate both `eng/Version.Details.xml` and `eng/Versions.props` first.
 
 ## Output
 

@@ -1,13 +1,13 @@
 ---
 name: workload-versions-check
-description: Fetches current component versions (runtime, android, ios, maui) from the dotnet/workload-versions repo across all active branches. Use when asked about current workload versions, what versions are shipping, or to compare versions across branches.
+description: Fetches current component versions (runtime, emsdk, android, ios, maui) from the dotnet/workload-versions repo across all active branches. Use when asked about current workload versions, what versions are shipping, or to compare versions across branches.
 ---
 
 # Check Workload Component Versions
 
 ## Purpose
 
-Retrieve the current runtime, Android, iOS, and MAUI versions from `eng/Versions.props` in the `dotnet/workload-versions` repo across all active branches. Produces a summary table for quick comparison.
+Retrieve the current runtime, emsdk, Android, iOS, and MAUI versions from `eng/Versions.props` in the `dotnet/workload-versions` repo across all active branches. Produces a summary table for quick comparison and flags runtime/emsdk servicing-version mismatches.
 
 ## Branches
 
@@ -21,7 +21,8 @@ Retrieve the current runtime, Android, iOS, and MAUI versions from `eng/Versions
 ## Workflow
 
 - [ ] Fetch `eng/Versions.props` from each branch
-- [ ] Extract the four component versions per branch
+- [ ] Extract the five component versions per branch
+- [ ] Verify runtime and emsdk versions match whenever they use the same servicing version line
 - [ ] Present results in a comparison table
 
 ## Fetching Versions
@@ -49,6 +50,12 @@ Property names vary by branch because they encode the SDK feature band. Use thes
 | `release/9.0.1xx` | `MicrosoftNETCoreAppRefPackageVersion` |
 | `release/10` | Property matching `MicrosoftNETWorkloadMonoToolchain*Manifest*PackageVersion` (not the transport variant) |
 | `main` | Property matching `MicrosoftNETWorkloadMonoToolChain*Manifest*PackageVersion` (not the transport variant) |
+
+### emsdk
+
+Property matching `MicrosoftNETWorkloadEmscriptenCurrentManifest*PackageVersion` (not the transport variant).
+
+For servicing branches where runtime and emsdk share the runtime servicing version, their values must match. Flag any mismatch prominently; for example, runtime `8.0.31` with emsdk `8.0.30` is not ready for workload-set generation or VS insertion.
 
 ### Android
 
@@ -78,6 +85,7 @@ Present a single comparison table:
 | Component | release/8.0.4xx | release/9.0.1xx | release/10 | main |
 |-----------|-----------------|-----------------|------------|------|
 | Runtime   | 8.0.x           | 9.0.x           | 10.0.x     | 11.0.0-preview.x |
+| emsdk     | 8.0.x           | 9.0.x           | 10.0.x     | 11.0.0-preview.x |
 | Android   | 34.0.x          | 35.0.x          | 36.x.x     | 36.99.0-preview.x |
 | iOS       | 18.0.x          | 26.2.x          | 26.2.x     | 26.2.x-net11-px |
 | MAUI      | 8.0.x           | 9.0.x           | 10.0.x     | 11.0.0-preview.x |

@@ -75,7 +75,13 @@ Ask the user for:
 ### Step 2: Check GitHub PRs
 Check for open PRs in `dotnet/workload-versions` targeting the source branch:
 - Use `github-mcp-server-list_pull_requests` with `base` filter
-- If PRs exist that are needed, check their status, approve if green, and merge
+- Inspect every needed dependency PR diff before approval
+- If the runtime minor/servicing version changes, require the emsdk manifest to change to the same version in the same PR:
+  - `Microsoft.NETCore.App.Ref` and `Microsoft.NET.Workload.Emscripten.Current.Manifest-*` in `eng/Version.Details.xml` must move together
+  - `MicrosoftNETCoreAppRefPackageVersion` and `MicrosoftNETWorkloadEmscriptenCurrentManifest*PackageVersion` in `eng/Versions.props` must move together
+  - Example: runtime `8.0.30 -> 8.0.31` requires emsdk `8.0.30 -> 8.0.31`
+- If runtime changes without emsdk, stop before approval and report that a corrected dependency-flow PR is required
+- If PRs pass the coherency check, check their status, approve if green, and merge
 - Wait for changes to mirror to dnceng AzDO (typically a few minutes)
 
 ### Step 3: Verify Mirror Status
@@ -91,6 +97,8 @@ If user needs to find available VS branches:
 
 ### Step 5: Run the Pipeline
 Queue the workloads CI pipeline with correct parameters:
+
+Do not queue until the Step 2 runtime/emsdk coherency check has passed for the source commit.
 
 ```
 Tool: dnceng-azure-devops-pipelines_run_pipeline
