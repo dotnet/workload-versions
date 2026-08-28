@@ -1,7 +1,6 @@
 steps:
-- template: /eng/common/core-templates/post-build/setup-maestro-vars.yml
+- template: /eng/common/core-templates/steps/get-github-app-token.yml
   parameters:
-    # Specifies whether to use 1ES
     is1ESPipeline: false
 
     ${{ each parameter in parameters }}:
