@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-11.0.100-rc.1" Version="11.0.100-rc.1.26428.106">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-11.0.100-rc.1" Version="11.0.100-rc.1.26428.111">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet</Uri>
-      <Sha>371497216d998436c3bfb76fe95c78eeee1cad22</Sha>
+      <Sha>43e464a0b659dddd7b2cb4e4fbf9c237460ad1d3</Sha>
       <SourceBuild RepoName="emsdk" ManagedOnly="true" />
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Mono.Toolchain.Current.Manifest-11.0.100-rc.1" Version="11.0.100-rc.1.26428.106">
+    <Dependency Name="Microsoft.NET.Workload.Mono.Toolchain.Current.Manifest-11.0.100-rc.1" Version="11.0.100-rc.1.26428.111">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet</Uri>
-      <Sha>371497216d998436c3bfb76fe95c78eeee1cad22</Sha>
+      <Sha>43e464a0b659dddd7b2cb4e4fbf9c237460ad1d3</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Sdk.Android.Manifest-11.0.100-rc.1" Version="37.0.0-rc.1.2253">
       <Uri>https://github.com/dotnet/android</Uri>
