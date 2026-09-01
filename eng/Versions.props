@@ -44,7 +44,7 @@
   </PropertyGroup>
   <PropertyGroup Label="EmscriptenWorkloads">
     <!-- Workloads from dotnet/sdk -->
-    <MicrosoftNETWorkloadEmscriptenCurrentManifest110100rc1PackageVersion>11.0.100-rc.1.26428.118</MicrosoftNETWorkloadEmscriptenCurrentManifest110100rc1PackageVersion>
+    <MicrosoftNETWorkloadEmscriptenCurrentManifest110100rc1PackageVersion>11.0.100-rc.1.26425.128</MicrosoftNETWorkloadEmscriptenCurrentManifest110100rc1PackageVersion>
     <EmscriptenWorkloadManifestVersion>$(MicrosoftNETWorkloadEmscriptenCurrentManifest110100rc1PackageVersion)</EmscriptenWorkloadManifestVersion>
     <!-- emsdk workload prerelease version band must match the emsdk feature band -->
     <EmscriptenWorkloadFeatureBand>11.0.100$([System.Text.RegularExpressions.Regex]::Match($(EmscriptenWorkloadManifestVersion), `-[A-z]*[\.]*\d*`))</EmscriptenWorkloadFeatureBand>
@@ -65,7 +65,7 @@
     <XamarinTvOSWorkloadManifestVersion>$(MicrosoftNETSdktvOSManifest110100rc1PackageVersion)</XamarinTvOSWorkloadManifestVersion>
   </PropertyGroup>
   <PropertyGroup Label="MonoWorkloads">
-    <MicrosoftNETWorkloadMonoToolchainCurrentManifest110100rc1PackageVersion>11.0.100-rc.1.26428.118</MicrosoftNETWorkloadMonoToolchainCurrentManifest110100rc1PackageVersion>
+    <MicrosoftNETWorkloadMonoToolchainCurrentManifest110100rc1PackageVersion>11.0.100-rc.1.26425.128</MicrosoftNETWorkloadMonoToolchainCurrentManifest110100rc1PackageVersion>
     <MicrosoftNETSdkPackageVersion>11.0.100-preview.4.26166.114</MicrosoftNETSdkPackageVersion>
     <!-- Workloads from dotnet/sdk use MicrosoftNETSdkPackageVersion as the manifests are now built from the dotnet/sdk repo -->
     <MonoWorkloadManifestVersion>$(MicrosoftNETWorkloadMonoToolchainCurrentManifest110100rc1PackageVersion)</MonoWorkloadManifestVersion>
