@@ -34,12 +34,8 @@
     <MicrosoftDotNetBuildTasksWorkloadsPackageVersion>$(ArcadeSdkVersion)</MicrosoftDotNetBuildTasksWorkloadsPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <!--
-      Force the legacy WiX 3 path while testing the pre-migration Arcade SDK.
-      WixPackageVersion is only used by the WiX 3 path.
-    -->
-    <UseWixToolset3>true</UseWixToolset3>
-    <WixPackageVersion>3.14.0-8606.20240208.1</WixPackageVersion>
+    <!-- Use the WiX 6 path supported by the current Arcade SDK. -->
+    <UseWixToolset3>false</UseWixToolset3>
     <SwixPackageVersion>1.1.392</SwixPackageVersion>
   </PropertyGroup>
   <PropertyGroup Label="EmscriptenWorkloads">
