@@ -87,6 +87,20 @@ jobs:
             $workloadNupkgExcludeListJson = $workloadNupkgExcludeList -replace '\r?\n\s*', ''
             Write-Host "##vso[task.setvariable variable=WorkloadNupkgExcludeListJson]$workloadNupkgExcludeListJson"
           displayName: 🟣 Set WorkloadNupkgExcludeListJson variable
+        - pwsh: eng/tests/GitHubAppToken.Tests.ps1
+          displayName: 🟣 Validate GitHub App token flow
+        - task: AzureCLI@2
+          displayName: 🟣 Get GitHub App installation token
+          inputs:
+            azureSubscription: dnceng-workload-versions-githubapp
+            scriptType: pscore
+            scriptLocation: inlineScript
+            inlineScript: |
+              & '$(System.DefaultWorkingDirectory)/eng/get-github-app-token.ps1' `
+                -KeyVaultName EngKeyVault `
+                -AppSecretName workload-versions-github-app `
+                -InstallationOwner dotnet `
+                -OutputVariableName GitHubAppInstallationToken
         - task: AzureCLI@2
           displayName: 🟣 Download workloads
           inputs:
@@ -97,7 +111,7 @@ jobs:
               $azDOToken = az account get-access-token --resource 499b84ac-1321-427f-aa17-267ca6975798 --query accessToken -o tsv
               & '$(System.DefaultWorkingDirectory)/eng/download-workloads.ps1' `
                 -workloadPath '$(System.DefaultWorkingDirectory)/artifacts/workloads' `
-                -gitHubPat (ConvertTo-SecureString -String '$(BotAccount-dotnet-bot-repo-PAT)' -AsPlainText -Force) `
+                -gitHubPat (ConvertTo-SecureString -String '$(GitHubAppInstallationToken)' -AsPlainText -Force) `
                 -azDOPat (ConvertTo-SecureString -String $azDOToken -AsPlainText -Force) `
                 -workloadListJson '$(WorkloadListJson)' `
                 -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }} `
