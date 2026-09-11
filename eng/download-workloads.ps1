@@ -4,7 +4,7 @@
 
 # $workloadPath: The path to the directory as output for the workload ZIPs. This is --output-dir in the DARC command for the workload drop .zip downloads.
 # - Example Value: "$(RepoRoot)artifacts\workloads"
-# $gitHubPat: The GitHub PAT to use for DARC (CI build only). See workload-build.yml for converting the PAT to SecureString.
+# $gitHubPat: The GitHub credential to use for DARC (CI build only). This can be a PAT or a GitHub App installation token.
 # $azDOPat: The Azure DevOps PAT to use for DARC (CI build only). See workload-build.yml for converting the PAT to SecureString.
 # $workloadListJson: The JSON string of the list of workload drop names to download. If not provided, all workloads found in Version.Details.xml will be downloaded.
 # - See the workloadDropNames parameter in official.yml for the list generally passed to this script.
