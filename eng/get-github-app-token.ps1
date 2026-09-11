@@ -14,16 +14,41 @@ Import-Module "$PSScriptRoot/GitHubAppToken.psm1" -Force
 function Get-KeyVaultSecretValue {
   param([Parameter(Mandatory=$true)] [string] $Name)
 
-  $secretJson = az keyvault secret show `
-    --vault-name $KeyVaultName `
-    --name $Name `
-    --output json `
-    --only-show-errors
-  if ($LASTEXITCODE -ne 0) {
-    throw "Failed to read secret '$Name' from Key Vault '$KeyVaultName'."
+  $escapedSecretName = [Uri]::EscapeDataString($Name)
+  $secretUri = "https://$KeyVaultName.vault.azure.net/secrets/$escapedSecretName`?api-version=7.4"
+  try {
+    $response = Invoke-RestMethod `
+      -Uri $secretUri `
+      -Headers @{ Authorization = "Bearer $keyVaultAccessToken" } `
+      -Method Get
+  }
+  catch {
+    throw "Failed to read secret '$Name' from Key Vault '$KeyVaultName': $_"
   }
 
-  ($secretJson | ConvertFrom-Json).value
+  if ([string]::IsNullOrWhiteSpace($response.value)) {
+    throw "Secret '$Name' in Key Vault '$KeyVaultName' is empty."
+  }
+
+  $response.value
+}
+
+$previousNativeCommandErrorPreference = $PSNativeCommandUseErrorActionPreference
+try {
+  # Azure CLI can emit non-fatal Python warnings to stderr.
+  $PSNativeCommandUseErrorActionPreference = $false
+  $keyVaultAccessToken = az account get-access-token `
+    --resource https://vault.azure.net `
+    --query accessToken `
+    --output tsv `
+    --only-show-errors
+  $tokenExitCode = $LASTEXITCODE
+}
+finally {
+  $PSNativeCommandUseErrorActionPreference = $previousNativeCommandErrorPreference
+}
+if ($tokenExitCode -ne 0 -or [string]::IsNullOrWhiteSpace($keyVaultAccessToken)) {
+  throw "Failed to acquire an Azure Key Vault access token."
 }
 
 $appId = Get-KeyVaultSecretValue "$AppSecretName-app-id"

@@ -87,6 +87,8 @@ jobs:
             $workloadNupkgExcludeListJson = $workloadNupkgExcludeList -replace '\r?\n\s*', ''
             Write-Host "##vso[task.setvariable variable=WorkloadNupkgExcludeListJson]$workloadNupkgExcludeListJson"
           displayName: 🟣 Set WorkloadNupkgExcludeListJson variable
+        # Keep this fast, offline test next to the credential flow so every path that
+        # downloads workloads validates the checked-in compatibility implementation.
         - pwsh: eng/tests/GitHubAppToken.Tests.ps1
           displayName: 🟣 Validate GitHub App token flow
         - task: AzureCLI@2
