@@ -151,7 +151,6 @@ variables:
 ############### GROUPS ###############
 # Provides TSA variables for automatic bug reporting.
 - group: DotNet-CLI-SDLValidation-Params
-- group: DotNetBot-GitHub-AllBranches
 
 resources:
   repositories:
