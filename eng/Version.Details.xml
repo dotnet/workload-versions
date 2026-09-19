@@ -34,9 +34,9 @@
       <Uri>https://github.com/dotnet/maui</Uri>
       <Sha>c1f4f7d879f6126029009902289efd6a4bb1bda9</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="9.0.122-servicing.26467.16">
+    <Dependency Name="Microsoft.NET.Sdk" Version="9.0.122-servicing.26467.30">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-sdk</Uri>
-      <Sha>f31037dfdd04fb8792a625a0bd7c1c5056eaa523</Sha>
+      <Sha>6f7450db52932da6b1ab76696cca9a1846f49fb7</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
