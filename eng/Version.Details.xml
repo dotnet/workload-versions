@@ -3,7 +3,7 @@
   <ProductDependencies>
     <Dependency Name="Microsoft.NETCore.App.Ref" Version="8.0.32" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-runtime</Uri>
-      <Sha>e62fa8c72e4e40558e1b2614d5e0f3146d06b961</Sha>
+      <Sha>66c3e8b7703bdb68a7ec2858a2b3c540da1317a3</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Workload.Emscripten.Current.Manifest-8.0.100" Version="8.0.32" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/emsdk</Uri>
@@ -33,9 +33,9 @@
       <Uri>https://github.com/dotnet/maui</Uri>
       <Sha>f4dbb744f19d479c9dc0582e97ba7753df149638</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.426-servicing.26467.3">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="8.0.426-servicing.26474.7">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-installer</Uri>
-      <Sha>74a6af1cb5e9ac76262cccaf023cf3debfb15104</Sha>
+      <Sha>877417a936e20c8cf2363838209cf58cef3f02b2</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
