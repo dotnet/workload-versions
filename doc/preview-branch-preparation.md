@@ -107,6 +107,12 @@ When transitioning to a new preview, you need to update the package ID suffixes 
    - The pattern should be: `{Major}{Minor}{Band}{PreviewLabel}{PreviewNumber}`
    - Example: `100100rc2` represents 10.0.100-rc.2
 
+#### Transition from RC 2 to GA
+
+Remove `-rc.2` from all manifest dependency names in `eng/Version.Details.xml`. In `eng/Versions.props`, remove `rc2` from the matching package property names and references, and set `MauiFeatureBand` to the SDK band without the preview suffix. Keep dependency versions unchanged until new builds are available.
+
+Set `PreReleaseVersionLabel` to `servicing` and clear `PreReleaseVersionIteration`. This removes the RC suffix from `SDKFeatureBand` while keeping stable publishing controlled by `StabilizePackageVersion`. Mono and Emscripten feature bands continue to follow their dependency versions.
+
 ### 4. Update VS Manifest IDs for Mono and Emsdk Workloads
 
 Visual Studio integration requires updating the VSMAN (Visual Studio Manifest) IDs and external.vsmanproj references for mono and emsdk workloads when preparing for a new preview.
