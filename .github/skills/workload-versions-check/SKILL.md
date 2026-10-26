@@ -1,94 +1,76 @@
 ---
 name: workload-versions-check
-description: Fetches current component versions (runtime, emsdk, android, ios, maui) from the dotnet/workload-versions repo across all active branches. Use when asked about current workload versions, what versions are shipping, or to compare versions across branches.
+description: Checks workload component versions, manifest IDs and upstream provenance at explicit public or internal source commits, including hotfix matrices and same-version rebuilds.
 ---
 
-# Check Workload Component Versions
+# Check Workload Component Versions and Provenance
 
-## Purpose
+## Inputs
 
-Retrieve the current runtime, emsdk, Android, iOS, and MAUI versions from `eng/Versions.props` in the `dotnet/workload-versions` repo across all active branches. Produces a summary table for quick comparison and flags runtime/emsdk servicing-version mismatches.
+- **sources**: explicit repository, branch and immutable SHA for each source.
+- **releaseMatrix**: target SDK bands, expected dependency builds and workload
+  scope, when validating a release.
 
-## Branches
+If no source list is provided, discover/confirm the active branches for the
+requested release; do not rely on a fixed public branch table. A single source
+can support several output bands. Internal-only branches do not need GitHub
+counterparts.
 
-| Branch | SDK Band | Notes |
-|--------|----------|-------|
-| `release/8.0.4xx` | 8.0.4xx | LTS servicing |
-| `release/9.0.1xx` | 9.0.1xx | STS servicing |
-| `release/10` | 10.0.1xx | Current stable |
-| `main` | 11.0.1xx | Next preview |
+## Read Each Source at One SHA
 
-## Workflow
+Use GitHub CLI/read APIs for public sources or discover the current Azure
+DevOps repository-file/commit schemas for internal sources. Resolve a branch
+once, record its SHA and read all files at that commit:
 
-- [ ] Fetch `eng/Versions.props` from each branch
-- [ ] Extract the five component versions per branch
-- [ ] Verify runtime and emsdk versions match whenever they use the same servicing version line
-- [ ] Present results in a comparison table
+- `eng/Versions.props`
+- `eng/Version.Details.xml`
+- `NuGet.config`
+- The approved upstream SDK/VMR build manifest, when available.
 
-## Fetching Versions
+Do not fetch different files from moving branch heads. If access or provenance
+is unavailable, report it as unverified rather than substituting a public file.
 
-For each branch, use `github-mcp-server-get_file_contents`:
+## Extract and Compare
 
-```json
-{
-  "owner": "dotnet",
-  "repo": "workload-versions",
-  "path": "eng/Versions.props",
-  "ref": "refs/heads/<branch>"
-}
-```
+Property names encode manifest bands and prerelease IDs, so match the actual
+XML rather than hardcoding complete property names.
 
-## Extracting Property Values
+| Component | Version property pattern / source |
+|-----------|-----------------------------------|
+| Runtime/mono | `MicrosoftNETCoreAppRefPackageVersion` on older sources, otherwise `MicrosoftNETWorkloadMonoToolchain*Manifest*PackageVersion` |
+| emsdk | `MicrosoftNETWorkloadEmscriptenCurrentManifest*PackageVersion` |
+| Android | `MicrosoftNETSdkAndroidManifest*PackageVersion` |
+| iOS | `MicrosoftNETSdkiOSManifest*PackageVersion` |
+| MAUI | `MicrosoftNETSdkMauiManifest*PackageVersion` |
 
-Property names vary by branch because they encode the SDK feature band. Use these patterns to locate the right XML elements:
+Match case-insensitively (`Toolchain` versus `ToolChain`) and distinguish
+non-transport properties from `*Transport*` siblings. Include other selected
+Apple manifests where applicable.
 
-### Runtime / Mono
+Compare properties with the corresponding XML dependency names/versions and
+the approved upstream build. Report each dependency's URI, SHA, BAR ID and
+required feed, not just the package version.
 
-| Branch | Property Name |
-|--------|---------------|
-| `release/8.0.4xx` | `MicrosoftNETCoreAppRefPackageVersion` |
-| `release/9.0.1xx` | `MicrosoftNETCoreAppRefPackageVersion` |
-| `release/10` | Property matching `MicrosoftNETWorkloadMonoToolchain*Manifest*PackageVersion` (not the transport variant) |
-| `main` | Property matching `MicrosoftNETWorkloadMonoToolChain*Manifest*PackageVersion` (not the transport variant) |
+Where runtime/mono and emsdk share a servicing line, require matching versions
+in the final source. Block a version mismatch. Same-version runtime rebuilds
+can legitimately update SHA/feed and SDK provenance without changing emsdk;
+different repositories do not require identical SHAs.
 
-### emsdk
+If one SHA maps to several BAR builds, require the approved explicit `BarId`.
+Check internal upstream URI/feed changes and missing sources even when the
+selected VS workload subset would not insert those dependencies.
 
-Property matching `MicrosoftNETWorkloadEmscriptenCurrentManifest*PackageVersion` (not the transport variant).
-
-For servicing branches where runtime and emsdk share the runtime servicing version, their values must match. Flag any mismatch prominently; for example, runtime `8.0.31` with emsdk `8.0.30` is not ready for workload-set generation or VS insertion.
-
-### Android
-
-Property matching `MicrosoftNETSdkAndroidManifest*PackageVersion` (not the transport variant).
-
-### iOS
-
-Property matching `MicrosoftNETSdkiOSManifest*PackageVersion` (not the transport variant).
-
-### MAUI
-
-Property matching `MicrosoftNETSdkMauiManifest*PackageVersion` (not the transport variant).
-
-## Gotchas
-
-- **Property names are band-versioned**: e.g. `*80100*` for 8.0, `*90100*` for 9.0, `*100100*` for 10.0. Don't hardcode the full property name — match the prefix pattern.
-- **Transport vs non-transport**: Many properties have a `*Transport*` sibling. Use the **non-transport** version (the shorter name without "Transport").
-- **`main` uses preview suffixes**: Property names on `main` include a preview label like `110100preview3`. This changes each preview cycle.
-- **Capitalization quirk**: `release/10` uses `Toolchain` (lowercase 'c') while `main` uses `ToolChain` (uppercase 'C'). Match case-insensitively.
-- **8.0/9.0 runtime property differs**: Older branches use `MicrosoftNETCoreAppRefPackageVersion` for runtime instead of the Mono Toolchain manifest property.
+Manifest IDs, upstream dependency versions, and workload-set branding are
+separate. A mono/emsdk RC3 hotfix can retain unaffected mobile/MAUI RC2 IDs.
+Do not infer effective output branding from the branch name or dependencies:
+compare `Versions.props` plus pipeline overrides to the release matrix.
 
 ## Output
 
-Present a single comparison table:
+Report source repository/branch/SHA first, then a comparison table containing
+component, manifest ID, property/XML version, upstream build/URI/SHA/BAR ID,
+feed and validation result. Separately report output bands and effective
+branding from the matrix.
 
-```markdown
-| Component | release/8.0.4xx | release/9.0.1xx | release/10 | main |
-|-----------|-----------------|-----------------|------------|------|
-| Runtime   | 8.0.x           | 9.0.x           | 10.0.x     | 11.0.0-preview.x |
-| emsdk     | 8.0.x           | 9.0.x           | 10.0.x     | 11.0.0-preview.x |
-| Android   | 34.0.x          | 35.0.x          | 36.x.x     | 36.99.0-preview.x |
-| iOS       | 18.0.x          | 26.2.x          | 26.2.x     | 26.2.x-net11-px |
-| MAUI      | 8.0.x           | 9.0.x           | 10.0.x     | 11.0.0-preview.x |
-```
-
-If any branch or property is missing, note it in the table with `⚠️ not found` rather than failing silently.
+Distinguish missing data, unverified provenance and confirmed mismatches.
+Do not declare readiness from matching version strings alone.

@@ -1,208 +1,127 @@
 # VS Workloads Insertion
 
-Guide the user through preparing and executing a workloads insertion into Visual Studio.
+Prepare and validate .NET workload insertions using the authoritative
+[Release Process](../../../doc/release-process.md). Support monthly, targeted
+workload-only OOB and SDK-hotfix releases. End with a validated handoff for a
+person to approve and merge VS PRs; never approve, enable autocomplete or merge.
 
-## Related Skills
+## Focused Skills
 
-This workflow can be executed using these focused skills in `.github/skills/`:
+| Skill | Responsibility |
+|-------|----------------|
+| `workload-release-day` | Approved release/output/phase matrix and publication plan |
+| `vs-workloads-check-mirror` | Prepare/verify public mirrored or internal-only sources |
+| `workload-versions-check` | Immutable dependency version, ID, feed and build-provenance checks |
+| `vs-workloads-trigger-pipeline` | Confirm settings and queue approved VS insertions |
+| `vs-workloads-monitor-build` | Independent stage monitoring and cumulative PR discovery |
+| `vs-workloads-approve-pr` | Read-only semantic validation and human handoff |
 
-| Skill | Purpose |
-|-------|---------|
-| `vs-workloads-check-mirror` | Check GitHub PRs and verify mirror sync |
-| `vs-workloads-trigger-pipeline` | Trigger the CI pipeline with correct parameters |
-| `vs-workloads-monitor-build` | Monitor build progress and find insertion PRs |
-| `vs-workloads-approve-pr` | Validate and merge VS insertion PRs |
+Discover the installed GitHub, dnceng and DevDiv tool schemas before use.
+Do not assume deprecated MCP operation aliases or guessed status enums.
 
-## Overview
+## 1. Confirm the Release Matrix
 
-This prompt helps automate the process of inserting .NET workloads (maui, iOS, Android, emsdk, mono) into Visual Studio branches. The process involves:
-1. Checking for pending PRs in the workload-versions GitHub repo
-2. Running the workloads CI pipeline in dnceng Azure DevOps
-3. Monitoring for VS insertion PRs in DevDiv Azure DevOps
-4. Validating and approving the VS insertion PRs
+Ask for missing information before queuing:
 
-## Prerequisites
+- Release mode/date and approving owner.
+- Source repository/mode, branch, approved baseline if creating it, final SHA
+  and upstream SDK/VMR/BAR build provenance.
+- Every target SDK band and expected workload-set version/pattern, explicit SDK
+  minor/feature/patch overrides, effective prerelease label/iteration and
+  stabilize flag.
+- Exact workload subset (`emsdk`, `mono`, `iOS`, `android`, `maui`).
+- Per-output primary VS targets (packs and (pre)components) and secondary VS
+  targets (**packs only**); either list can be empty.
+- Validation/final phase, test-mode flag, AzDO feed/flag and NuGet flag.
 
-This workflow requires the following MCP servers / tools to be configured in your Copilot agent environment:
+For hotfixes, the release-owner-approved matrix supersedes next-Patch-Tuesday
+lookup. Do not infer five builds, all workloads or normal monthly VS targets.
+One source can produce multiple SDK-band outputs with different overrides.
+Workload-only revisions such as `10.0.402.1` differ from SDK-hotfix outputs such
+as `10.0.114`; `setVersionPatch` is not a runtime patch number.
 
-| MCP Server | Purpose | Tools Referenced |
-|------------|---------|-----------------|
-| **GitHub MCP** (`github-mcp-server`) | Interact with GitHub repos and PRs | `github-mcp-server-list_pull_requests`, `github-mcp-server-pull_request_read` |
-| **dnceng Azure DevOps** (`dnceng-azure-devops`) | Trigger builds and check mirror sync in `dnceng/internal` | `dnceng-azure-devops-pipelines_run_pipeline`, `dnceng-azure-devops-pipelines_get_build_status`, `dnceng-azure-devops-repo_search_commits` |
-| **DevDiv Azure DevOps** (`azure-devops-devdiv`) | Find and manage VS insertion PRs | `azure-devops-devdiv-repo_list_pull_requests_by_repo_or_project`, `azure-devops-devdiv-repo_get_pull_request_by_id`, `azure-devops-devdiv-repo_update_pull_request`, `azure-devops-devdiv-repo_list_branches_by_repo` |
+## 2. Prepare and Verify Sources
 
-## Key Information
+Use `vs-workloads-check-mirror` and `workload-versions-check`.
 
-### Pipeline Details
-- **Pipeline ID**: 1298
-- **Pipeline Name**: `dotnet-workload-versions-official-ci`
-- **Project**: `internal` (dnceng Azure DevOps)
-- **Pipeline Branch**: Always run from `refs/heads/eng` branch
-- **Source Branch Parameter**: User specifies (e.g., `release/10`, `release/9.0.1xx`)
+For public sources, review the needed GitHub dependency PRs and verify the
+authorized merge has mirrored to the internal repository. For internal-only
+hotfixes, create the approved branch from the exact baseline when requested,
+prepare dependency updates and internal Azure DevOps PRs, and verify the
+resulting approved commit directly. No GitHub counterpart is required.
 
-### Workloads (5 total)
-- maui
-- iOS
-- Android
-- emsdk
-- mono
+Review XML, properties and NuGet feeds together. Require coherent final
+runtime/emsdk versions where they share a servicing line, while allowing
+approved same-version SHA-only rebuilds. Validate upstream URI/SHA/BAR ID and
+preserve unaffected workloads. Selective RC ID changes do not automatically
+advance workload-set branding.
 
-### VS Repository (DevDiv)
-- **Repository ID**: `a290117c-5a8a-40f7-bc2c-f14dbe3acf6d`
-- **Repository Name**: VS
-- **Project**: DevDiv
-- **Project ID**: `0bdbc590-a062-4c3f-b0f6-9383f67865ee`
+Do not automatically approve/merge dependency PRs or ignore failed policies.
+Unverified provenance, mirror/source mismatch or ambiguous BAR build blocks
+readiness.
 
-### VS Insertion PR Author
-- **User**: `MicroBuildInsertionVS`
-- **GUID**: `558012ed-704d-617d-868c-985c8dbc9b16`
+## 3. Confirm and Queue
 
-### Common VS Insertion Branch Patterns
-- `rel/insiders` - VS Insiders branch
-- `main` - VS main branch
-- `team/dotnetdevexcli/insertion/sdk/rel/d{version}_{buildId}` - SDK staging branches
-- `team/dotnetdevexcli/insertion/sdk/main_{buildId}` - Main staging branches
+Use pipeline `1298`, project `dnceng/internal`, with pipeline resource
+`refs/heads/eng` and separate `sourceBranch`. Pin the approved `source` resource
+SHA when supported, then verify both resolved resource SHAs after queuing.
 
-## Workflow Steps
+Use `vs-workloads-trigger-pipeline`; confirm the complete matrix first. Set
+branding and target lists explicitly. Keep NuGet disabled for insertion-only
+validation unless explicitly approved. Preview/RC final publication still
+requires prerelease branding. `createTestWorkloadSet` is a special versioning
+mode, not a requirement for release-candidate testing.
 
-### Step 1: Gather User Input
-Ask the user for:
-1. **Source branch** from workload-versions repo (e.g., `release/10`, `release/9.0.1xx`)
-2. **Workloads to insert** (default: all 5 - maui, iOS, Android, emsdk, mono)
-3. **VS target branches** - which branches to insert into
-4. **Primary vs Secondary** - Primary branches get 2 sets of changes per workload (pack + component), secondary get 1
+The current pipeline requests `InsertAutoComplete: true`. Disclose this before
+queuing and identify the human reviewer. This workflow's read-only PR handoff
+does not override that setting or enforce manual-only completion.
 
-### Step 2: Check GitHub PRs
-Check for open PRs in `dotnet/workload-versions` targeting the source branch:
-- Use `github-mcp-server-list_pull_requests` with `base` filter
-- Inspect every needed dependency PR diff before approval
-- If the runtime minor/servicing version changes, require the emsdk manifest to change to the same version in the same PR:
-  - `Microsoft.NETCore.App.Ref` and `Microsoft.NET.Workload.Emscripten.Current.Manifest-*` in `eng/Version.Details.xml` must move together
-  - `MicrosoftNETCoreAppRefPackageVersion` and `MicrosoftNETWorkloadEmscriptenCurrentManifest*PackageVersion` in `eng/Versions.props` must move together
-  - Example: runtime `8.0.30 -> 8.0.31` requires emsdk `8.0.30 -> 8.0.31`
-- If runtime changes without emsdk, stop before approval and report that a corrected dependency-flow PR is required
-- If PRs pass the coherency check, check their status, approve if green, and merge
-- Wait for changes to mirror to dnceng AzDO (typically a few minutes)
+## 4. Monitor Independent Outcomes
 
-### Step 3: Verify Mirror Status
-Check that the source branch is mirrored to dnceng Azure DevOps:
-- Use `dnceng-azure-devops-repo_search_commits` to verify latest commits are present
-- Repository: `dotnet-workload-versions`, Project: `internal`
-- **Poll every 5 minutes** until the expected commit appears (typically takes 2-10 minutes)
+Use `vs-workloads-monitor-build` for all matrix runs. Build precedes Insertion
+and Publish, but those two stages are independent. Publication approval/checks
+can wait or fail after a VS PR was created. Report stage attempts, first failing
+task, approval state and actual publication results instead of assuming serial
+stages or a fixed duration.
 
-### Step 4: Find VS Insertion Branches (if needed)
-If user needs to find available VS branches:
-- Use `azure-devops-devdiv-repo_list_branches_by_repo` with repository ID `a290117c-5a8a-40f7-bc2c-f14dbe3acf6d`
-- Filter patterns: `team/dotnetdevexcli/insertion/sdk`, `rel/insiders`, `main`
+When VS insertion is disabled, stale drop/target parameters are inactive.
 
-### Step 5: Run the Pipeline
-Queue the workloads CI pipeline with correct parameters:
+## 5. Reconcile Cumulative VS PRs
 
-Do not queue until the Step 2 runtime/emsdk coherency check has passed for the source commit.
+VS repository: `a290117c-5a8a-40f7-bc2c-f14dbe3acf6d`, DevDiv.
+Insertion author: `MicroBuildInsertionVS`
+(`558012ed-704d-617d-868c-985c8dbc9b16`).
 
-```
-Tool: dnceng-azure-devops-pipelines_run_pipeline
-Parameters:
-  - project: "internal"
-  - pipelineId: 1298
-  - resources: {"pipelines": {}, "repositories": {"self": {"refName": "refs/heads/eng"}}}
-  - templateParameters:
-      - sourceBranch: "<user-specified branch, e.g., release/10>"
-      - publishToAzDO: "true"
-      - createVSInsertion: "true"
-      - workloadDropNames: "- maui\n- iOS\n- Android\n- emsdk\n- mono"
-      - primaryVsInsertionBranches: "- <branch1>\n- <branch2>"  # Branches with 2 changes per workload
-      - secondaryVsInsertionBranches: "[]"  # Or list of branches with 1 change per workload
-```
+Use insertion logs and actual topic/target branches to find active or completed
+PRs. The default monthly topic can accumulate several .NET versions and builds.
+Do not match solely by author, title or original build link.
 
-**IMPORTANT**: 
-- The pipeline MUST run from `refs/heads/eng` branch (use `resources.repositories.self.refName`)
-- `primaryVsInsertionBranches` = branches that get BOTH pack and component updates (2 changes per workload)
-- `secondaryVsInsertionBranches` = branches that get only component updates (1 change per workload)
-- Branch lists use YAML array format with `- ` prefix and `\n` separators
+For existing-PR/no-change warnings, inspect the latest PR iteration and target
+state. Verify the required contribution actually arrived; the warning alone
+is not a pass or a reason to rerun the entire pipeline.
 
-### Step 6: Monitor Build
-The build typically takes **~100-110 minutes** to complete:
-- Use `dnceng-azure-devops-pipelines_get_build_status` to check progress
-- Build ID is returned when pipeline is queued
-- Key stages: Build Repo → SDL → Publish Assets → VS Insertion
-- Poll every 10-15 minutes during the build
+## 6. Validate and Hand Off
 
-### Step 7: Check for VS Insertion PRs
-After the build's VS Insertion stage starts (~90+ minutes), PRs are created in DevDiv:
-- Use `azure-devops-devdiv-repo_list_pull_requests_by_repo_or_project`
-- Filter by `created_by_user` with MicroBuildInsertionVS or search by target branch
-- PRs will target the branches specified in the pipeline parameters
-- **Note**: You may see "TF401179: An active pull request already exists" warnings in build logs - this is **normal** when multiple builds target the same branches simultaneously
+Use `vs-workloads-approve-pr` to validate selected workload/version entries,
+drop URLs, expected primary/secondary role, all contributing build/source SHAs,
+unaffected content and current policies. **Validate entries, not changed-file
+counts**: many workloads can share one JSON file.
 
-### Step 8: Validate VS PR Content
-For each VS insertion PR:
-- **Primary branch PRs**: Expect 2 file changes per workload (pack entry + component entry)
-- **Secondary branch PRs**: Expect 1 file change per workload
-- Check PR description links back to the originating pipeline build
-- Use `azure-devops-devdiv-repo_get_pull_request_by_id` for details
+Report each run's source SHA, effective branding, stage/publication results,
+PR link/iteration, verified cumulative contributions, blockers and actual
+autocomplete state. A person approves and merges. If the PR changes after
+validation, revalidate the new iteration before reporting readiness.
 
-### Step 9: Approve and Merge VS PRs
-Once validated:
-- Approve the PR
-- Set autocomplete or merge directly
-- Use `azure-devops-devdiv-repo_update_pull_request` to manage PR state
+## Recovery
 
-## Example Execution
+- Ambiguous SHA-to-BAR lookup: obtain the approved build ID and update explicit
+  `BarId` through a reviewed source change, even if the dependency is outside
+  the selected VS workload subset.
+- Failed/partial run: inspect existing artifacts, PRs and stage attempts before
+  retrying only the failed work when supported and authorized.
+- Changed source/branding: confirm a revised matrix and track the replacement
+  run; do not silently reuse stale output.
+- Missing VS target: discover the actual branch and obtain owner confirmation
+  rather than substituting a normal monthly branch.
 
-User request: "Insert all workloads from release/10 into rel/insiders and main as primary branches"
-
-Pipeline parameters:
-```json
-{
-  "sourceBranch": "release/10",
-  "publishToAzDO": "true",
-  "createVSInsertion": "true",
-  "workloadDropNames": "- maui\n- iOS\n- Android\n- emsdk\n- mono",
-  "primaryVsInsertionBranches": "- rel/insiders\n- main",
-  "secondaryVsInsertionBranches": "[]"
-}
-```
-
-## Reference Documentation
-- Release process: https://github.com/dotnet/workload-versions/blob/main/doc/release-process.md
-- Pipeline: https://dev.azure.com/dnceng/internal/_build?definitionId=1298
-
-## Multi-Insertion Scenarios
-
-It's common to run multiple insertion builds simultaneously for different SDK versions. For example:
-
-| Build | Source Branch | Primary Branches | Secondary Branches |
-|-------|--------------|------------------|-------------------|
-| 1 | release/10 | 18.3-staging, rel/insiders, main | [] |
-| 2 | release/9.0.1xx | [] | rel/insiders, main |
-| 3 | release/8.0.4xx | [] | rel/insiders, main |
-
-**Tips for multi-insertion:**
-- Trigger all builds in parallel to save time (each takes ~100 minutes)
-- Track build IDs separately for each insertion
-- Some builds may show "active pull request exists" warnings - this is normal
-- Monitor all builds and validate PRs as they complete
-
-## Troubleshooting
-
-### Pipeline fails to start
-- Ensure you're specifying `resources.repositories.self.refName: "refs/heads/eng"` - the pipeline YAML only exists on the eng branch
-
-### Build cancelled or needs to be restarted
-- Use `dnceng-azure-devops-pipelines_update_build_stage` with `status: "Cancel"` and stage name `__default`
-- Queue a new build with corrected parameters
-
-### GitHub PR blocked
-- If `mergeable_state` shows "blocked", the PR likely needs approval
-- Use `github-mcp-server-pull_request_read` with `method: "get_status"` to check CI status
-- A "placeholder" or required check that shows as "failure" is often expected - check if it's actually blocking
-
-### Multiple builds targeting same branches
-- When running multiple insertion builds (e.g., different SDK versions), some may show "active pull request already exists" warnings
-- This is **expected behavior** - only one PR can exist per source→target branch combination
-- PRs are updated or created based on the order builds complete
-
-### Can't find VS insertion branches
-- Search for `team/dotnetdevexcli/insertion/sdk` pattern
-- Common direct branches: `rel/insiders`, `main`, `rel/d{version}`
+Pipeline: https://dev.azure.com/dnceng/internal/_build?definitionId=1298

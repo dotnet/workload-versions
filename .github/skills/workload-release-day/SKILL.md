@@ -1,203 +1,153 @@
 ---
 name: workload-release-day
-description: Triggers workload set builds for Patch Tuesday releases. Publishes to NuGet.org without VS insertion. Use for monthly .NET release day workload prep.
+description: Prepares, builds, validates and publishes workload sets for monthly releases and out-of-band hotfixes. Supports public or internal-only sources and owner-approved release matrices.
 ---
 
 # Workload Set Release Day
 
-## Purpose
+Follow the [Release Process](../../../doc/release-process.md) as the authoritative
+runbook. Do not queue builds or approve publication until the user has confirmed
+the effective settings.
 
-Build and publish workload sets to NuGet.org for Patch Tuesday releases. These workload sets do **NOT** insert into VS - they are consumed directly by SDK users via `dotnet workload update`.
+## Select the Release Mode
 
-## Inputs
+- **Monthly**: use the `dotnet-release-tracker` skill for the intended release
+  date and approved staged SDK builds. Derive every shipping band; do not
+  hardcode a five-run plan or assume the date is next week's Patch Tuesday.
+- **Workload-only OOB**: use a release-owner-approved matrix for a revision on an
+  existing SDK-aligned set, such as `10.0.402.1`.
+- **SDK hotfix**: use a release-owner-approved matrix for new SDK-aligned outputs,
+  such as `10.0.114` and `10.0.403`, possibly from one internal-only source.
 
-- **releaseBranches**: Which branches to build (e.g., `release/8.0.4xx`, `release/9.0.1xx`, `release/10`)
-- **workloadSets**: Which SDK feature bands to build. **Do not hardcode these** — always derive the exact bands from the release tracker for the upcoming release date (see Pre-Release Check).
+For either hotfix mode, the approved matrix takes precedence over tracker
+inference. Never infer new hotfix versions by incrementing the latest public
+release. Public `dotnet/core` release metadata can corroborate published
+versions, but is not authority for an unpublished hotfix. Stop for owner input
+if the intended release or approved build is unclear.
 
-## Standard Release Configuration
+## Required Matrix
 
-### Default Settings (apply to every pipeline unless the user says otherwise)
+Record a separate row for every SDK-band output and phase:
 
-Unless the user overrides them, assume ALL of the following defaults so the user does not need to restate them:
+| Field | Required value |
+|-------|----------------|
+| Release | Mode, date, approving owner |
+| Source | Public mirror or internal-only repository, branch, baseline SHA if creating a branch, approved final SHA, upstream build IDs |
+| Output | Target SDK, expected workload-set version/pattern and package identity |
+| Branding | SDK minor, two-digit feature, patch, effective prerelease label/iteration, stabilize flag |
+| Phase | Validation or final publication; test-mode flag |
+| Publication | AzDO enabled/feed, NuGet enabled |
+| VS | Insertion enabled, exact workload subset, primary and secondary targets |
 
-- **Standard set of 5 pipelines**: one from `release/8.0.4xx`, two from `release/9.0.1xx`, two from `release/10`.
-- **Target branch (pipeline resource)**: `refs/heads/eng`.
-- **Source branch**: the version-specific `release/*` branch, passed as the `sourceBranch` template parameter.
-- **`setVersionFeature`**: always the two-digit, zero-padded feature band (e.g. `02`, `19`, `23`).
-- **Branding**: stable (`stabilizePackageVersion: "true"`) unless a band is explicitly a preview.
-- **Publish targets**: publish to both AzDO (`publishToAzDO: "true"`, feed `public/dotnet-workloads`) and NuGet (`publishToNuGet: "true"`).
-- **No VS insertion**: `createVSInsertion: "false"`, `createTestWorkloadSet: "false"`.
-- **Always confirm all settings with the user before triggering** (see Confirmation Step).
+Final publication normally has `createVSInsertion=false` and
+`createTestWorkloadSet=false`. An insertion/validation phase is a separate row
+with independently approved settings; never inherit publication or VS targets
+from another row.
 
-### Active Branches & Workload Sets
+## Prepare the Source
 
-> ⚠️ **Important**: Branch version files are no longer kept up to date. You **must** always set `setVersionSdkMinor` and `setVersionFeature` explicitly for every build. Use the release tracker (dotnet-release-tracker skill) or releases.json to look up the correct SDK versions.
+Use `vs-workloads-check-mirror` to prepare/consume the approved public or
+internal-only branch, review dependency changes, and verify its final SHA.
+Use `workload-versions-check` at that SHA to report dependency versions, IDs,
+upstream provenance and feeds. Do not require a GitHub PR/mirror for an
+internal-only source or automatically merge unapproved dependency changes.
 
-> ⚠️ **The specific feature bands shift release to release** — especially on the newest major (`release/10`), which currently ships 10.0.1xx + 10.0.3xx (**not** 10.0.2xx). Never assume the bands below; always read the actual shipping SDK versions from the release tracker and map each to a band.
+Validate the resulting runtime/mono and emsdk versions where they share a
+servicing line, while allowing approved same-version SHA-only rebuilds.
+Preserve unaffected workloads in a targeted hotfix.
 
-| Source Branch | Workload Sets (typical) | Required Overrides |
-|---------------|---------------|-------------------|
-| `release/8.0.4xx` | 8.0.4xx | `setVersionSdkMinor`, `setVersionFeature` |
-| `release/9.0.1xx` | 9.0.1xx | `setVersionSdkMinor`, `setVersionFeature` |
-| `release/9.0.1xx` | 9.0.3xx | `setVersionSdkMinor`, `setVersionFeature` |
-| `release/10` | 10.0.1xx (+ second band, e.g. 10.0.3xx) | `setVersionSdkMinor`, `setVersionFeature` |
-| `release/10` | second `release/10` band | `setVersionSdkMinor`, `setVersionFeature` |
+## Derive and Confirm Effective Branding
 
-## Workflow
+Always set `setVersionSdkMinor`, `setVersionFeature` and `setVersionPatch`
+explicitly. Branch branding can be stale.
 
-- [ ] Fetch current SDK versions from releases.json
-- [ ] Calculate expected versions (increment patch)
-- [ ] Queue pipeline runs for each workload set
-- [ ] Monitor builds and report status
-- [ ] Verify packages published to NuGet.org
+For SDK `X.Y.CFP`, SDK minor is the hundreds digit `C`, and feature is the
+two-digit remainder `FP`. Verify the source's inherited major/minor matches the
+target; these three overrides do not change it.
 
-## Pre-Release Check
+| Expected output | SDK minor | Feature | Patch | Stabilize | Label / iteration |
+|-----------------|-----------|---------|-------|-----------|-------------------|
+| `10.0.402.1` | `4` | `02` | `1` | `true` | Review inherited values; stable output |
+| `10.0.114` | `1` | `14` | `0` | `true` | Review inherited values; stable output |
+| `10.0.403` | `4` | `03` | `0` | `true` | Review inherited values; stable output |
+| `11.0.100-rc.3.<build>` | `1` | `00` | `0` | `false` | `rc` / `3` |
 
-Preferred: run the **dotnet-release-tracker** skill to fetch the upcoming release's SDK versions per feature band:
+`setVersionPatch` is the workload-set revision, **not** the runtime patch.
+Stable nonzero patches append a fourth component. Preview/RC output must retain
+prerelease branding even for final NuGet publication. Set label and iteration
+explicitly for prerelease rows; changing manifest IDs does not change branding.
+For servicing validation, use label `servicing` and verify the effective
+iteration. `createTestWorkloadSet` changes test-version identity; it is not
+required to validate an ordinary release candidate.
 
-```
-pwsh scripts/Get-DotNetReleaseStatus.ps1
-```
+Present the complete matrix, including effective branding, sources and targets,
+and obtain confirmation before queuing. Missing approval or ambiguous values
+are blockers, not reasons to apply monthly defaults.
 
-It lists each active release with its **Release Date** and **SDK Version(s)** (e.g. `10.0.302, 10.0.110`). Pick the release whose date matches next week's Patch Tuesday, then map each listed SDK version to a band.
+## Queue Pipeline 1298
 
-Fallback (if the tracker is unavailable), fetch current versions from GitHub:
-```
-https://github.com/dotnet/core/blob/main/release-notes/releases-index.json
-```
+Discover the installed Azure DevOps tools and their current schemas rather than
+assuming operation aliases. Use the dnceng pipeline-run operation (currently
+`pipelines_write`, action `run_pipeline`) or the equivalent Azure DevOps API.
 
-Parse each `releases.json` to get current SDK versions per feature band.
-
-### Deriving the two override values from an SDK version
-
-For SDK version `X.Y.CFP`: `setVersionSdkMinor` = `C` (hundreds digit), `setVersionFeature` = `FP` (tens + ones, two-digit zero-padded).
-
-| SDK Version | Band | `setVersionSdkMinor` | `setVersionFeature` |
-|-------------|------|----------------------|---------------------|
-| 8.0.423 | 8.0.4xx | 4 | 23 |
-| 9.0.119 | 9.0.1xx | 1 | 19 |
-| 9.0.316 | 9.0.3xx | 3 | 16 |
-| 10.0.110 | 10.0.1xx | 1 | 10 |
-| 10.0.302 | 10.0.3xx | 3 | 02 |
-
-## Confirmation Step
-
-Before triggering, present a table of all pipelines with their source branch, target SDK, `setVersionSdkMinor`, `setVersionFeature`, branding, and publish targets, and **ask the user to confirm**. Call out any band that differs from what the user (or this doc) expected — e.g. substituting 10.0.3xx for a previously-listed 10.0.2xx. Only trigger after explicit confirmation.
-
-## Pipeline Execution
-
-Use the `dnceng-azure-devop-pipelines_write` tool with `action: "run_pipeline"`, `project: "internal"`, `pipelineId: 1298`, and `resources: {"repositories": {"self": {"refName": "refs/heads/eng"}}}`. Pass the per-band values via `templateParameters`.
-
-### Base Parameters (All Runs)
+The pipeline implementation is `eng`; `sourceBranch` is a separate resource.
+Pin the approved source version when the run API supports it. Example request
+body for a **validation-only** SDK hotfix:
 
 ```json
 {
-  "project": "internal",
-  "pipelineId": 1298,
   "resources": {
     "pipelines": {},
-    "repositories": {"self": {"refName": "refs/heads/eng"}}
-  }
-}
-```
-
-### Stable Workload Set
-
-All stable builds require explicit `setVersionSdkMinor` and `setVersionFeature` parameters. Derive these from the target SDK version: for SDK version `X.Y.CFP`, `setVersionSdkMinor` = `C` (hundreds digit) and `setVersionFeature` = `FP` (tens + ones digits, two-digit zero-padded).
-
-Example for 9.0.314 from release/9.0.1xx branch:
-
-```json
-{
+    "repositories": {
+      "self": {"refName": "refs/heads/eng"},
+      "source": {
+        "refName": "refs/heads/<approved-source-branch>",
+        "version": "<approved-source-sha>"
+      }
+    }
+  },
   "templateParameters": {
-    "sourceBranch": "release/9.0.1xx",
-    "createTestWorkloadSet": "false",
-    "publishToAzDO": "true",
+    "sourceBranch": "<approved-source-branch>",
+    "setVersionSdkMinor": "1",
+    "setVersionFeature": "14",
+    "setVersionPatch": "0",
+    "setPreReleaseVersionLabel": "servicing",
+    "setPreReleaseVersionIteration": "0",
+    "stabilizePackageVersion": false,
+    "createTestWorkloadSet": false,
+    "publishToAzDO": true,
     "azDOPublishFeed": "public/dotnet-workloads",
-    "createVSInsertion": "false",
-    "stabilizePackageVersion": "true",
-    "publishToNuGet": "true",
-    "setVersionSdkMinor": "3",
-    "setVersionFeature": "14"
+    "publishToNuGet": false,
+    "createVSInsertion": false
   }
 }
 ```
 
-### Preview Workload Set
+Use only values from the confirmed matrix, not literal placeholder strings.
+For a confirmed stable final-publication row, use stable branding and the
+approved publishing flags. For a VS insertion row, delegate to
+`vs-workloads-trigger-pipeline` with the same source/branding matrix.
+After queuing, verify both resolved repository SHAs, especially `source`.
+If it differs from the approved SHA, stop acceptance/publication and report it.
 
-> ℹ️ **Only when a band is actually a preview.** The standard monthly run is all-stable. Use this section only if the release tracker shows a preview SDK for a band (e.g. a brand-new `release/10` minor). It is **not** used for 10.0.1xx/10.0.3xx stable builds.
+## Monitor, Validate and Report
 
-Example for a 10.0.2xx-preview from release/10 branch:
+- Record each run ID, link, effective parameters and both resource SHAs.
+- Monitor Build, Insertion and Publish independently. The latter two depend on
+  Build, not each other. Report approval waits separately from task failures;
+  do not promise a fixed completion time or assume overall failure means no PR.
+- Verify generated versions, package identities, workload manifests and approved
+  dependency provenance before publication signoff.
+- Follow [Test Workload Updates](../../../doc/test-workload-updates.md) for
+  installation validation in an isolated environment for each shipping SDK band.
+- Inspect requested publication tasks and verify exact package versions are
+  available in the approved AzDO feed and/or NuGet.org. Workload-set publication
+  does not establish availability of every referenced upstream package.
+- For VS rows, use `vs-workloads-monitor-build` and `vs-workloads-approve-pr` to
+  validate cumulative PR contents and hand off to a person. Do not approve,
+  enable autocomplete, or merge VS PRs.
 
-> ⚠️ **Important**: Set `setVersionFeature: "00"` to zero out the feature band, otherwise it inherits from the branch and produces incorrect versions like 10.0.203-preview.0 instead of 10.0.200-preview.0.
-
-```json
-{
-  "templateParameters": {
-    "sourceBranch": "release/10",
-    "createTestWorkloadSet": "false",
-    "publishToAzDO": "true",
-    "azDOPublishFeed": "public/dotnet-workloads",
-    "createVSInsertion": "false",
-    "stabilizePackageVersion": "false",
-    "publishToNuGet": "true",
-    "setVersionSdkMinor": "2",
-    "setVersionFeature": "00",
-    "setPreReleaseVersionLabel": "preview",
-    "setPreReleaseVersionIteration": "0"
-  }
-}
-```
-
-## Version Override Parameters
-
-| Parameter | Description | Example |
-|-----------|-------------|---------|
-| `setVersionSdkMinor` | SDK minor version (one digit) | `3` for 9.0.3xx |
-| `setVersionFeature` | Feature band (two digits) | `11` for x.x.311 |
-| `setVersionPatch` | Patch number | `13` for runtime 9.0.13 |
-| `setPreReleaseVersionLabel` | Pre-release label | `preview`, `rc`, `alpha` |
-| `setPreReleaseVersionIteration` | Pre-release iteration | `0`, `1`, `2` |
-
-## Critical Notes
-
-1. **Pipeline branch**: MUST use `refs/heads/eng` in resources
-2. **No VS Insertion**: `createVSInsertion` = `false` for all release day runs
-3. **Stabilize versions**: `stabilizePackageVersion` = `true` for stable releases, `false` for preview
-4. **Always set version overrides**: Branch version files are no longer kept current. Always set `setVersionSdkMinor` and `setVersionFeature` explicitly for every build. Use release tracker to look up SDK versions.
-5. **Preview feature band**: Set `setVersionFeature` = `"00"` to zero out the feature band for new preview SDK minor versions
-6. **Publish to NuGet**: `publishToNuGet` = `true` to push to NuGet.org
-7. **Build duration**: ~60-90 minutes per build
-
-## Output
-
-Report queued builds:
-
-| Workload Set | Build ID | Link |
-|--------------|----------|------|
-| 8.0.4xx | 2899378 | [View](https://dev.azure.com/dnceng/internal/_build/results?buildId=2899378) |
-| 9.0.1xx | 2899379 | [View](https://dev.azure.com/dnceng/internal/_build/results?buildId=2899379) |
-
-## Verification
-
-After builds complete, verify packages on NuGet.org:
-- `Microsoft.NET.Workloads.8.0.418`
-- `Microsoft.NET.Workloads.9.0.114`
-- etc.
-
-## Difference from VS Insertion
-
-| Aspect | Release Day | VS Insertion |
-|--------|-------------|--------------|
-| `createVSInsertion` | `false` | `true` |
-| `publishToNuGet` | `true` | Usually `false` |
-| Target | NuGet.org for SDK users | VS branches |
-| Frequency | Monthly (Patch Tuesday) | As needed |
-
-## Minimal Prompt (for the user)
-
-Because the Default Settings above are now baked in, the standard monthly run can be requested with just:
-
-> "Prepare next week's release-day workload sets."
-
-That implies all of: the standard 5 pipelines (8.0.4xx, 9.0.1xx, 9.0.3xx, and the two current `release/10` bands), `eng` as the target branch, version-specific `release/*` branches as `sourceBranch`, two-digit `setVersionFeature`, stable branding, publish to both AzDO and NuGet, and confirm-before-trigger. You only need to add extra words to **override** a default — e.g. "include a preview band", "skip 8.0.4xx", or "don't publish to NuGet".
+Report one row per matrix output with run link, source SHA, generated version,
+validation result, each publication destination's result, and VS PR state.
+Explicitly distinguish unverified, waiting, failed, partial and completed work.
+Never requeue a whole pipeline solely to make a warning or PR check green.

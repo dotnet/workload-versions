@@ -1,72 +1,94 @@
 ---
 name: vs-workloads-trigger-pipeline
-description: Triggers the dotnet-workload-versions-official-ci pipeline for VS insertion. Use to start a VS workloads insertion build. For release day (NuGet publishing), use workload-release-day skill instead.
+description: Queues workload VS insertions using an approved source, branding, selected workload subset and primary/secondary target matrix, including internal-only hotfixes.
 ---
 
-# Trigger VS Workloads Pipeline (VS Insertion)
+# Trigger a VS Workloads Insertion
 
-> **Note**: This skill is for **VS insertion** workflows. For Patch Tuesday release day workload sets that publish to NuGet.org (without VS insertion), use the `workload-release-day` skill instead.
+Use [Release Process](../../../doc/release-process.md) and
+`workload-release-day` for the release matrix. NuGet publication is a separate
+choice, not implied by VS insertion.
 
-## Inputs
-- **sourceBranch**: Workload-versions branch (e.g., `release/10`)
-- **primaryVsInsertionBranches**: Branches getting 2 changes per workload
-- **secondaryVsInsertionBranches**: Branches getting 1 change per workload
+## Required Inputs
 
-## Workflow
+- **sourceMode**, **sourceBranch**, **expectedCommit**: verified by
+  `vs-workloads-check-mirror`.
+- **branding**: target SDK, expected workload-set version/pattern, explicit
+  SDK minor/feature/patch, effective prerelease label/iteration and stabilize flag.
+- **workloadDropNames**: exact approved subset of `emsdk`, `mono`, `iOS`,
+  `android`, `maui`. Do not silently expand a hotfix to all workloads.
+- **primaryVsInsertionBranches**: packs and (pre)components.
+- **secondaryVsInsertionBranches**: packs only; no (pre)components.
+- **publication**: explicit AzDO feed/flag, NuGet flag and test-mode flag.
 
-- [ ] Confirm runtime/emsdk coherency was validated on the source commit
-- [ ] Validate inputs and branch names
-- [ ] Trigger pipeline 1298 with correct parameters
-- [ ] Report build ID and link
+Both branch lists must be explicit; either can be empty. Confirm actual VS
+branches, not guessed monthly/staging names. Prevent contradictory primary and
+secondary roles for the same target in one row.
 
-## Execute
+## Preflight and Confirmation
 
-Use `dnceng-azure-devops-pipelines_run_pipeline`:
+Verify the final source SHA and dependency/feed/BAR coherency. Confirm the full
+matrix with the owner before queuing, including version overrides and every
+target's role. Default validation/insertion plans to no NuGet publication unless
+the approved matrix explicitly requests it.
+
+The current pipeline template sets `InsertAutoComplete: true`. Surface that
+fact before queuing and identify the responsible human reviewer. This workflow
+does not approve or merge VS PRs; enforcing manual-only completion requires a
+separate pipeline/policy change, not an invented run parameter.
+
+## Queue
+
+Discover the current dnceng run operation/schema (currently `pipelines_write`
+with action `run_pipeline`), or use the equivalent Azure DevOps API.
+Use project `internal`, pipeline ID `1298`. Example request body for an approved
+mono/emsdk servicing-validation insertion:
 
 ```json
 {
-  "project": "internal",
-  "pipelineId": 1298,
   "resources": {
     "pipelines": {},
-    "repositories": {"self": {"refName": "refs/heads/eng"}}
+    "repositories": {
+      "self": {"refName": "refs/heads/eng"},
+      "source": {
+        "refName": "refs/heads/<approved-source-branch>",
+        "version": "<approved-source-sha>"
+      }
+    }
   },
   "templateParameters": {
-    "sourceBranch": "<user-specified>",
-    "publishToAzDO": "true",
-    "createVSInsertion": "true",
-    "workloadDropNames": "- maui\n- iOS\n- Android\n- emsdk\n- mono",
-    "primaryVsInsertionBranches": "- branch1\n- branch2",
+    "sourceBranch": "<approved-source-branch>",
+    "setVersionSdkMinor": "1",
+    "setVersionFeature": "14",
+    "setVersionPatch": "0",
+    "setPreReleaseVersionLabel": "servicing",
+    "setPreReleaseVersionIteration": "0",
+    "stabilizePackageVersion": false,
+    "createTestWorkloadSet": false,
+    "publishToAzDO": true,
+    "azDOPublishFeed": "public/dotnet-workloads",
+    "publishToNuGet": false,
+    "createVSInsertion": true,
+    "workloadDropNames": "- emsdk\n- mono",
+    "primaryVsInsertionBranches": "- <approved-primary-target>",
     "secondaryVsInsertionBranches": "[]"
   }
 }
 ```
 
-## Critical Notes
+Replace all example values with the confirmed matrix. Pin the source repository
+version when supported; verify the returned run's resolved `source` SHA in all
+cases. If the API cannot pin it, recheck the branch before queuing and treat any
+resolved-SHA mismatch as a blocker to accepting the run.
 
-1. **Pipeline branch**: MUST use `refs/heads/eng` in resources
-2. **Resources structure**: `resources` must include both `"pipelines": {}` and `"repositories"` keys — omitting `pipelines` may cause the API call to fail
-3. **Branch format**: YAML array with `- ` prefix and `\n` separators
-4. **Empty arrays**: Use `"[]"`
-5. **Build duration**: ~100-110 minutes
-6. **Runtime/emsdk gate**: Do not trigger if a runtime minor/servicing update is missing the matching emsdk manifest update. Validate both `eng/Version.Details.xml` and `eng/Versions.props` first.
+The pipeline implementation must use `refs/heads/eng`; `sourceBranch` does not
+select the pipeline implementation. Branch/drop object parameters may need YAML
+list strings with `- ` prefixes and newline separators for the selected tool.
+Use `[]` for empty lists and follow the discovered API schema.
 
 ## Output
 
-Report:
-- Build ID: `<id>`
-- Link: `https://dev.azure.com/dnceng/internal/_build/results?buildId=<id>`
-
-## Example
-
-Input: "release/10 to rel/insiders and main as primary"
-
-```json
-{
-  "templateParameters": {
-    "sourceBranch": "release/10",
-    "primaryVsInsertionBranches": "- rel/insiders\n- main",
-    "secondaryVsInsertionBranches": "[]"
-  }
-}
-```
+Report run ID/link, pipeline/source resource SHAs, complete effective parameters,
+expected version and per-target workload/role matrix. Pass them to
+`vs-workloads-monitor-build`. Do not promise fixed build duration or queue
+duplicate builds to work around existing insertion PRs.

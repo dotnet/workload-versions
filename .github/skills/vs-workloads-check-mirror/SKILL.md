@@ -1,65 +1,81 @@
 ---
 name: vs-workloads-check-mirror
-description: Checks for pending GitHub PRs on workload-versions branch and verifies mirror sync to Azure DevOps. Use before triggering VS workloads insertion pipeline.
+description: Prepares and verifies public mirrored or internal-only workload sources, including hotfix branches and dependency PRs, before workload builds or VS insertion.
 ---
 
-# Check GitHub PRs and Mirror Sync
+# Prepare and Verify Workload Sources
+
+Follow the source-preparation section of the
+[Release Process](../../../doc/release-process.md).
 
 ## Inputs
-- **sourceBranch**: Branch to check (e.g., `release/10`)
-- **expectedCommit** (optional): Specific commit SHA to wait for
 
-## Workflow
+- **sourceMode**: `public-mirror` or `internal-only`, explicitly approved.
+- **sourceBranch**, **expectedCommit**: authoritative branch and approved SHA.
+- **prepareBranch**: whether to create/update a source, rather than just consume it.
+- **baselineCommit**, **upstreamBuilds**, **dependencyScope**: required when
+  preparing a branch; approved baseline, SDK/VMR/BAR provenance and workloads.
 
-- [ ] Check open PRs on GitHub targeting sourceBranch
-- [ ] Validate runtime and emsdk version coherency in dependency PRs
-- [ ] If PRs need merging: verify checks, approve, merge
-- [ ] Poll dnceng AzDO every 5 min until commit mirrors
-- [ ] Report when ready for pipeline trigger
+Discover installed GitHub/Azure DevOps tool schemas before using them; do not
+assume old operation aliases. GitHub CLI is also suitable for public PRs.
+The internal source repository is `dnceng/internal/dotnet-workload-versions`.
 
-## Check Open PRs
+## Prepare a Source
 
-Use `github-mcp-server-list_pull_requests`:
-```json
-{
-  "owner": "dotnet",
-  "repo": "workload-versions", 
-  "base": "<sourceBranch>",
-  "state": "open"
-}
-```
+1. Confirm the source mode, branch, baseline and dependency builds with the owner.
+   Do not silently substitute current branch heads or the newest tracker build.
+2. If creating an internal-only branch, resolve and verify the approved baseline
+   SHA in the internal repository, check whether the branch already exists, then
+   create it from that SHA. Never reset or overwrite an existing branch.
+3. Read the selected upstream build's dependency manifest/provenance and use
+   dependency-flow tooling (DARC) to prepare the update. Consult the installed
+   tool's help/schema for the update operation and build selector.
+4. Review `eng/Version.Details.xml`, `eng/Versions.props` and `NuGet.config`
+   together. Update version properties, IDs, URI, SHA, explicit BAR ID and feeds
+   coherently; preserve unrelated dependencies and upstream version values.
+5. Create the dependency PR in the authoritative repository: GitHub for public
+   sources, Azure DevOps for internal-only sources. Report its diff, checks and
+   provenance for owner review. Do not automatically approve or merge; use the
+   normal authorized review/merge process and verify the resulting commit.
 
-### If PRs exist:
-1. Inspect the PR diff before checking or approving it.
-2. If the runtime minor/servicing version changes, verify that emsdk changes to the same version in that PR:
-   - `Microsoft.NETCore.App.Ref` and `Microsoft.NET.Workload.Emscripten.Current.Manifest-*` in `eng/Version.Details.xml` must move together.
-   - `MicrosoftNETCoreAppRefPackageVersion` and the corresponding `MicrosoftNETWorkloadEmscriptenCurrentManifest*PackageVersion` in `eng/Versions.props` must move together.
-   - Example: runtime `8.0.30 -> 8.0.31` requires emsdk `8.0.30 -> 8.0.31`.
-3. If runtime changes without the matching emsdk change, **do not approve, merge, or trigger the pipeline**. Report the mismatch and require a corrected dependency-flow PR.
-4. Check status with `github-mcp-server-pull_request_read` (method: `get_status`).
-5. Verify checks pass (ignore "placeholder" failures).
-6. Check `mergeable_state`: `clean` = ready, `blocked` = needs approval.
-7. Merge when ready.
+Preparing an isolated RC hotfix does not require retargeting normal monthly
+subscriptions. Selective mono/emsdk ID transitions may leave mobile/MAUI IDs at
+the previous RC.
 
-## Verify Mirror Sync
+## Validate the Final Commit
 
-Use `dnceng-azure-devops-repo_search_commits`:
-```json
-{
-  "project": "internal",
-  "repository": "dotnet-workload-versions",
-  "version": "<sourceBranch>",
-  "top": 5
-}
-```
+Use `workload-versions-check` against the resulting immutable SHA, not just a PR
+diff or branch head. For servicing lines using runtime and emsdk versions,
+require matching versions in the final XML and corresponding properties.
 
-**Polling**: Every 5 min, typical sync 2-10 min, max wait 30 min.
+A runtime version change must have the matching emsdk version in the resulting
+source. A legitimate same-version runtime rebuild can change its SHA/feed and
+SDK provenance without changing emsdk. Validate the approved upstream build;
+do not require every individual PR to change both dependencies or identical
+SHAs across different repositories.
+
+If DARC finds several BAR builds for one SHA, stop and identify the approved
+build. Add the verified `BarId` to the applicable dependencies through a reviewed
+update. Even a narrow workload-drop selection can resolve other dependencies.
+Do not guess a BAR ID or treat downstream missing-artifact errors as root cause.
+
+## Resolve the Internal Source
+
+- **Public mirror:** verify the authorized GitHub merge and check internal
+  branch history for that exact commit. Poll at reasonable intervals (for
+  example five minutes); after an agreed timeout report the mirror blocker
+  rather than queuing stale source.
+- **Internal-only:** verify the approved commit and completed dependency PR
+  directly in Azure DevOps. Do not search for a required GitHub counterpart or
+  wait for a mirror that does not apply.
+
+Check required policies and checks rather than blanket-ignoring failures named
+"placeholder". Missing permissions, failed checks, an unresolved dependency
+mismatch, or a different final SHA blocks readiness.
 
 ## Output
 
-Report:
-- Open PRs found: X
-- Runtime/emsdk coherency: ✓/✗
-- PRs merged: Y  
-- Mirror verified: ✓/✗
-- Latest AzDO commit: `<sha>` - `<message>`
+Report source mode/repository/branch, baseline and final SHA, dependency PR links,
+upstream build IDs, coherency/feed/BAR validation, mirror status or
+`not applicable`, and remaining blockers. Pass this exact final SHA to the
+pipeline skill.
