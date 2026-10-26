@@ -11,7 +11,8 @@
     <!-- Enable to remove prerelease label. -->
     <StabilizePackageVersion Condition="'$(StabilizePackageVersion)' == ''">false</StabilizePackageVersion>
     <PreReleaseVersionLabel>servicing</PreReleaseVersionLabel>
-    <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'"></PreReleaseVersionIteration>
+    <PreReleaseVersionIteration Condition="'$(StabilizePackageVersion)' != 'true'">
+    </PreReleaseVersionIteration>
   </PropertyGroup>
   <PropertyGroup>
     <VersionPrefix>$(VersionMajor).$(VersionSDKMinor)$(VersionFeature).$(VersionPatch)</VersionPrefix>
@@ -47,12 +48,12 @@
   </PropertyGroup>
   <PropertyGroup Label="MauiWorkloads">
     <MauiFeatureBand>11.0.100</MauiFeatureBand>
-    <MicrosoftNETSdkAndroidManifest110100PackageVersion>37.2.0-rc.2.84</MicrosoftNETSdkAndroidManifest110100PackageVersion>
-    <MicrosoftNETSdkiOSManifest110100PackageVersion>27.0.12212-net11-rc.2</MicrosoftNETSdkiOSManifest110100PackageVersion>
-    <MicrosoftNETSdktvOSManifest110100PackageVersion>27.0.12212-net11-rc.2</MicrosoftNETSdktvOSManifest110100PackageVersion>
-    <MicrosoftNETSdkMacCatalystManifest110100PackageVersion>27.0.12212-net11-rc.2</MicrosoftNETSdkMacCatalystManifest110100PackageVersion>
-    <MicrosoftNETSdkmacOSManifest110100PackageVersion>27.0.12212-net11-rc.2</MicrosoftNETSdkmacOSManifest110100PackageVersion>
-    <MicrosoftNETSdkMauiManifest110100PackageVersion>11.0.0-rc.2.26505.5</MicrosoftNETSdkMauiManifest110100PackageVersion>
+    <MicrosoftNETSdkAndroidManifest110100PackageVersion>37.2.21</MicrosoftNETSdkAndroidManifest110100PackageVersion>
+    <MicrosoftNETSdkiOSManifest110100PackageVersion>27.1.11027</MicrosoftNETSdkiOSManifest110100PackageVersion>
+    <MicrosoftNETSdktvOSManifest110100PackageVersion>27.0.12253</MicrosoftNETSdktvOSManifest110100PackageVersion>
+    <MicrosoftNETSdkMacCatalystManifest110100PackageVersion>27.0.12253</MicrosoftNETSdkMacCatalystManifest110100PackageVersion>
+    <MicrosoftNETSdkmacOSManifest110100PackageVersion>27.0.12253</MicrosoftNETSdkmacOSManifest110100PackageVersion>
+    <MicrosoftNETSdkMauiManifest110100PackageVersion>11.0.0</MicrosoftNETSdkMauiManifest110100PackageVersion>
     <MauiWorkloadManifestVersion>$(MicrosoftNETSdkMauiManifest110100PackageVersion)</MauiWorkloadManifestVersion>
     <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest110100PackageVersion)</XamarinAndroidWorkloadManifestVersion>
     <XamarinIOSWorkloadManifestVersion>$(MicrosoftNETSdkiOSManifest110100PackageVersion)</XamarinIOSWorkloadManifestVersion>
