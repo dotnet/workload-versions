@@ -1,76 +1,55 @@
 ---
 name: workload-versions-check
-description: Checks workload component versions, manifest IDs and upstream provenance at explicit public or internal source commits, including hotfix matrices and same-version rebuilds.
+description: Checks workload versions, IDs, feeds and upstream builds at public or internal source SHAs, including same-version rebuilds.
 ---
 
-# Check Workload Component Versions and Provenance
+# Check Workload Versions and Upstream Builds
 
 ## Inputs
 
-- **sources**: explicit repository, branch and immutable SHA for each source.
-- **releaseMatrix**: target SDK bands, expected dependency builds and workload
-  scope, when validating a release.
+Source repository/branch/SHA and, for releases, the approved matrix of SDK
+bands, workloads and upstream builds. If omitted, confirm the active sources;
+do not assume a fixed public branch list or substitute public data for an
+inaccessible internal source.
 
-If no source list is provided, discover/confirm the active branches for the
-requested release; do not rely on a fixed public branch table. A single source
-can support several output bands. Internal-only branches do not need GitHub
-counterparts.
+## 1. Read one snapshot
 
-## Read Each Source at One SHA
-
-Use GitHub CLI/read APIs for public sources or discover the current Azure
-DevOps repository-file/commit schemas for internal sources. Resolve a branch
-once, record its SHA and read all files at that commit:
+Resolve each branch once and read these at the same SHA:
 
 - `eng/Versions.props`
 - `eng/Version.Details.xml`
 - `NuGet.config`
-- The approved upstream SDK/VMR build manifest, when available.
 
-Do not fetch different files from moving branch heads. If access or provenance
-is unavailable, report it as unverified rather than substituting a public file.
+Compare them with the approved upstream SDK/VMR build manifest. Report missing
+access or upstream evidence as unverified.
 
-## Extract and Compare
+## 2. Compare dependencies
 
-Property names encode manifest bands and prerelease IDs, so match the actual
-XML rather than hardcoding complete property names.
+Match properties case-insensitively and exclude `*Transport*` siblings:
 
-| Component | Version property pattern / source |
-|-----------|-----------------------------------|
-| Runtime/mono | `MicrosoftNETCoreAppRefPackageVersion` on older sources, otherwise `MicrosoftNETWorkloadMonoToolchain*Manifest*PackageVersion` |
+| Component | Version property |
+|-----------|------------------|
+| Runtime/mono | `MicrosoftNETCoreAppRefPackageVersion` or `MicrosoftNETWorkloadMonoToolchain*Manifest*PackageVersion` |
 | emsdk | `MicrosoftNETWorkloadEmscriptenCurrentManifest*PackageVersion` |
 | Android | `MicrosoftNETSdkAndroidManifest*PackageVersion` |
 | iOS | `MicrosoftNETSdkiOSManifest*PackageVersion` |
 | MAUI | `MicrosoftNETSdkMauiManifest*PackageVersion` |
 
-Match case-insensitively (`Toolchain` versus `ToolChain`) and distinguish
-non-transport properties from `*Transport*` siblings. Include other selected
-Apple manifests where applicable.
+Include other selected Apple manifests. Check each property's XML dependency
+ID/version, upstream URI/SHA/BAR ID and required feed.
 
-Compare properties with the corresponding XML dependency names/versions and
-the approved upstream build. Report each dependency's URI, SHA, BAR ID and
-required feed, not just the package version.
-
-Where runtime/mono and emsdk share a servicing line, require matching versions
-in the final source. Block a version mismatch. Same-version runtime rebuilds
-can legitimately update SHA/feed and SDK provenance without changing emsdk;
-different repositories do not require identical SHAs.
-
-If one SHA maps to several BAR builds, require the approved explicit `BarId`.
-Check internal upstream URI/feed changes and missing sources even when the
-selected VS workload subset would not insert those dependencies.
-
-Manifest IDs, upstream dependency versions, and workload-set branding are
-separate. A mono/emsdk RC3 hotfix can retain unaffected mobile/MAUI RC2 IDs.
-Do not infer effective output branding from the branch name or dependencies:
-compare `Versions.props` plus pipeline overrides to the release matrix.
+- Runtime/mono and emsdk versions must match where they share a servicing line.
+  A same-version runtime rebuild can change SHA/feed and SDK build without
+  changing emsdk; different repositories do not require identical SHAs.
+- If a SHA identifies several BAR builds, require the approved explicit `BarId`.
+  Check all dependencies/feeds, even those outside the selected VS subset.
+- Keep manifest IDs, upstream versions and output branding distinct. A
+  mono/emsdk RC3 hotfix can retain unaffected mobile/MAUI RC2 IDs. Compare
+  `Versions.props` plus pipeline overrides with the expected output.
 
 ## Output
 
-Report source repository/branch/SHA first, then a comparison table containing
-component, manifest ID, property/XML version, upstream build/URI/SHA/BAR ID,
-feed and validation result. Separately report output bands and effective
-branding from the matrix.
-
-Distinguish missing data, unverified provenance and confirmed mismatches.
-Do not declare readiness from matching version strings alone.
+Report source repository/branch/SHA, then component ID, property/XML version,
+upstream build/URI/SHA/BAR ID, feed and result. Report output bands/branding
+separately. Distinguish confirmed mismatches from missing or unverified data;
+matching version strings alone do not establish readiness.
