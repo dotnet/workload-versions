@@ -53,7 +53,7 @@
     <MicrosoftNETSdktvOSManifest110100PackageVersion>27.0.12253</MicrosoftNETSdktvOSManifest110100PackageVersion>
     <MicrosoftNETSdkMacCatalystManifest110100PackageVersion>27.0.12253</MicrosoftNETSdkMacCatalystManifest110100PackageVersion>
     <MicrosoftNETSdkmacOSManifest110100PackageVersion>27.0.12253</MicrosoftNETSdkmacOSManifest110100PackageVersion>
-    <MicrosoftNETSdkMauiManifest110100PackageVersion>11.0.0-rc.2.26505.5</MicrosoftNETSdkMauiManifest110100PackageVersion>
+    <MicrosoftNETSdkMauiManifest110100PackageVersion>11.0.0</MicrosoftNETSdkMauiManifest110100PackageVersion>
     <MauiWorkloadManifestVersion>$(MicrosoftNETSdkMauiManifest110100PackageVersion)</MauiWorkloadManifestVersion>
     <XamarinAndroidWorkloadManifestVersion>$(MicrosoftNETSdkAndroidManifest110100PackageVersion)</XamarinAndroidWorkloadManifestVersion>
     <XamarinIOSWorkloadManifestVersion>$(MicrosoftNETSdkiOSManifest110100PackageVersion)</XamarinIOSWorkloadManifestVersion>
