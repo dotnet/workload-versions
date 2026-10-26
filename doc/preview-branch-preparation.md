@@ -6,6 +6,13 @@ This document outlines the process we go through during previews to prepare the 
 
 When preparing for a new preview release of .NET, we need to ensure that the workload-versions repository is properly configured to receive and flow dependencies from the correct sources. This involves updating Maestro subscriptions to point to the appropriate channels for the preview period.
 
+For an OOB/RC hotfix, follow the approved source and output matrix in the
+[Release Process](release-process.md). A hotfix can use an internal-only branch
+created from an approved baseline in `dnceng/internal`'s
+`dotnet-workload-versions` repository. Prepare and review dependency updates
+there; no public branch or GitHub mirror wait is required. Do not retarget the
+normal monthly subscription just to prepare an isolated hotfix.
+
 ## Process Steps
 
 ### 1. Change the Channel for the dotnet/dotnet Subscription
@@ -58,21 +65,32 @@ For major version previews shipped from the main branch:
 
 1. **Work from the main branch**
    - Major version previews (e.g., .NET 10 RC 1, RC 2) are typically shipped from the main branch
-   - No separate preview branch is needed for these releases
+   - A separate preview branch is not normally needed; isolated hotfixes can use a separate internal branch as described above
 
-2. **Update Version.props**
+2. **Review `eng/Versions.props` and pipeline overrides**
    - Set the appropriate version features and patch levels for the preview
    - Update `VersionFeature` to match the SDK release band
    - Ensure `VersionPatch` is set correctly (typically 0 for a new preview)
+   - Explicitly review `PreReleaseVersionLabel` and `PreReleaseVersionIteration`;
+     new dependency IDs do not automatically advance workload-set branding
+   - Queue with explicit SDK minor, feature and patch overrides; use
+     `stabilizePackageVersion=false` for preview/RC output, including final NuGet publication
 
 3. **Configure channel publishing**
    - Ensure builds from this branch publish to the correct workloads feed
-   - For .NET 10: `dotnet10-workloads` feed
-   - Feed URL: `https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet10-workloads/nuget/v3/index.json`
+   - Use the release-approved destination, not a feed inferred from the .NET major version
+   - The current official pipeline default is `public/dotnet-workloads`
+   - Feed URL: `https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-workloads/nuget/v3/index.json`
 
 ### 3. Update Package IDs for MAUI Packages
 
 When transitioning to a new preview, you need to update the package ID suffixes for all MAUI-related packages in `eng/Versions.props`.
+
+This applies when those workloads actually transition. A targeted mono/emsdk
+RC hotfix can advance only their manifest IDs and corresponding property names,
+leaving unaffected MAUI/mobile IDs at the earlier RC. Preserve each upstream
+build's actual dependency version, SHA, URI and feed; manifest IDs, upstream
+versions, and workload-set branding are separate values.
 
 #### Steps to Update MAUI Package IDs:
 
@@ -139,6 +157,10 @@ Visual Studio integration requires updating the VSMAN (Visual Studio Manifest) I
 ## Reference Information
 
 ### Workloads Feeds by .NET Version
+
+The following are legacy version-specific feeds. Use the approved
+`azDOPublishFeed` for the release; current official builds default to the unified
+`public/dotnet-workloads` feed.
 
 - dotnet8-workloads: https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet8-workloads/nuget/v3/index.json
 - dotnet9-workloads: https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9-workloads/nuget/v3/index.json
