@@ -6,6 +6,10 @@ This document outlines the process we go through during previews to prepare the 
 
 When preparing for a new preview release of .NET, we need to ensure that the workload-versions repository is properly configured to receive and flow dependencies from the correct sources. This involves updating Maestro subscriptions to point to the appropriate channels for the preview period.
 
+For OOB/RC hotfixes, follow the [Release Process](release-process.md): use the
+approved baseline and internal-only branch when needed, without a GitHub mirror
+wait. Do not retarget monthly subscriptions for an isolated hotfix.
+
 ## Process Steps
 
 ### 1. Change the Channel for the dotnet/dotnet Subscription
@@ -58,21 +62,24 @@ For major version previews shipped from the main branch:
 
 1. **Work from the main branch**
    - Major version previews (e.g., .NET 10 RC 1, RC 2) are typically shipped from the main branch
-   - No separate preview branch is needed for these releases
+   - A separate preview branch is not normally needed; isolated hotfixes can use a separate internal branch as described above
 
-2. **Update Version.props**
-   - Set the appropriate version features and patch levels for the preview
-   - Update `VersionFeature` to match the SDK release band
-   - Ensure `VersionPatch` is set correctly (typically 0 for a new preview)
+2. **Review `eng/Versions.props` and pipeline overrides**
+   - Set explicit SDK minor, feature and patch overrides (patch is typically 0)
+   - Confirm `PreReleaseVersionLabel` and `PreReleaseVersionIteration`;
+     dependency ID changes do not update branding
+   - Use `stabilizePackageVersion=false` for preview/RC output, including final publication
 
 3. **Configure channel publishing**
-   - Ensure builds from this branch publish to the correct workloads feed
-   - For .NET 10: `dotnet10-workloads` feed
-   - Feed URL: `https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet10-workloads/nuget/v3/index.json`
+   - Use the release-approved feed; the current default is `public/dotnet-workloads`
+   - See [test feed setup](test-workload-updates.md#3-validate-the-output) for its URL
 
 ### 3. Update Package IDs for MAUI Packages
 
-When transitioning to a new preview, you need to update the package ID suffixes for all MAUI-related packages in `eng/Versions.props`.
+Update MAUI-related ID/property suffixes in `eng/Versions.props` only when those
+workloads transition. A mono/emsdk RC3 hotfix can leave mobile/MAUI IDs at RC2.
+Preserve upstream dependency versions, SHAs, URIs and feeds: changing IDs does
+not change the upstream build or workload-set branding.
 
 #### Steps to Update MAUI Package IDs:
 
@@ -139,6 +146,9 @@ Visual Studio integration requires updating the VSMAN (Visual Studio Manifest) I
 ## Reference Information
 
 ### Workloads Feeds by .NET Version
+
+These legacy feeds are not the current default. Use the release-approved
+`azDOPublishFeed` (default: `public/dotnet-workloads`).
 
 - dotnet8-workloads: https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet8-workloads/nuget/v3/index.json
 - dotnet9-workloads: https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9-workloads/nuget/v3/index.json
