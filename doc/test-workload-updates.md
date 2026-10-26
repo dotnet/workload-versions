@@ -1,131 +1,76 @@
-# Test Workload Updates Process
+# Test Workload Updates
 
-This document provides instructions for the MAUI, Android, and iOS teams on how to create test workload sets for validation and testing purposes.
+Use this guide to validate workload sets and optional VS insertions before
+release. You need repository/PR permissions and access to internal Azure DevOps
+builds. For monthly releases or hotfixes, first agree on the matrix in the
+[Release Process](release-process.md).
 
-## Overview
+## 1. Prepare the source
 
-Test workload sets allow teams to validate workload updates before they are included in official releases. This process supports two main scenarios:
-1. Creating test workload sets for general validation
-2. Creating test workload sets with Visual Studio insertion for integration testing
+Create a test branch from the intended release baseline, update its dependencies
+using `darc update-dependencies` with the approved upstream build/channel, then
+review and merge the dependency PR. Example branch names:
 
-For monthly or hotfix release validation, start with the approved matrix in the
-[Release Process](release-process.md). Validating a release candidate is not the
-same as enabling `createTestWorkloadSet`: ordinary servicing/RC candidates can
-use `createTestWorkloadSet=false`. Enable the special test mode below only when
-its modified test-version identity is intended.
+| Team | Example |
+|------|---------|
+| MAUI | `release/{version}/mauitest{mauiversion}` |
+| Android | `release/{version}/androidtest{androidversion}` |
+| iOS | `release/{version}/iostest{iosversion}` |
 
-## Prerequisites
+Use GitHub and verify mirroring for public sources. For an internal-only
+hotfix, create/review the branch and PR in Azure DevOps; no GitHub mirror wait
+is needed. See the runbook for dependency, feed and source-SHA checks.
 
-- Access to the workload-versions repository
-- Permissions to create branches and pull requests
-- Access to Azure DevOps internal builds
+## 2. Queue a validation build
 
-## Process Steps
+Open [pipeline 1298](https://dev.azure.com/dnceng/internal/_build?definitionId=1298)
+and choose:
 
-### 1. Create a Test Branch
+| Setting | Value |
+|---------|-------|
+| Pipeline version by branch/tag | `eng` |
+| Source branch | Your prepared branch |
+| Version overrides | Explicit SDK minor, feature and patch; confirm prerelease label/iteration |
+| Stabilize package version | `false` for servicing/preview/RC candidates |
+| Publish to AzDO | Enable for feed-based testing; default feed is `public/dotnet-workloads` |
+| Publish to NuGet | `false` |
+| Create a test workload set | Enable only for special test-version identity; ordinary servicing/RC validation can use `false` |
 
-1. **Branch from a release branch**: Start by creating a test branch from one of the existing release branches
-   ```
-   Example branch name: release/9.0.3xx-mauitest
-   ```
-   
-   **Branch naming convention:**
-   - `release/{version}/mauitest{mauiversion}` - for MAUI team tests
-   - `release/{version}/androidtest{androidversion}` - for Android team tests  
-   - `release/{version}/iostest{iosversion}` - for iOS team tests
+Pipeline overrides take precedence over `eng/Versions.props`. You can also test
+stable artifacts with publication disabled.
 
-2. **Make your changes**: Update the necessary workload configurations in your test branch
-   - An approved hotfix can use an internal-only branch from an explicit baseline.
-     Review its dependency changes through an internal Azure DevOps PR rather
-     than requiring a GitHub branch or mirror wait.
+For VS testing, enable **Create VS insertion** and explicitly select:
 
-### 2. Create and Merge Pull Request
+- Workload drop names: the required subset of `emsdk`, `mono`, `iOS`, `android`, `maui`.
+- Primary targets: packs and (pre)components.
+- Secondary targets: packs only. Either target list can be empty.
 
-1. **Publish your test build to a Darc channel**: After making changes, publish the build artifacts to a dedicated Darc channel for test workloads.
-2. **Use `darc update-dependencies`**: Run `darc update-dependencies` to update your test branch with the new build information from the Darc channel. This ensures your branch references the correct test workload versions.
-3. **Get approval** from the appropriate reviewers
-4. **Merge the PR** once approved
+## 3. Validate the output
 
-> **Note**: Once the test pipeline is established, PRs will not be required and teams can push directly to the internal Azure DevOps repository.
+Verify the run's resolved `eng` and `source` SHAs and generated version against
+the approved plan. Insertion and Publish each depend on Build, not each other;
+a Publish approval wait/failure does not establish whether a VS PR was created.
 
-### 3. Queue Internal Build
+In an isolated environment for **each shipping SDK band**:
 
-After merging your PR, queue an internal build using the Azure DevOps pipeline.
-https://dev.azure.com/dnceng/internal/_build?definitionId=1298
+1. Install the intended SDK and create a test folder with `dotnet new nugetconfig`.
+2. Add the selected AzDO feed or downloaded artifact directory (such as
+   `C:\packages`) as a NuGet source. The default feed URL is
+   `https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-workloads/nuget/v3/index.json`.
+3. Add any feeds required by unreleased manifests/packs, then run:
 
-## Build Configuration Options
+```powershell
+dotnet workload update --version <generated-workload-set-version>
+```
 
-When queuing the pipeline, you have several configuration options depending on your testing needs:
+For VS testing, follow the runbook's
+[insertion validation](release-process.md#5-validate-workload-installation-and-vs-insertions):
+check expected JSON entries/drop URLs, including contributions from other builds
+in a shared PR. A person approves/merges; report the actual autocomplete setting
+because the pipeline currently requests it.
 
-### For Test Workload Sets Only
-
-If you only need to create a test workload set:
-
-1. ✅ **Select pipeline version by branch/tag** set to **eng**
-2. ✅ **🚩 Source branch 🚩** set to your branch
-3. ✅ **Select "Publish to AzDO"** when queuing the pipeline
-4. ✅ **AzDO publish feed** is the feed it'll publish the workload set to. Default should be _dotnet-workloads_.
-5. ✅ **⭐ Create a test workload set** enabled
-   - This modifies the prerelease iteration used for test workload-set identity;
-     verify the generated version in the build artifacts
-   - The workload set will be published to Azure DevOps for testing
-
-Keep `publishToNuGet=false` for validation. Set SDK minor, feature and patch
-overrides explicitly, and review the effective prerelease label/iteration.
-Use `stabilizePackageVersion=false` for servicing/preview/RC candidates;
-stable artifacts can also be tested with publication disabled.
-
-The default feed URL is
-`https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-workloads/nuget/v3/index.json`.
-Use the actual destination selected for the run, plus any dependency feeds
-required by unreleased manifests and packs.
-
-### For Visual Studio Insertion Testing
-
-If you need to test a Visual Studio insertion:
-
-1. ✅ **Update the workload drop names** for the workloads you want to update in VS
-2. ✅ **Update the primary VS insertion branch** configuration
-3. ✅ **Check the box for "Create VS insertion"**
-
-Use the exact workload drop names: `emsdk`, `mono`, `iOS`, `android`, `maui`.
-Primary targets receive packs and (pre)components; secondary targets receive
-packs only. Set both lists explicitly, using an empty list when appropriate.
-Validate expected JSON entries and drop URLs rather than counting changed files.
-Shared topic branches can accumulate several builds in the same PR.
-
-Report validated PRs for human approval/merge. The pipeline currently requests
-autocomplete; inspect and report its actual state rather than assuming that a
-human handoff disables it.
-
-This configuration will:
-- Create the workload set using the selected test-mode and branding settings
-- Prepare the workloads for VS insertion
-- Initiate the insertion process into the specified VS branch
-
-## Important Notes
-
-- **Installation validation**: In an isolated environment with the intended SDK
-  and feeds configured, run `dotnet workload update --version <generated-version>`.
-  Validate each shipping SDK band, even when several outputs share one source.
-- **Run provenance**: Record the resolved `eng` and `source` resource SHAs and
-  verify the source matches the approved commit.
-- **Stage results**: Insertion and Publish independently depend on Build.
-  Approval waits and Publish failures do not necessarily prevent VS PR creation.
-
-- **Branch Management**: Keep test branches organized and clean up after testing is complete
-- **Communication**: Coordinate with other teams if multiple test branches are being used simultaneously
-
-## Troubleshooting
-
-If you encounter issues during the process:
-
-1. **Build Failures**: Check the build logs in Azure DevOps for specific error messages
-2. **Permission Issues**: Ensure you have the necessary access rights for the repositories and pipelines
-3. **Workload Set Versioning**: Pipeline overrides take precedence over
-   `eng/Versions.props`. Inspect the generated version and effective branding,
-   not just the branch file or branch name.
-
-## Support
-
-For additional support or questions about this process, please reach out to the .NET SDK team on our Teams chat.
+If validation fails, check the first failing task, effective version overrides
+and feed/repository permissions. See the runbook's
+[recovery guidance](release-process.md#troubleshooting-and-recovery) before retrying.
+Coordinate shared branches/PRs with other teams and remove test branches when
+they are no longer needed. Contact the .NET SDK team for help.

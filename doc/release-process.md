@@ -4,67 +4,58 @@ Based on https://github.com/dotnet/sdk/issues/41607
 
 ## Current Process
 
-This is the operational runbook for monthly releases and out-of-band (OOB/hotfix)
-releases. The [Ideal Process](#ideal-process) below describes future goals, not
-the behavior of the current pipeline.
+Use this runbook for monthly and out-of-band (OOB/hotfix) releases.
+The [Ideal Process](#ideal-process) below is a future goal, not current behavior.
 
 ### 1. Agree on the release matrix
 
-For monthly releases, use the release tracker for the intended release date to
-identify every shipping SDK band and its approved staged build. Inspect the
-tracker's build history when the latest staging is not the approved build.
+For monthly releases, get the shipping SDKs and approved builds from the release
+tracker for the intended date. Check build history if the latest staging is not
+the approved build.
 
-For hotfixes, obtain an explicit matrix approved by the release owner. That
-matrix takes precedence over a next-Patch-Tuesday lookup. Do not infer the set
-of bands, source branches, or versions from the normal monthly release.
-
-Record one row per output and phase, including:
+For hotfixes, use the **release owner's approved matrix**, even if it differs
+from the monthly tracker. Record one row per output and phase:
 
 | Setting | Required information |
 |---------|----------------------|
 | Release | Date, owner, monthly/workload-only OOB/SDK-hotfix mode |
-| Source | Repository, branch, approved baseline and final commit SHA, dependency PRs and upstream builds |
-| Version | Target SDK, exact expected workload-set version/pattern, all effective branding values |
-| Publication | Validation or final release, stabilize flag, AzDO feed and NuGet flags |
+| Source | Repository, branch, final SHA, dependency PRs and upstream builds; baseline SHA if creating a branch |
+| Version | Target SDK, expected workload-set version/pattern and branding overrides |
+| Publication | Validation or final release, stabilize/test-mode flags, AzDO feed and NuGet flags |
 | VS insertion | Enabled or disabled, selected workloads, primary and secondary target branches |
 
-One source branch can produce multiple SDK-band outputs. Keep a separate row
-and explicit version overrides for each; do not change dependencies merely
-because two outputs have different workload-set versions.
+One source branch can produce several SDK-band outputs. Give each its own row
+and version overrides; they can share the same dependencies.
 
 ### 2. Prepare and verify the source
 
-For public changes, create/review the dependency PR on GitHub, merge through the
-normal review process, and verify the expected commit has mirrored to
-`dnceng/internal`'s `dotnet-workload-versions` repository.
+The build consumes `dnceng/internal`'s `dotnet-workload-versions` repository.
+Prepare the source through the appropriate review path:
 
-Hotfixes can instead use an internal-only branch. Create it in that repository
-from the release owner's approved baseline commit, update dependencies from the
-approved upstream build, and create/review/merge the internal Azure DevOps PR.
-Verify the resulting internal source commit directly. Such a branch does not
-need a GitHub counterpart or a GitHub mirror wait.
+| Source | Steps |
+|--------|-------|
+| Public | Review/merge the GitHub dependency PR, then verify that commit has mirrored internally. |
+| Internal-only hotfix | Create the branch from the approved baseline SHA, update from the approved upstream build, and review/merge an Azure DevOps PR. No GitHub branch or mirror wait is needed. |
 
-At the final source commit, check these together:
+At the final approved SHA, check:
 
 - `eng/Version.Details.xml`: dependency names, versions, upstream URI, SHA and
   explicit `BarId` where needed.
 - `eng/Versions.props`: matching dependency version properties and manifest IDs.
 - `NuGet.config`: feeds for the selected upstream builds, including internal
   sources when applicable.
-- Runtime/mono and emsdk coherency: where they share a servicing version line,
-  require matching versions in the resulting source. A same-version rebuild can
-  legitimately change only the runtime SHA/feed and SDK provenance; it does not
-  require an artificial emsdk version change.
+- Runtime/mono and emsdk versions must match where they share a servicing line.
+  A same-version runtime rebuild can change its SHA/feed and SDK provenance
+  without changing emsdk.
 
-Do not globally advance manifest IDs for a targeted hotfix. For example,
-mono/emsdk can move to RC3 while unaffected Android, Apple and MAUI manifests
-remain RC2. See [Preview Branch Preparation](preview-branch-preparation.md).
+Preserve unaffected workloads. A mono/emsdk RC3 hotfix can retain mobile/MAUI
+RC2 IDs; see [Preview Branch Preparation](preview-branch-preparation.md).
 
 ### 3. Set and review effective branding
 
-Source branding in `eng/Versions.props` can lag the intended output. Always set
+Branding in `eng/Versions.props` can be stale. Set
 `setVersionSdkMinor`, `setVersionFeature` and `setVersionPatch` explicitly, and
-review the effective prerelease label/iteration before queuing.
+confirm the prerelease label/iteration before queuing.
 
 For SDK version `X.Y.CFP`, the override values are `C` (hundreds digit) and `FP`
 (two-digit remainder). `setVersionPatch` is a workload-set revision, **not** the
@@ -77,101 +68,75 @@ runtime servicing patch.
 | Same source, another SDK band | `10.0.403` | `4` | `03` | `0` | `true` |
 | RC hotfix | `11.0.100-rc.3.<build>` | `1` | `00` | `0` | `false` |
 
-For the RC example, also set `setPreReleaseVersionLabel=rc` and
-`setPreReleaseVersionIteration=3`. Updating dependency IDs to RC3 does not update
-workload-set branding automatically.
-
-Use the approved exact version matrix rather than an automatic patch increment.
-Stable outputs with nonzero patch append the fourth component; prerelease
-outputs retain build-derived suffixes. Verify the generated version and package
-identity from the build artifacts before publication.
+For RC3, also set `setPreReleaseVersionLabel=rc` and
+`setPreReleaseVersionIteration=3`; changing dependency IDs does not update
+branding. Stable nonzero patches append a fourth component; prerelease outputs
+retain build-derived suffixes. Verify the generated version and package identity
+against the matrix before publication.
 
 ### 4. Queue the appropriate phase
 
 Use [official pipeline 1298](https://dev.azure.com/dnceng/internal/_build?definitionId=1298).
 Select **pipeline version by branch/tag = `eng`**. Separately set **Source branch**
 (`sourceBranch`) to the prepared branch name, without `refs/heads/`.
-The `eng` checkout supplies pipeline/build implementation; the `source`
-repository resource supplies release dependencies. The pipeline is manual:
-merging a PR does not queue it automatically.
+`eng` supplies the build implementation; `source` supplies release dependencies.
+Merging a PR does not queue this manual pipeline.
 
-Confirm these independent choices against the matrix:
+Confirm these settings against the matrix:
 
-- `stabilizePackageVersion`: `true` for stable output; `false` for servicing
-  validation or preview/RC output. Final RC publication still uses `false`.
-- `publishToAzDO` and `azDOPublishFeed`: select the approved destination. The
-  current default is `public/dotnet-workloads`, consumed at
-  `https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-workloads/nuget/v3/index.json`.
-- `publishToNuGet`: enable only for approved final publication, not ordinary
-  validation or VS insertion runs.
-- `createVSInsertion`: enable only for the approved VS insertion phase.
-- `createTestWorkloadSet`: a special test-version mode, not a general validation
-  flag. Ordinary servicing/RC validation can leave it `false`.
+| Parameter | Selection |
+|-----------|-----------|
+| `stabilizePackageVersion` | `true` for stable output; `false` for servicing validation or preview/RC output, including final RC publication. |
+| `publishToAzDO`, `azDOPublishFeed` | Approved feed; current default is `public/dotnet-workloads`. |
+| `publishToNuGet` | Enable only for approved final publication. |
+| `createVSInsertion` | Enable only for the approved VS phase. |
+| `createTestWorkloadSet` | Enable only for special test-version identity, not ordinary servicing/RC validation. |
 
-Validation can use AzDO publication without NuGet, or stable artifacts with
-publication disabled. Publishing a workload set does not by itself guarantee
-that all referenced workload packages have been published by their owners.
-
-Record the resolved `eng` and `source` resource SHAs from the run. Verify the
-resolved source matches the approved commit before approving publication or
-accepting an insertion; do not substitute the current branch head for the
-commit actually consumed by the run.
+Validation can use AzDO without NuGet, or unpublished stable artifacts.
+Record both resolved resource SHAs and verify `source` matches the approved
+commit before accepting the run's outputs.
 
 ### 5. Validate workload installation and VS insertions
 
-Use an isolated test environment for each shipping SDK band. Follow
-[Test Workload Updates](test-workload-updates.md), using the exact generated
-workload-set version and approved feeds or downloaded package artifacts.
-For local artifacts, add their directory (for example `C:\packages`) as a NuGet
-source. Add any additional feeds required by unreleased dependencies, then run:
-
-```powershell
-dotnet workload update --version <generated-workload-set-version>
-```
+Follow [Test Workload Updates](test-workload-updates.md) in an isolated environment
+for every shipping SDK band. Use the generated version and approved feeds or
+downloaded artifacts, including sources for unreleased dependencies.
 
 For VS insertion, select only the required `workloadDropNames` (`emsdk`, `mono`,
 `iOS`, `android`, `maui`; casing matters). Primary targets receive packs and
 (pre)components; secondary targets receive **packs only**. Empty primary or
 secondary lists are valid. When `createVSInsertion=false`, these lists are inactive.
 
-Validate the expected entries and drop URLs in the VS PR, not a fixed number of
-changed files. Several workloads can be represented in one JSON file. The
-default monthly topic branch can accumulate updates from several builds and
-.NET versions; inspect all contributing builds, latest PR iteration and target.
-Search active and completed PRs when the logs report an existing PR or no change.
+Validate JSON entries and drop URLs, not changed-file counts. Shared topic
+branches can combine several builds/.NET versions in one PR. Check the latest
+iteration, target and all contributions; search active and completed PRs for
+existing-PR/no-change messages.
 
-Automation validates and reports VS PRs; a person approves and merges them.
-The current insertion template nevertheless sets `InsertAutoComplete: true`.
-Check and report the PR's actual autocomplete state to the responsible person;
-documentation or agent handoff alone does not disable pipeline autocomplete.
-Enforcing manual-only completion requires a separate pipeline/policy change.
+Automation reports readiness; a person approves and merges. The pipeline still
+sets `InsertAutoComplete: true`: report the actual PR setting to that person.
+Enforcing manual-only completion needs a separate pipeline/policy change.
 
 ### 6. Monitor and approve publication
 
-After Build, Insertion and Publish are independent stages, not a serial sequence.
-A failed Publish approval/check does not mean Build or VS insertion failed.
-The Publish deployment uses the `DotNet-SDK-Workloads` environment; AzDO and
-NuGet publishing tasks share that deployment rather than separate approval stages.
+Insertion and Publish each depend on Build, not each other. A Publish failure
+does not imply a failed insertion. AzDO and NuGet tasks share the Publish
+deployment and its `DotNet-SDK-Workloads` approval.
 
-Approval waits can dominate elapsed time. Report stage/task results, waiting
-approvals and links instead of promising a fixed end-to-end duration. Approve
-publication only after the release owner's required validation and signoff.
-Verify the publishing tasks and exact package identities/versions in each
-requested destination. Record VS PR state separately from publication status.
+Report stage/task results and waiting approvals separately; waits can dominate
+elapsed time. Approve publication after required validation and owner signoff.
+Verify exact package identities/versions in each destination and availability of
+referenced upstream packages. Record VS PR status separately.
 
 ### Troubleshooting and recovery
 
-- **Ambiguous BAR lookup:** an upstream SHA can identify more than one BAR build.
-  Verify the intended upstream build and add its explicit `BarId` in
-  `eng/Version.Details.xml` through a reviewed source update. A mono/emsdk-only
-  insertion can still fail while resolving another dependency such as macios.
-- **Existing PR / no changes:** inspect the current target, topic branch and PR
-  contents. These messages do not prove either success or failure. Do not queue
-  duplicate builds merely to obtain a new PR.
-- **Partial/failed run:** inspect the first failing task, stage attempts and
-  existing side effects before retrying. Reuse valid artifacts/PRs and retry the
-  appropriate failed stage where supported. Changed source or branding may
-  require a new run; retain links to the superseded run.
+- **Ambiguous BAR lookup:** confirm the intended build and add its `BarId` in
+  `eng/Version.Details.xml` through a reviewed update. Even a narrow insertion
+  can fail while resolving another dependency.
+- **Existing PR / no changes:** verify the required update in the PR or target;
+  do not queue duplicates just to obtain a new PR or clear a warning.
+- **Partial/failed run:** inspect the first failure, attempts and existing
+  artifacts/PRs. Retry only failed work where supported. Changed source or
+  branding may need a new run; link it to the superseded run.
 
 ## Ideal Process
 
