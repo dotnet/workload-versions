@@ -37,6 +37,8 @@ param (
 )
 
 ## Initialize ##
+Import-Module "$PSScriptRoot/WorkloadBuildSelection.psm1" -Force
+
 if (-not $workloadNupkgPath) {
   $workloadNupkgPath = "$workloadPath/packages/workloadNupkgs";
 }
@@ -74,18 +76,21 @@ $versionDetailsPath = (Get-Item "$PSScriptRoot/Version.Details.xml").FullName
 $versionDetailsXml = [Xml.XmlDocument](Get-Content $versionDetailsPath)
 # DropNames is not a value in the Version.Details.xml. We end up adding the drop name(s) after downloading the drops.
 $versionDetailsUnfiltered = $versionDetailsXml.Dependencies.ProductDependencies.Dependency | Select-Object -Property Name, Version, Uri, Sha, BarId, DropNames
-# Only unique entries are needed (based on Sha). If BarId is present, those entries are kept instead of BarId-less entries.
-$versionDetails = $versionDetailsUnfiltered | Group-Object -Property Sha | ForEach-Object {
+$workloadList = @(ConvertFrom-Json -InputObject $workloadListJson)
+$requestedDependencies = $versionDetailsUnfiltered | Where-Object {
+  Test-WorkloadDependencyRequested -Dependency $_ -WorkloadNames $workloadList
+}
+# Prefer explicit IDs, and never combine builds from different repositories.
+$versionDetails = $requestedDependencies | Group-Object -Property Uri, Sha | ForEach-Object {
   $entries = $_.Group | Where-Object { $_.BarId }
   if (-not $entries) {
     $entries = $_.Group | Select-Object -First 1
   }
-  $entries
+  $entries | Sort-Object -Property BarId -Unique
 }
 
 # Construct the asset filter to only download the required workload drops.
 $workloadFilter = ''
-$workloadList = ConvertFrom-Json -InputObject $workloadListJson
 # Using Length accounts for arrays (multiple workloads provided) and strings (single workload provided).
 if ($workloadList.Length -ne 0) {
   $workloadFilter = "($($workloadList | Join-String -Separator '|'))"
@@ -125,24 +130,16 @@ $versionDetails | ForEach-Object {
     $nonShippingFlag
   )
 
-  $darcBuildArguments = @(
-    '--repo'
-    $_.Uri
-    '--commit'
-    $_.Sha
-  )
-
-  if ($_.BarId) {
-    $darcBuildArguments = @(
-      '--id'
-      $_.BarId
-    )
-  }
+  $_.BarId = Resolve-WorkloadBarId -Dependency $_ -Darc $darc -CiArguments $ciArguments
+  $darcBuildArguments = @('--id', $_.BarId)
 
   Write-Host "darcArguments: $($darcArguments | Join-String -Separator ' ')"
   Write-Host "darcBuildArguments: $($darcBuildArguments | Join-String -Separator ' ')"
 
   & $darc ($darcArguments + $darcBuildArguments + $ciArguments)
+  if ($LASTEXITCODE) {
+    throw "Darc workload download failed for BAR ID $($_.BarId) (exit code $LASTEXITCODE)."
+  }
 
   # Check if a workload drop was downloaded.
   $workloadDropsAfter = Get-ChildItem $workloadPath -File -Recurse
@@ -196,24 +193,15 @@ if ($downloadWorkloadNupkgs) {
       $nonShippingFlag
     )
 
-    $nupkgDarcBuildArguments = @(
-      '--repo'
-      $versionDetail.Uri
-      '--commit'
-      $versionDetail.Sha
-    )
-
-    if ($versionDetail.BarId) {
-      $nupkgDarcBuildArguments = @(
-        '--id'
-        $versionDetail.BarId
-      )
-    }
+    $nupkgDarcBuildArguments = @('--id', $versionDetail.BarId)
 
     Write-Host "nupkgDarcArguments: $($nupkgDarcArguments | Join-String -Separator ' ')"
     Write-Host "nupkgDarcBuildArguments: $($nupkgDarcBuildArguments | Join-String -Separator ' ')"
 
     & $darc ($nupkgDarcArguments + $nupkgDarcBuildArguments + $ciArguments)
+    if ($LASTEXITCODE) {
+      throw "Darc workload package download failed for BAR ID $($versionDetail.BarId) (exit code $LASTEXITCODE)."
+    }
   }
 
   Write-Host 'Workload .nupkgs downloaded:'

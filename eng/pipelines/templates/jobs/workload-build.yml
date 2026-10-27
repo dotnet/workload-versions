@@ -91,6 +91,8 @@ jobs:
         # downloads workloads validates the checked-in compatibility implementation.
         - pwsh: eng/tests/GitHubAppToken.Tests.ps1
           displayName: 🟣 Validate GitHub App token flow
+        - pwsh: eng/tests/WorkloadBuildSelection.Tests.ps1
+          displayName: Validate workload build selection
         - task: AzureCLI@2
           displayName: 🟣 Get GitHub App installation token
           inputs:
