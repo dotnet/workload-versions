@@ -23,6 +23,8 @@ stages:
         parameters:
           sourceBranchAlias: ${{ parameters.sourceBranchAlias }}
           engBranchAlias: ${{ parameters.engBranchAlias }}
+      - pwsh: eng/tests/VsInsertionPlan.Tests.ps1
+        displayName: Validate VS insertion plan
       - powershell: >-
           eng/common/build.ps1
           -restore -build -pack -ci -msbuildEngine vs
