@@ -40,10 +40,6 @@ param (
 if (-not $workloadNupkgPath) {
   $workloadNupkgPath = "$workloadPath/packages/workloadNupkgs";
 }
-$nonShippingFlag = ''
-if ($includeNonShipping) {
-  $nonShippingFlag = '--non-shipping'
-}
 
 ### Local Build ###
 # Local build requires the installation of DARC. See: https://github.com/dotnet/arcade/blob/main/Documentation/Darc.md#setting-up-your-darc-client
@@ -122,7 +118,9 @@ $versionDetails | ForEach-Object {
     '--skip-existing'
     '--continue-on-error'
     '--use-azure-credential-for-blobs'
-    $nonShippingFlag
+    if ($includeNonShipping) {
+      '--non-shipping'
+    }
   )
 
   $darcBuildArguments = @(
@@ -193,7 +191,9 @@ if ($downloadWorkloadNupkgs) {
       '--skip-existing'
       '--continue-on-error'
       '--use-azure-credential-for-blobs'
-      $nonShippingFlag
+      if ($includeNonShipping) {
+        '--non-shipping'
+      }
     )
 
     $nupkgDarcBuildArguments = @(
