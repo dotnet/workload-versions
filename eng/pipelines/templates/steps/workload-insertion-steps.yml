@@ -43,7 +43,8 @@ steps:
     AllowTopicBranchUpdate: true
     # This is the name of our DevDiv alias.
     InsertionReviewers: Dotnet Core SDK and CLI
-    InsertionBuildPolicies: Request Perf DDRITs
+    # Explicitly disable optional policy queuing to avoid retries for policies that are not configured.
+    InsertionBuildPolicies: ''
     # Documentation: https://devdiv.visualstudio.com/DevDiv/_wiki/wikis/DevDiv.wiki/631/Copy-Commit-Details-to-PR
     # Disabled: this feature's "Copy Commit Details to PR" step fatally fails the task *after* the insertion PR
     # is already created when it cannot compute a commit diff (e.g. the metadata service has no bearer token and
