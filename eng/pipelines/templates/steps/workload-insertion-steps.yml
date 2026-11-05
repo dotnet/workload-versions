@@ -34,6 +34,7 @@ steps:
     # Connection: https://dnceng.visualstudio.com/internal/_settings/adminservices?resourceId=fd289dd6-7de6-4a3b-b33f-eaf786770fa2
     ConnectedVSDropServiceName: VSEng-VSDrop-MI
     TargetBranch: ${{ parameters.targetBranch }}
+    ShallowClone: true
     InsertionTopicBranch: $(InsertionTopicBranch)
     TeamName: $(_TeamName)
     TeamEmail: dotnetdevexcli@microsoft.com
