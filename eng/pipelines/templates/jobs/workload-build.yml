@@ -32,6 +32,8 @@ jobs:
         parameters:
           sourceBranchAlias: source
           engBranchAlias: self
+      - pwsh: eng/tests/EsrpNuGetPublish.Tests.ps1
+        displayName: Validate ESRP NuGet staging
       - ${{ if eq(parameters.createVSInsertion, true) }}:
         - powershell: Write-Host "##vso[build.addbuildtag]insert-vs"
           displayName: 🟣 Tag pipeline run - VS insertion
