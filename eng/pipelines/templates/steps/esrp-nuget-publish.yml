@@ -1,4 +1,3 @@
-# Ported from dotnet/maui commit 56741504f9432a6284e80cb1685ae50cd95dd37c.
 parameters:
 - name: packagesPath
   type: string
