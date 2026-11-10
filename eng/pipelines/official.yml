@@ -85,6 +85,22 @@ parameters:
   displayName: 🚨 Publish to NuGet.org
   type: boolean
   default: false
+- name: nugetOrganization
+  displayName: ESRP-onboarded NuGet organization
+  type: string
+  default: dotnetframework
+- name: esrpServiceConnection
+  displayName: ESRP service connection
+  type: string
+  default: DotNetBuildESRP
+- name: esrpOwners
+  displayName: ESRP release owners (comma-separated Microsoft aliases or emails)
+  type: string
+  default: $(Build.RequestedForEmail)
+- name: esrpApprovers
+  displayName: ESRP approvers (excluding owners and requester)
+  type: string
+  default: '|default|'
 
 - name: dividerAdvanced
   displayName: '[ ######## ADVANCED ######## ]'
@@ -230,6 +246,8 @@ extends:
         jobs:
         - deployment: PublishFeeds
           displayName: Publish to feed(s)
+          ${{ if eq(parameters.publishToNuGet, true) }}:
+            timeoutInMinutes: 90
           # Environment: https://dnceng.visualstudio.com/internal/_environments/42
           environment: DotNet-SDK-Workloads
           pool:
@@ -261,13 +279,10 @@ extends:
                       packageParentPath: $(System.DefaultWorkingDirectory)/artifacts
                       publishVstsFeed: ${{ parameters.azDOPublishFeed }}
                 - ${{ if eq(parameters.publishToNuGet, true) }}:
-                  - task: 1ES.PublishNuget@1
-                    displayName: 🟣 Publish packages to NuGet.org
-                    inputs:
-                      useDotNetTask: false
-                      packagesToPush: $(System.DefaultWorkingDirectory)/artifacts/packages/**/*.nupkg
-                      packageParentPath: $(System.DefaultWorkingDirectory)/artifacts
-                      nuGetFeedType: external
-                      publishVstsFeed: https://api.nuget.org/v3/index.json
-                      # Service connection: https://dev.azure.com/dnceng/internal/_settings/adminservices?resourceId=479fdc43-a27d-4f5f-b2fc-5cf19dce159a
-                      publishFeedCredentials: nuget.org (dotnetframework)
+                  - template: /eng/pipelines/templates/steps/esrp-nuget-publish.yml@self
+                    parameters:
+                      packagesPath: $(System.DefaultWorkingDirectory)/artifacts/packages
+                      nugetOrganization: ${{ parameters.nugetOrganization }}
+                      serviceConnection: ${{ parameters.esrpServiceConnection }}
+                      owners: ${{ parameters.esrpOwners }}
+                      approvers: ${{ parameters.esrpApprovers }}

@@ -1,0 +1,104 @@
+parameters:
+- name: packagesPath
+  type: string
+- name: nugetOrganization
+  type: string
+- name: owners
+  type: string
+- name: approvers
+  type: string
+- name: serviceConnection
+  type: string
+  default: DotNetBuildESRP
+# Source ESRP defaults; verify destination authorization before publishing.
+- name: keyVaultName
+  type: string
+  default: DotNetEngKeyVault
+- name: signCertName
+  type: string
+  default: DotNet-ESRP-AuthSignCert
+- name: clientId
+  type: string
+  default: 28ec6507-2167-4eaa-a294-34408cf5dd0e
+- name: domainTenantId
+  type: string
+  default: 975f013f-7f24-47e8-a7d3-abc4752bf346
+
+steps:
+- pwsh: |
+    $ErrorActionPreference = 'Stop'
+    if ([string]::IsNullOrWhiteSpace($env:NUGET_ORGANIZATION) -or $env:NUGET_ORGANIZATION -eq 'skip') {
+      throw 'Set nugetOrganization to the NuGet organization onboarded to ESRP and owning all selected packages.'
+    }
+
+    function Resolve-MicrosoftEmails([string] $value) {
+      foreach ($entry in $value.Split(',')) {
+        $alias = $entry.Trim()
+        if ($alias -notmatch '^[a-z0-9._-]+(@microsoft\.com)?$') {
+          throw 'Set esrpOwners and esrpApprovers to comma-separated individual Microsoft aliases or email addresses.'
+        }
+        if ($alias -notlike '*@*') {
+          $alias += '@microsoft.com'
+        }
+        $alias.ToLowerInvariant()
+      }
+    }
+    $owners = @(Resolve-MicrosoftEmails $env:ESRP_OWNERS | Select-Object -Unique)
+    $approvers = @(Resolve-MicrosoftEmails $env:ESRP_APPROVERS)
+    $requester = ([string] $env:RELEASE_REQUESTER).Trim().ToLowerInvariant()
+    if ($requester -notmatch '^[a-z0-9._-]+@microsoft\.com$') {
+      throw 'The release requester must have an individual Microsoft email address.'
+    }
+    $ineligibleApprovers = @($owners) + @($requester)
+    $excludedApprovers = @($approvers | Where-Object { $_ -in $ineligibleApprovers })
+    if ($excludedApprovers.Count -gt 0) {
+      Write-Warning "Excluding release owners and the requester from ESRP approvers: $($excludedApprovers -join ', ')."
+    }
+    $approvers = @($approvers | Where-Object { $_ -notin $ineligibleApprovers } | Select-Object -Unique)
+    if ($approvers.Count -eq 0) {
+      throw 'Set esrpApprovers to include at least one individual who is neither a release owner nor the requester.'
+    }
+    Write-Host "##vso[task.setvariable variable=EsrpResolvedOwners]$($owners -join ',')"
+    Write-Host "##vso[task.setvariable variable=EsrpResolvedApprovers]$($approvers -join ',')"
+
+    # Preserve the previous artifacts/packages/**/*.nupkg selection, including downloaded workloads.
+    $packages = @(Get-ChildItem -LiteralPath $env:PACKAGES_PATH -Filter '*.nupkg' -File -Recurse)
+    if ($packages.Count -eq 0) {
+      throw 'No NuGet packages remain for the ESRP submission.'
+    }
+    $duplicates = @($packages | Group-Object -Property Name | Where-Object Count -gt 1)
+    if ($duplicates.Count -gt 0) {
+      throw "Duplicate NuGet package filenames cannot be flattened for ESRP: $($duplicates.Name -join ', ')."
+    }
+    $submissionPath = Join-Path $env:AGENT_TEMPDIRECTORY ("esrp-nuget-" + [guid]::NewGuid().ToString('N'))
+    New-Item -ItemType Directory -Path $submissionPath | Out-Null
+    $packages | Copy-Item -Destination $submissionPath -ErrorAction Stop
+    Write-Host "Staged $($packages.Count) packages for NuGet organization '$env:NUGET_ORGANIZATION'."
+    Write-Host "##vso[task.setvariable variable=EsrpNuGetSubmissionPath]$submissionPath"
+  displayName: Stage NuGet packages for ESRP Release
+  env:
+    PACKAGES_PATH: ${{ parameters.packagesPath }}
+    NUGET_ORGANIZATION: ${{ parameters.nugetOrganization }}
+    ESRP_OWNERS: ${{ parameters.owners }}
+    ESRP_APPROVERS: ${{ parameters.approvers }}
+    RELEASE_REQUESTER: $(Build.RequestedForEmail)
+
+- task: EsrpRelease@14
+  displayName: Publish NuGet packages through ESRP Release
+  inputs:
+    connectedservicename: ${{ parameters.serviceConnection }}
+    usemanagedidentity: true
+    keyvaultname: ${{ parameters.keyVaultName }}
+    signcertname: ${{ parameters.signCertName }}
+    clientid: ${{ parameters.clientId }}
+    intent: PackageDistribution
+    contenttype: NuGet
+    organizationname: ${{ parameters.nugetOrganization }}
+    contentsource: Folder
+    folderlocation: $(EsrpNuGetSubmissionPath)
+    waitforreleasecompletion: true
+    owners: $(EsrpResolvedOwners)
+    approvers: $(EsrpResolvedApprovers)
+    serviceendpointurl: https://api.esrp.microsoft.com
+    mainpublisher: ESRPRELPACMAN
+    domaintenantid: ${{ parameters.domainTenantId }}
