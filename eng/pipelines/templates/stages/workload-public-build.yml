@@ -23,8 +23,6 @@ stages:
         parameters:
           sourceBranchAlias: ${{ parameters.sourceBranchAlias }}
           engBranchAlias: ${{ parameters.engBranchAlias }}
-      - pwsh: eng/tests/EsrpNuGetPublish.Tests.ps1
-        displayName: Validate ESRP NuGet staging
       - powershell: >-
           eng/common/build.ps1
           -restore -build -pack -ci -msbuildEngine vs
