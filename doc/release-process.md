@@ -4,44 +4,139 @@ Based on https://github.com/dotnet/sdk/issues/41607
 
 ## Current Process
 
-This section details the current process for releasing workloads.
+Use this runbook for monthly and out-of-band (OOB/hotfix) releases.
+The [Ideal Process](#ideal-process) below is a future goal, not current behavior.
 
-1. **Identify the current versions of the workloads you want to ship**
-2. **Identify an existing PR that makes those changes**
-3. **Update the branding in the Version.props file for the release**
-    - If it's a monthly release, update the VersionFeature to match the SDK release and set VersionPatch to 0
-    - If it's an in-between release, increment the VersionPatch value
-    - Note, if you are prepping 9 release, make sure you update all impacted branches since we are shipping multiple .NET9 SDKs from one branch
-4. **Merge the change**
-5. **Wait for the change to flow internally**
-    - You can check the branch history internally to see if you change made it
-7. **Queue a build**
-    - Target the branch you are shipping from
-    - Only select both the checkbox for a stable version and publish to the feed if you have high confidence that the branding and versions are correct.
-      - Without the stable box selected, you will get a -servicing version of the stable ID workload which can be used for testing and saved on the feed
-      - You can select stable and not publish to the feed and download the package artifacts locally for testing
-8. **Verify the versions**
-    - Go to the release-tracker (an internal website)
-    - Compare the version in the `release/8.0.4xx`, `release/9.0.1xx`, and `release/10.0.1xx` branches to the manifest for each of the versions listed in the release tracker
-    - A shorthand is to check the SDK version in the branch as that should be sufficient, but comparing the commit SHA to the manifest is an exact match
-    - Note that release tracker will show the latest staging which in rare instances may not be correct. You can click the builds node in the release tracker tool to see all staged builds for a release if you aren't sure.
-9. **Test the build**
-    - start a sandbox
-    - install the SDK band you intend to test
-    - create a test folder
-      - cd \
-      - mkdir test
-      - cd test
-      - dotnet new nugetconfig
-    - if you published to a feed
-      - dotnet nuget add source https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9-workloads/nuget/v3/index.json
-    - if you didn't publish to a feed
-      - copy the packageartifacts into c:\packages
-      - dotnet nuget add source c:\packages
-    - dotnet workload update --version <version>
-      - note that if you are testing before release day, you may have to find and add additional feeds for the various manifest.
-    - testing the manifests is typically enough 
-10. **Approve the 'publish on NuGet.org' stage in the AzDO pipeline**
+### 1. Agree on the release matrix
+
+For monthly releases, get the shipping SDKs and approved builds from the release
+tracker for the intended date. Check build history if the latest staging is not
+the approved build.
+
+For hotfixes, use the **release owner's approved matrix**, even if it differs
+from the monthly tracker. Record one row per output and phase:
+
+| Setting | Required information |
+|---------|----------------------|
+| Release | Date, owner, monthly/workload-only OOB/SDK-hotfix mode |
+| Source | Repository, branch, final SHA, dependency PRs and upstream builds; baseline SHA if creating a branch |
+| Version | Target SDK, expected workload-set version/pattern and branding overrides |
+| Publication | Validation or final release, stabilize/test-mode flags, AzDO feed and NuGet flags |
+| VS insertion | Enabled or disabled, selected workloads, primary and secondary target branches |
+
+One source branch can produce several SDK-band outputs. Give each its own row
+and version overrides; they can share the same dependencies.
+
+### 2. Prepare and verify the source
+
+The build consumes `dnceng/internal`'s `dotnet-workload-versions` repository.
+Prepare the source through the appropriate review path:
+
+| Source | Steps |
+|--------|-------|
+| Public | Review/merge the GitHub dependency PR, then verify that commit has mirrored internally. |
+| Internal-only hotfix | Create the branch from the approved baseline SHA, update from the approved upstream build, and review/merge an Azure DevOps PR. No GitHub branch or mirror wait is needed. |
+
+At the final approved SHA, check:
+
+- `eng/Version.Details.xml`: dependency names, versions, upstream URI, SHA and
+  explicit `BarId` where needed.
+- `eng/Versions.props`: matching dependency version properties and manifest IDs.
+- `NuGet.config`: feeds for the selected upstream builds, including internal
+  sources when applicable.
+- Runtime/mono and emsdk versions must match where they share a servicing line.
+  A same-version runtime rebuild can change its SHA/feed and SDK provenance
+  without changing emsdk.
+
+Preserve unaffected workloads. A mono/emsdk RC3 hotfix can retain mobile/MAUI
+RC2 IDs; see [Preview Branch Preparation](preview-branch-preparation.md).
+
+### 3. Set and review effective branding
+
+Branding in `eng/Versions.props` can be stale. Set
+`setVersionSdkMinor`, `setVersionFeature` and `setVersionPatch` explicitly, and
+confirm the prerelease label/iteration before queuing.
+
+For SDK version `X.Y.CFP`, the override values are `C` (hundreds digit) and `FP`
+(two-digit remainder). `setVersionPatch` is a workload-set revision, **not** the
+runtime servicing patch.
+
+| Scenario | Target example | SDK minor | Feature | Patch | Stabilize |
+|----------|----------------|-----------|---------|-------|-----------|
+| Workload-only OOB on an existing SDK | `10.0.402.1` | `4` | `02` | `1` | `true` |
+| New SDK hotfix, first band | `10.0.114` | `1` | `14` | `0` | `true` |
+| Same source, another SDK band | `10.0.403` | `4` | `03` | `0` | `true` |
+| RC hotfix | `11.0.100-rc.3.<build>` | `1` | `00` | `0` | `false` |
+
+For RC3, also set `setPreReleaseVersionLabel=rc` and
+`setPreReleaseVersionIteration=3`; changing dependency IDs does not update
+branding. Stable nonzero patches append a fourth component; prerelease outputs
+retain build-derived suffixes. Verify the generated version and package identity
+against the matrix before publication.
+
+### 4. Queue the appropriate phase
+
+Use [official pipeline 1298](https://dev.azure.com/dnceng/internal/_build?definitionId=1298).
+Select **pipeline version by branch/tag = `eng`**. Separately set **Source branch**
+(`sourceBranch`) to the prepared branch name, without `refs/heads/`.
+`eng` supplies the build implementation; `source` supplies release dependencies.
+Merging a PR does not queue this manual pipeline.
+
+Confirm these settings against the matrix:
+
+| Parameter | Selection |
+|-----------|-----------|
+| `stabilizePackageVersion` | `true` for stable output; `false` for servicing validation or preview/RC output, including final RC publication. |
+| `publishToAzDO`, `azDOPublishFeed` | Approved feed; current default is `public/dotnet-workloads`. |
+| `publishToNuGet` | Enable only for approved final publication. |
+| `createVSInsertion` | Enable only for the approved VS phase. |
+| `createTestWorkloadSet` | Enable only for special test-version identity, not ordinary servicing/RC validation. |
+
+Validation can use AzDO without NuGet, or unpublished stable artifacts.
+Record both resolved resource SHAs and verify `source` matches the approved
+commit before accepting the run's outputs.
+
+### 5. Validate workload installation and VS insertions
+
+Follow [Test Workload Updates](test-workload-updates.md) in an isolated environment
+for every shipping SDK band. Use the generated version and approved feeds or
+downloaded artifacts, including sources for unreleased dependencies.
+
+For VS insertion, select only the required `workloadDropNames` (`emsdk`, `mono`,
+`iOS`, `android`, `maui`; casing matters). Primary targets receive packs and
+(pre)components; secondary targets receive **packs only**. Empty primary or
+secondary lists are valid. When `createVSInsertion=false`, these lists are inactive.
+
+Validate JSON entries and drop URLs, not changed-file counts. Shared topic
+branches can combine several builds/.NET versions in one PR. Check the latest
+iteration, target and all contributions; search active and completed PRs for
+existing-PR/no-change messages.
+
+Automation reports readiness; a person approves and merges. The pipeline still
+sets `InsertAutoComplete: true`: report the actual PR setting to that person.
+Enforcing manual-only completion needs a separate pipeline/policy change.
+
+### 6. Monitor and approve publication
+
+Insertion and Publish each depend on Build, not each other. A Publish failure
+does not imply a failed insertion. AzDO and NuGet tasks share the Publish
+deployment and its `DotNet-SDK-Workloads` approval.
+
+Report stage/task results and waiting approvals separately; waits can dominate
+elapsed time. Approve publication after required validation and owner signoff.
+Verify exact package identities/versions in each destination and availability of
+referenced upstream packages. Record VS PR status separately.
+
+### Troubleshooting and recovery
+
+- **Ambiguous BAR lookup:** confirm the intended build and add its `BarId` in
+  `eng/Version.Details.xml` through a reviewed update. Even a narrow insertion
+  can fail while resolving another dependency.
+- **Existing PR / no changes:** verify the required update in the PR or target;
+  do not queue duplicates just to obtain a new PR or clear a warning.
+- **Partial/failed run:** inspect the first failure, attempts and existing
+  artifacts/PRs. Retry only failed work where supported. Changed source or
+  branding may need a new run; link it to the superseded run.
 
 ## Ideal Process
 
@@ -88,7 +183,7 @@ This section details the current process for releasing workloads.
     - Query nuget.org until the manifests are available
     - Publish the workload set
 
-## Additional Details
+## Additional Details for the Ideal Process
 
 ### Approvals
 
@@ -96,6 +191,10 @@ In the above steps, step 3 will require approval in GitHub. Additionally, steps 
 
 Basically, everything should happen automatically once merged but we want to control whether we publish the workloads to the feeds, to VS, and to nuget.org so we don't publish by default.
 
-### We have a preview workloads feed for each major version of .NET
+### Legacy version-specific preview feeds
+
+These feeds appear in older workflows. For current official publication, use
+the approved destination described in [Current Process](#current-process);
+do not infer a feed solely from the .NET major version.
 - dotnet8-workloads https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet8-workloads/nuget/v3/index.json
 - dotnet9-workloads https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet9-workloads/nuget/v3/index.json

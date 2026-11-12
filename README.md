@@ -4,8 +4,9 @@ This repository contains the version information for .NET SDK Workloads.
 
 ### Documentation
 
-- [Release Process](doc/release-process.md) - Current and ideal release process for workloads
+- [Release Process](doc/release-process.md) - Monthly releases, hotfixes, and future process goals
 - [Preview Branch Preparation](doc/preview-branch-preparation.md) - Process for preparing branches during preview releases
+- [Test Workload Updates](doc/test-workload-updates.md) - Validate workload sets and VS insertions before publication
 
 ### Pre-requisites for local VS insertion build
 
