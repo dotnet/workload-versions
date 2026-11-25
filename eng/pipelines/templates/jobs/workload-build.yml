@@ -119,6 +119,7 @@ jobs:
                 -usePreComponents:$${{ parameters.usePreComponentsForVSInsertion }} `
                 -includeNonShipping:$${{ parameters.includeNonShippingWorkloads }} `
                 -downloadWorkloadNupkgs:$${{ parameters.downloadWorkloadNupkgs }} `
+                -darcChannelName '${{ parameters.darcChannelName }}' `
                 -WorkloadNupkgExcludeListJson '$(WorkloadNupkgExcludeListJson)' `
                 -workloadNupkgPath '$(System.DefaultWorkingDirectory)/artifacts/packages/workloadNupkgs'
       - powershell: eng/create-version-override.ps1
