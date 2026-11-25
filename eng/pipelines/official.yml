@@ -99,7 +99,7 @@ parameters:
   type: boolean
   default: false
 - name: darcChannelName
-  displayName: 'DARC channel name for commit-based downloads [default: no channel filter]'
+  displayName: 'DARC channel name for workload drop/package downloads'
   type: string
   default: '|default|'
 
