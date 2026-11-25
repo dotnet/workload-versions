@@ -98,6 +98,10 @@ parameters:
   displayName: Include non-shipping workloads
   type: boolean
   default: false
+- name: darcChannelName
+  displayName: 'DARC channel name for workload drop/package downloads'
+  type: string
+  default: '|default|'
 
 - name: dividerSetVersion
   displayName: '[ ######## SET VERSION ######## ]'
@@ -199,6 +203,7 @@ extends:
           createVSInsertion: ${{ parameters.createVSInsertion }}
           usePreComponentsForVSInsertion: ${{ parameters.usePreComponentsForVSInsertion }}
           includeNonShippingWorkloads: ${{ parameters.includeNonShippingWorkloads }}
+          darcChannelName: ${{ parameters.darcChannelName }}
           workloadDropNames: ${{ parameters.workloadDropNames }}
           createTestWorkloadSet: ${{ parameters.createTestWorkloadSet }}
           setVersionSdkMinor: ${{ parameters.setVersionSdkMinor }}

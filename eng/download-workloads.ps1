@@ -23,6 +23,12 @@
 # - Example Value: '["emsdk","mono"]'
 # $workloadNupkgPath: The path to the directory for workload .nupkg downloads. This is --output-dir in the DARC command for the .nupkg downloads.
 # - Example Value: "$(RepoRoot)artifacts\packages\workloadNupkgs"
+# $darcChannelName: The BAR channel name (case-insensitive substring) used to select the build when downloading by --repo and --commit.
+# - This is --channel in the DARC command for both the workload drop .zip and .nupkg downloads.
+# - Only applies to dependencies without a BarId. DARC does not allow --channel with --id, so BarId entries are unaffected.
+# - If empty or '|default|', no channel filter is applied.
+# - See the darcChannelName parameter in official.yml.
+# - Example Value: ".NET 10 Workload Release"
 
 param (
   [Parameter(Mandatory=$true)] [string] $workloadPath,
@@ -33,12 +39,39 @@ param (
   [bool] $includeNonShipping = $false,
   [bool] $downloadWorkloadNupkgs = $false,
   [string] $workloadNupkgExcludeListJson = '[]',
-  [string] $workloadNupkgPath = ''
+  [string] $workloadNupkgPath = '',
+  [string] $darcChannelName = ''
 )
 
 ## Initialize ##
 if (-not $workloadNupkgPath) {
   $workloadNupkgPath = "$workloadPath/packages/workloadNupkgs";
+}
+
+$darcChannelName = $darcChannelName.Trim()
+if ($darcChannelName -eq '|default|') {
+  $darcChannelName = ''
+}
+
+# Builds the DARC arguments that identify which build to gather the drop from.
+function Get-DarcBuildArguments($versionDetail) {
+  if ($versionDetail.BarId) {
+    return @(
+      '--id'
+      $versionDetail.BarId
+    )
+  }
+
+  @(
+    '--repo'
+    $versionDetail.Uri
+    '--commit'
+    $versionDetail.Sha
+    if ($darcChannelName) {
+      '--channel'
+      $darcChannelName
+    }
+  )
 }
 
 ### Local Build ###
@@ -123,19 +156,7 @@ $versionDetails | ForEach-Object {
     }
   )
 
-  $darcBuildArguments = @(
-    '--repo'
-    $_.Uri
-    '--commit'
-    $_.Sha
-  )
-
-  if ($_.BarId) {
-    $darcBuildArguments = @(
-      '--id'
-      $_.BarId
-    )
-  }
+  $darcBuildArguments = Get-DarcBuildArguments $_
 
   Write-Host "darcArguments: $($darcArguments | Join-String -Separator ' ')"
   Write-Host "darcBuildArguments: $($darcBuildArguments | Join-String -Separator ' ')"
@@ -196,19 +217,7 @@ if ($downloadWorkloadNupkgs) {
       }
     )
 
-    $nupkgDarcBuildArguments = @(
-      '--repo'
-      $versionDetail.Uri
-      '--commit'
-      $versionDetail.Sha
-    )
-
-    if ($versionDetail.BarId) {
-      $nupkgDarcBuildArguments = @(
-        '--id'
-        $versionDetail.BarId
-      )
-    }
+    $nupkgDarcBuildArguments = Get-DarcBuildArguments $versionDetail
 
     Write-Host "nupkgDarcArguments: $($nupkgDarcArguments | Join-String -Separator ' ')"
     Write-Host "nupkgDarcBuildArguments: $($nupkgDarcBuildArguments | Join-String -Separator ' ')"
